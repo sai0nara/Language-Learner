@@ -1,4 +1,11 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
+import java.text.SimpleDateFormat
+import java.util.Date
+
+fun buildTimestamp(): String {
+  val formatter = SimpleDateFormat("yyyyMMdd-HHmm")
+  return formatter.format(Date())
+}
 
 plugins {
   alias(libs.plugins.android.application)
@@ -18,6 +25,8 @@ android {
     targetSdk = 36
     versionCode = 1
     versionName = "1.0"
+
+    buildConfigField("String", "BUILD_TIMESTAMP", "\"${buildTimestamp()}\"")
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -54,6 +63,14 @@ android {
       // AI Studio.
       signingConfig = signingConfigs.getByName("debugConfig")
     }
+    // Slim distribution build: debug-signed, minified + resource-shrunk.
+    // Dev loop keeps using unminified `debug`.
+    create("dist") {
+      initWith(getByName("debug"))
+      isMinifyEnabled = true
+      isShrinkResources = true
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -72,6 +89,17 @@ android {
   dependenciesInfo {
     includeInApk = false
     includeInBundle = true
+  }
+}
+
+androidComponents {
+  onVariants { variant ->
+    variant.outputs.forEach { output ->
+      val version = output.versionName.get()
+      (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set(
+        "app-${variant.name}-v$version-${buildTimestamp()}.apk"
+      )
+    }
   }
 }
 
