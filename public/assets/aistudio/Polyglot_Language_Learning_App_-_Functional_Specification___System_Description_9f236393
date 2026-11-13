@@ -1,0 +1,263 @@
+﻿Polyglot Language Learning App: Product Requirements & Functional Specification
+1. Executive Summary & Vision
+Product Overview
+Polyglot is a streamlined, pedagogy-driven language learning mobile and web application inspired by the 'Polyglot 16' methodology. The application focuses on rapid conversational mastery by systematically automating core grammar matrices and facilitating active sentence synthesis.
+Core Educational Philosophy
+Rather than relying on the rote memorization of disconnected phrasebooks, Polyglot trains learners to internalize structural grammar paradigms—specifically verb conjugation matrices—until sentence generation transitions from conscious calculation to an automatic reflex.
+Target Audience
+* Primary Target: Beginners to intermediate language learners seeking an efficient, low-friction, and rule-grounded pathway to practical fluency.
+* User Profile: Learners who value structured system mechanics, clear grammatical frameworks, and deliberate practice over gamified distractions.
+
+
+________________
+
+
+2. Information Architecture & User Flow
+Primary System Architecture
+The application architecture enforces a logical progression from conceptual understanding to passive recognition, culminating in active production.
+
+
++-------------------------------------------------------------------+
+
+
+|                        1. Main Menu                               |
+|---|
++-------------------------------------------------------------------+
+                                  |
+                                  v
++-------------------------------------------------------------------+
+|               2. Vocabulary Acquisition Module                    |
+|             (Lexical Primer & Matching Drills)                    |
++-------------------------------------------------------------------+
+                                  |
+                                  v
++-------------------------------------------------------------------+
+|                 3. Grammar Reference Section                      |
+|       (3x3 Matrix, Structural Rules, Usage Guides)                |
++-------------------------------------------------------------------+
+                                  |
+                                  v
++-------------------------------------------------------------------+
+|          4. Interactive Sentence Construction                    |
+|             (Tile Unscrambling & Active Synthesis)                |
++-------------------------------------------------------------------+
+                                  |
+                                  v
++-------------------------------------------------------------------+
+|             5. Lesson Completion & Performance                    |
+|            (Mastery Score, Analytics, Next Lesson)                |
++-------------------------------------------------------------------+
+
+________________
+
+
+3. Detailed Functional Specifications
+3.1 Main Menu & Structured Lesson Hierarchy
+Curriculum Layout
+The main dashboard utilizes a vertical stream presenting progressive, numbered modules (e.g., Lesson 1 through Lesson 16).
+Lesson Item Specification
+Each item within the curriculum list must render the following metadata:
+
+
+* Identification: Lesson number and primary focus title (e.g., Lesson 1: The Core Verb Matrix).
+* Grammatical Focus Tag: Concise categorization pill (e.g., Regular Verbs, Basic Tenses, Question Forms).
+* Completion Status: Visual status indicators (Locked, Available, In-Progress, Mastered).
+* Module Shortcuts: Direct navigation triggers for Vocabulary Primer, Grammar Guide, and Sentence Practice.
+Functional Requirements
+Component
+	Interaction
+	System Behavior
+	Progress Bar
+	View
+	Renders aggregate completion percentage and mastery score for the specific lesson.
+	Lesson Card
+	Tap
+	Expands modal displaying lesson objectives, estimated time, and sub-module navigation.
+	Quick Action
+	Tap
+	Directs the user immediately to the selected sub-module, bypassing initial steps if already unlocked.
+	
+
+________________
+
+
+3.2 Vocabulary Learning & Multiple-Choice Matching Drills
+Objective
+Establish an initial lexical base of 30 to 50 core words per lesson required to execute the structural grammar patterns taught in that module.
+Interface Specifications
+* Target Word Display: Source-language word displayed prominently at top-center (e.g., Russian target term).
+* Option Grid: A 2x2 grid containing four distinct translation options in the target language (e.g., English).
+* Progress Track: Top visual bar tracking completed items against remaining queue (12 / 25).
+
+
++-------------------------------------------------------------------+
+|                       Progress: [||||||||....] 12/25              |
+|                                                                   |
+|                             работать                              |
+|                            (to work)                              |
+|                                                                   |
+|          +-------------------+     +-------------------+          |
+|          |     1. To live    |     |    2. To work     |          |
+|          +-------------------+     +-------------------+          |
+|          |     3. To see     |     |    4. To speak    |          |
+|          +-------------------+     +-------------------+          |
++-------------------------------------------------------------------+
+Interaction & Feedback Rules
+* Correct Selection:
+   * Immediate emerald green highlight on the selected card.
+   * Haptic pulse (success feedback) and brief affirmative audio queue.
+   * Automatic transition to the subsequent term after a 500ms delay.
+* Incorrect Selection:
+   * Coral red highlight on the selected incorrect option with a lateral shake animation.
+   * Immediate emerald green highlight applied to the correct card.
+   * Missed term is automatically appended to the end of the active session queue for re-testing.
+
+
+________________
+
+
+3.3 Comprehensive Grammar Reference & Conjugation Tables
+Pedagogical Function
+Serves as the structural blueprint for the language. Users review this material prior to sentence synthesis and access it as contextual support during drills.
+The 3x3 Core Verb Matrix Model
+The central component of the grammar engine is a 3x3 structural matrix crossing Tense (Past, Present, Future) with Form (Affirmative, Negative, Interrogative).
+
+
+Form / Tense
+	Past Simple
+	Present Simple
+	Future Simple
+	Affirmative (+)
+	I worked / Я работал
+	I work / Я работаю
+	I will work / Я буду работать
+	Negative (-)
+	I did not work / Я не работал
+	I do not work / Я не работаю
+	I will not work / Я не буду работать
+	Interrogative (?)
+	Did I work? / Я работал?
+	Do I work? / Я работаю?
+	Will I work? / Я буду работать?
+	Structural Rule Specifications
+* Auxiliary Automation: Explicitly highlights operational shifts in auxiliary verbs (did, do, does, will).
+* Pronoun Alignment: Integrated person/number reference tables (I, You, He, She, It, We, They) detailing suffix alterations and agreement rules.
+* Contextual Pairings: Side-by-side bilingual examples detailing common usage edge cases.
+
+
+________________
+
+
+3.4 Interactive Practice: Sentence Translation & Unscrambling
+Objective
+Transition from passive recognition to active production by enforcing syntactically correct sentence assembly from randomized word pools.
+Interface Layout
+* Source Prompt Area: Displays source sentence to translate (e.g., "Ты пойдёшь завтра в кино?").
+* Assembly Bay: Target area where selected word tiles snap into sequential order.
+* Tile Pool (Word Bank): Scrambled array of target-language tiles containing correct sentence tokens plus 1–2 distractor tokens.
+
+
++-------------------------------------------------------------------+
+|  Prompt: "Ты пойдёшь завтра в кино?"                               |
+|                                                                   |
+|  Assembly Bay:                                                    |
+|  [ Will ]  [ you ]  [ go ]  [ to ]  [ ... ]                       |
+|                                                                   |
+|  Tile Pool:                                                       |
+|  [ the ]   [ go ]   [ tomorrow ]   [ cinema ]   [ went ]  [ ? ]   |
+|                                                                   |
+|  [ CHECK ANSWER ]                                                 |
++-------------------------------------------------------------------+
+Workflow & Behavioral Logic
+1. Tile Placement: Tapping an available tile in the pool moves it to the next open position in the Assembly Bay.
+2. Tile Removal: Tapping a tile within the Assembly Bay returns it to the Tile Pool pool.
+3. Evaluation: Pressing Check Answer locks the UI state and validates the array sequence against target string definitions.
+4. Error Handling: If an incorrect sequence is submitted, the engine highlights misplaced tokens, reveals the target structure, and provides a direct link to the associated grammar rule.
+
+
+________________
+
+
+4. UI/UX Design System & Behavioral Rules
+Color Palette & Design Tokens
+The visual design utilizes a slate-neutral base paired with high-contrast structural accents to minimize fatigue and support long learning sessions.
+
+
+* Neutral Slate: #0F172A (Text/Headers), #64748B (Secondary UI), #F8FAFC (Surface Background).
+* Success Emerald: #10B981 (Correct State, Mastery Indicators).
+* Error Coral: #EF4444 (Incorrect State, Alert Triggers).
+* Accent Indigo: #6366F1 (Active Elements, Focus Ring, Primary Buttons).
+Ergonomics & Adaptability
+* Touch Targets: All interactive components (word tiles, options, buttons) maintain a minimum target area of 48dp x 48dp.
+* Viewport Handling: Optimized for primary single-handed vertical mobile usage while dynamically scaling to multi-column desktop layouts.
+
+
+________________
+
+
+5. Technical Architecture & Data Model Recommendations
+Key Entity Schemas
+{
+  "Lesson": {
+    "id": "string (UUID)",
+    "orderIndex": "number",
+    "title": "string",
+    "grammarFocus": "string",
+    "prerequisites": "array[LessonID]"
+  },
+  "VocabularyItem": {
+    "id": "string (UUID)",
+    "lessonId": "string (Foreign Key)",
+    "sourceWord": "string",
+    "targetWord": "string",
+    "partOfSpeech": "string",
+    "distractorsList": "array[string]"
+  },
+  "GrammarGuide": {
+    "id": "string (UUID)",
+    "lessonId": "string (Foreign Key)",
+    "contentMarkdown": "string",
+    "conjugationTablesJSON": "object"
+  },
+  "SentencePracticeItem": {
+    "id": "string (UUID)",
+    "lessonId": "string (Foreign Key)",
+    "sourceSentence": "string",
+    "targetSentence": "string",
+    "wordTokens": "array[string]",
+    "distractorTokens": "array[string]",
+    "explanation": "string"
+  },
+  "UserProgress": {
+    "userId": "string (Foreign Key)",
+    "lessonId": "string (Foreign Key)",
+    "vocabScore": "number (percentage)",
+    "practiceScore": "number (percentage)",
+    "status": "enum('LOCKED', 'AVAILABLE', 'IN_PROGRESS', 'MASTERED')",
+    "lastAttemptedAt": "timestamp"
+  }
+}
+Client State Machine Transitions
+The practice engine follows a strict linear state progression to ensure data integrity during assessment sessions.
+
+
+ [IDLE] ---> [VOCAB_PRACTICE] ---> [GRAMMAR_VIEW] ---> [SENTENCE_PRACTICE] ---> [SUMMARY_RESULT]
+   ^                                                                                  |
+   +---------------------------------- REPEAT / EXIT ---------------------------------+
+
+________________
+
+
+6. Implementation Roadmap
+Phase 1: MVP Core
+* Core infrastructure implementation (Lessons 1–4).
+* Vocabulary drill engine with immediate feedback loop.
+* Interactive 3x3 Verb Conjugation matrix viewer.
+* Basic tile-unscrambling sentence practice engine.
+Phase 2: Full Curriculum & Offline Persistence
+* Expansion to complete 16-lesson curriculum catalog.
+* Local storage persistence layer for offline learning session caching.
+* Spaced-repetition scheduling algorithm integration for incorrect vocabulary and sentence patterns.
+Phase 3: Advanced Audio & Voice Synthesizer
+* Native audio playback for all vocabulary items and target practice sentences.
+* Speech-to-text integration for real-time oral sentence production evaluation.

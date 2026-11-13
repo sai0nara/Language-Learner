@@ -1,0 +1,18 @@
+description = 'Implement a new UI component/screen and its corresponding test suite'
+
+prompt = '''
+Before proceeding, run `git status --porcelain` to check for uncommitted, unstaged, or untracked changes. If any exist, abort immediately and notify the user that the workspace must be clean.
+
+You will implement a new Android UI feature/component for the Language Learner app: {{args}}.
+
+1) Derive a safe branch name using the format `feature/slug`, where `slug` is a lowercase kebab-case version of the component description.
+2) Create and switch to this new branch using `git checkout -b <branch-name>`.
+3) Verify the branch switch was successful. If uncommitted changes blocked the switch, abort and inform the user.
+4) Create a new Compose UI test file in `app/src/test/java/com/example/ui/` (or `app/src/androidTest/java/com/example/ui/`). Write a meaningful suite of tests using `createComposeRule()` that asserts the expected behavior (e.g., visibility of elements, interaction logic). Do not run the tests yet.
+5) Create the new UI component (a `@Composable` function) in `app/src/main/java/com/example/ui/screens/` (or `components/`). Ensure naming follows PascalCase and adheres to the project's Material 3 theme and existing architectural patterns.
+6) Once implemented, run the specific test class using:
+   `gradle testDebugUnitTest --tests "<full.package.name.TestClassName>"`
+   If tests fail, diagnose the issue, fix the component, and rerun until all tests pass.
+7) Integrate the new component into the app's navigation/screens in `MainActivity.kt` as appropriate.
+8) Briefly summarize the branch created, the files added/modified, and the test results.
+'''

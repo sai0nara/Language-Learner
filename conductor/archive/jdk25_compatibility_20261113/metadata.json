@@ -1,0 +1,8 @@
+{
+  "track_id": "jdk25_compatibility_20261113",
+  "type": "chore",
+  "status": "completed",
+  "created_at": "2026-11-13T12:44:50Z",
+  "updated_at": "2026-11-13T12:44:50Z",
+  "description": "update project to be compatible with jdk 25"
+}

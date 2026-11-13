@@ -1,0 +1,5 @@
+{
+  "name": "docs-wiki",
+  "version": "0.1.0",
+  "description": "Language Learner docs + LLMwiki maintenance: lint, triage, and fix Docs/ and wiki/ findings."
+}

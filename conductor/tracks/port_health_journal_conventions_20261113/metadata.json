@@ -1,0 +1,8 @@
+{
+  "track_id": "port_health_journal_conventions_20261113",
+  "type": "chore",
+  "status": "completed",
+  "created_at": "2026-11-13T17:04:10Z",
+  "updated_at": "2026-11-13T17:04:10Z",
+  "description": "copy ui testing approach, docs and llmwiki maintain approach, README, AGENTS and GEMINI, port skills and commands from /Users/sai/VS_CODE_PROJECTS/health-journal"
+}
