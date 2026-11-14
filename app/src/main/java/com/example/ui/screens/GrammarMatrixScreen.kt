@@ -211,6 +211,11 @@ fun GrammarMatrixScreen(
             // Selected Cell Detail Card
             if (selectedCell != null) {
                 val cell = selectedCell!!
+                val displayExampleSerbian = if (isLatin && cell.exampleSerbianLatin.isNotBlank()) {
+                    cell.exampleSerbianLatin
+                } else {
+                    cell.exampleSerbian
+                }
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Card(
@@ -236,8 +241,7 @@ fun GrammarMatrixScreen(
 
                             IconButton(
                                 onClick = {
-                                    val text = if (isLatin) cell.exampleSerbianLatin else cell.exampleSerbian
-                                    viewModel.playAudio(text, isTargetLanguage = true)
+                                    viewModel.playAudio(displayExampleSerbian, isTargetLanguage = true)
                                 }
                             ) {
                                 Icon(
@@ -259,7 +263,7 @@ fun GrammarMatrixScreen(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = if (isLatin) cell.exampleSerbianLatin else cell.exampleSerbian,
+                            text = displayExampleSerbian,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
