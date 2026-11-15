@@ -61,7 +61,8 @@ fun SpacedRepetitionScreen(
     var currentIndex by remember { mutableIntStateOf(0) }
     var isRevealed by remember { mutableStateOf(false) }
 
-    val currentItem = dueItems.getOrNull(currentIndex)
+    val effectiveIndex = if (dueItems.isEmpty()) 0 else currentIndex.coerceIn(0, dueItems.lastIndex)
+    val currentItem = dueItems.getOrNull(effectiveIndex)
 
     Column(
         modifier = Modifier
@@ -97,7 +98,7 @@ fun SpacedRepetitionScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = if (dueItems.isNotEmpty()) "Карточка ${currentIndex + 1} из ${dueItems.size}" else "Нет карточек",
+                    text = if (dueItems.isNotEmpty()) "Карточка ${effectiveIndex + 1} из ${dueItems.size}" else "Нет карточек",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -1,0 +1,36 @@
+{
+  "name": "qa-feature-pipeline",
+  "description": "End-to-end QA pipeline for Language Learner features: resolve requirement gaps from Docs/ & source, generate QA test-model/test-suite/coverage-report via qa-architect, automate P0/P1/P2 Robolectric Compose tests, run Gradle & fix failures, run wiki/lint.py, and optionally commit & push.",
+  "entry": "workflow.py",
+  "args": {
+    "type": "object",
+    "required": ["slugs"],
+    "properties": {
+      "slugs": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1,
+        "description": "Feature slugs matching Docs/prd/<slug>.md (e.g. ['vocab-drill', 'spaced-repetition'])."
+      },
+      "run_date": {
+        "type": "string",
+        "description": "Date prefix for qa-artifacts/<run_date>-<slug>/ (defaults to today's YYYY-MM-DD)."
+      },
+      "priorities": {
+        "type": "string",
+        "default": "p0,p1,p2",
+        "description": "Priorities to automate in Stage 4 (e.g. 'p0' or 'p0,p1,p2')."
+      },
+      "resolve_gaps": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether to resolve PRD gaps using Docs/psd/<slug>.md, Docs/tests/<slug>.md, and source files before Stage 3."
+      },
+      "commit_and_push": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to git add, commit, and push after all tests and wiki/lint.py pass."
+      }
+    }
+  }
+}

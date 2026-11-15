@@ -384,35 +384,46 @@ fun VocabDrillScreen(
             Spacer(modifier = Modifier.weight(0.4f))
 
             // Bottom Progress Bar & Percentage matching screenshot
-            val progress = if (initialTotal > 0) {
-                (correctCount.toFloat() / initialTotal.toFloat()).coerceIn(0f, 1f)
-            } else 0f
-            val percentText = String.format("%.1f%%", progress * 100f)
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "$percentText ($correctCount / $initialTotal)",
-                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp)),
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            }
+            VocabDrillProgressBar(
+                correctCount = correctCount,
+                initialTotal = initialTotal
+            )
         }
+    }
+}
+
+@Composable
+internal fun VocabDrillProgressBar(
+    correctCount: Int,
+    initialTotal: Int
+) {
+    val progress = if (initialTotal > 0) {
+        (correctCount.toFloat() / initialTotal.toFloat()).coerceIn(0f, 1f)
+    } else 0f
+    val percentText = String.format("%.1f%%", progress * 100f)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "$percentText ($correctCount / $initialTotal)",
+            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LinearProgressIndicator(
+            progress = { progress },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .clip(RoundedCornerShape(3.dp)),
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     }
 }

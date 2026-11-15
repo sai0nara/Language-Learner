@@ -3,6 +3,7 @@ package com.example.qa
 import android.app.Application
 import android.content.Context
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.example.data.local.AppDatabase
@@ -13,6 +14,7 @@ import com.example.ui.screens.CurriculumScreen
 import com.example.ui.screens.LessonDetailScreen
 import com.example.ui.theme.LanguageLearnerTheme
 import com.example.ui.viewmodel.LanguageLearnerViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
@@ -55,11 +57,19 @@ class CurriculumProgressionTest {
             .allowMainThreadQueries()
             .build()
         repository = CurriculumRepository(db)
+        runBlocking(Dispatchers.IO) {
+            val singletonDb = AppDatabase.getInstance(app as Context)
+            singletonDb.clearAllTables()
+            CurriculumRepository(singletonDb).ensureInitialDataLoaded()
+        }
         viewModel = LanguageLearnerViewModel(app)
     }
 
     @After
     fun tearDown() {
+        runBlocking(Dispatchers.IO) {
+            AppDatabase.getInstance(app as Context).clearAllTables()
+        }
         db.close()
     }
 
@@ -354,6 +364,10 @@ class CurriculumProgressionTest {
                     onOpenImportExport = {}
                 )
             }
+        }
+        composeRule.waitUntil(timeoutMillis = 5_000) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper()
+            composeRule.onAllNodesWithTag("lesson_card_lesson_2").fetchSemanticsNodes().isNotEmpty()
         }
         page.assertLessonCardDisplayed("lesson_2")
 
