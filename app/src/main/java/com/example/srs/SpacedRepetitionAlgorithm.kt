@@ -147,7 +147,7 @@ object SpacedRepetitionAlgorithm {
         if (targetSize == 0) return emptyList()
 
         val minActiveSlots = minOf(targetSize, activeLessonItems.size, maxOf(6, (targetSize * 3) / 10))
-        val maxOverdueSlots = (targetSize - minActiveSlots).coerceAtLeast(0)
+        val maxOverdueSlots = minOf((targetSize * 7) / 10, targetSize - minActiveSlots).coerceAtLeast(0)
         val sortedOverdue = overdueItems
             .filter { it.nextReviewTimestamp <= nowMs }
             .sortedBy { retrievability(it, nowMs) }

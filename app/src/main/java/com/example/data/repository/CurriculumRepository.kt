@@ -19,6 +19,8 @@ import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
@@ -119,8 +121,7 @@ class CurriculumRepository(private val db: AppDatabase) {
     }
 
     suspend fun recordSrsResult(item: SrsReviewEntity, grade: ReviewGrade) = withContext(Dispatchers.IO) {
-        val quality = SpacedRepetitionAlgorithm.gradeToQuality(grade)
-        val updated = SpacedRepetitionAlgorithm.calculateNextReview(item, quality)
+        val updated = SpacedRepetitionAlgorithm.calculateFsrsNextReview(item, grade)
         db.srsDao().insertOrUpdate(updated)
     }
 
@@ -185,22 +186,9 @@ class CurriculumRepository(private val db: AppDatabase) {
         )
     }
 
-    private val moshi = Moshi.Builder().build()
-    private val matrixStatsMapType = Types.newParameterizedType(
-        Map::class.java,
-        String::class.java,
-        MatrixCellStat::class.java
-    )
-    private val matrixStatsAdapter = moshi.adapter<Map<String, MatrixCellStat>>(matrixStatsMapType)
+    private val matrixMutex = Mutex()
 
-    fun parseMatrixStats(json: String): Map<String, MatrixCellStat> {
-        if (json.isBlank() || json == "{}") return emptyMap()
-        return try {
-            matrixStatsAdapter.fromJson(json) ?: emptyMap()
-        } catch (_: Exception) {
-            emptyMap()
-        }
-    }
+    fun parseMatrixStats(json: String): Map<String, MatrixCellStat> = parseMatrixStatsJson(json)
 
     suspend fun recordMatrixCellAttempt(
         lessonId: String,
@@ -208,27 +196,31 @@ class CurriculumRepository(private val db: AppDatabase) {
         isCorrect: Boolean,
         latencyMs: Long
     ) = withContext(Dispatchers.IO) {
-        val lesson = db.lessonDao().getLessonById(lessonId) ?: return@withContext
-        val currentMap = parseMatrixStats(lesson.matrixStatsJson).toMutableMap()
-        val prev = currentMap[coordinateKey] ?: MatrixCellStat()
-        val newAttempts = prev.attempts + 1
-        val newCorrect = prev.correct + if (isCorrect) 1 else 0
-        val newAccuracy = newCorrect.toFloat() / newAttempts.toFloat()
-        val newAvgLatency = ((prev.avgLatencyMs * prev.attempts) + latencyMs) / newAttempts
-        val cellStatus = computeCellStatus(newAttempts, newAccuracy, newAvgLatency)
-        currentMap[coordinateKey] = MatrixCellStat(
-            attempts = newAttempts,
-            correct = newCorrect,
-            accuracy = newAccuracy,
-            avgLatencyMs = newAvgLatency,
-            cellStatus = cellStatus
-        )
-        evaluateTwoTierGatesInternal(lesson.copy(matrixStatsJson = matrixStatsAdapter.toJson(currentMap)))
+        matrixMutex.withLock {
+            val lesson = db.lessonDao().getLessonById(lessonId) ?: return@withContext
+            val currentMap = parseMatrixStatsJson(lesson.matrixStatsJson).toMutableMap()
+            val prev = currentMap[coordinateKey] ?: MatrixCellStat()
+            val newAttempts = prev.attempts + 1
+            val newCorrect = prev.correct + if (isCorrect) 1 else 0
+            val newAccuracy = newCorrect.toFloat() / newAttempts.toFloat()
+            val newAvgLatency = ((prev.avgLatencyMs * prev.attempts) + latencyMs) / newAttempts
+            val cellStatus = computeCellStatus(newAttempts, newAccuracy, newAvgLatency)
+            currentMap[coordinateKey] = MatrixCellStat(
+                attempts = newAttempts,
+                correct = newCorrect,
+                accuracy = newAccuracy,
+                avgLatencyMs = newAvgLatency,
+                cellStatus = cellStatus
+            )
+            evaluateTwoTierGatesInternal(lesson.copy(matrixStatsJson = matrixStatsAdapter.toJson(currentMap)))
+        }
     }
 
     suspend fun evaluateTwoTierGates(lessonId: String) = withContext(Dispatchers.IO) {
-        val lesson = db.lessonDao().getLessonById(lessonId) ?: return@withContext
-        evaluateTwoTierGatesInternal(lesson)
+        matrixMutex.withLock {
+            val lesson = db.lessonDao().getLessonById(lessonId) ?: return@withContext
+            evaluateTwoTierGatesInternal(lesson)
+        }
     }
 
     private suspend fun evaluateTwoTierGatesInternal(lesson: LessonEntity) {
@@ -266,7 +258,7 @@ class CurriculumRepository(private val db: AppDatabase) {
             unresolvedLapses == 0 &&
             medianLatency in 1L..12_000L
 
-        val unlockNext = practiceScore >= 0.70f || lesson.masteryScore >= 4.5f
+        val unlockNext = (recent.size >= MIN_PRACTICE_SAMPLE && practiceScore >= 0.70f) || lesson.masteryScore >= 4.5f
         if (unlockNext) {
             db.lessonDao().unlockLessonByOrder(lesson.orderIndex + 1)
         }
@@ -281,7 +273,7 @@ class CurriculumRepository(private val db: AppDatabase) {
         db.lessonDao().updatePolyglotProgress(
             id = lesson.id,
             status = newStatus,
-            completed = isMastered || lesson.isCompleted,
+            completed = isMastered || (lesson.masteryScore >= 4.5f),
             unlocked = lesson.isUnlocked,
             vocabMastery = vocabMastery,
             practiceScore = practiceScore,
@@ -304,6 +296,25 @@ class CurriculumRepository(private val db: AppDatabase) {
         sentences.filter { it.matrixCoordinateKey() in weakCoords }.take(limit)
 
     companion object {
+        const val MIN_PRACTICE_SAMPLE = 5
+
+        private val sharedMoshi = Moshi.Builder().build()
+        private val matrixStatsMapType = Types.newParameterizedType(
+            Map::class.java,
+            String::class.java,
+            MatrixCellStat::class.java
+        )
+        val matrixStatsAdapter = sharedMoshi.adapter<Map<String, MatrixCellStat>>(matrixStatsMapType)
+
+        fun parseMatrixStatsJson(json: String): Map<String, MatrixCellStat> {
+            if (json.isBlank() || json == "{}") return emptyMap()
+            return try {
+                matrixStatsAdapter.fromJson(json) ?: emptyMap()
+            } catch (_: Exception) {
+                emptyMap()
+            }
+        }
+
         val ALL_MATRIX_COORDS = listOf(
             "PAST_AFFIRMATIVE", "PAST_NEGATIVE", "PAST_INTERROGATIVE",
             "PRESENT_AFFIRMATIVE", "PRESENT_NEGATIVE", "PRESENT_INTERROGATIVE",

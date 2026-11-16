@@ -112,6 +112,7 @@ class LanguageLearnerViewModel(application: Application) : AndroidViewModel(appl
     fun recordReview(item: SrsReviewEntity, grade: ReviewGrade) {
         viewModelScope.launch {
             repository.recordSrsResult(item, grade)
+            _dailyBlendedQueue.value = _dailyBlendedQueue.value.filterNot { it.id == item.id }
         }
     }
 
@@ -144,8 +145,10 @@ class LanguageLearnerViewModel(application: Application) : AndroidViewModel(appl
                 rating = rating,
                 isFirstAttemptInSession = isFirstAttemptInSession
             )
-            repository.recordAnswer(vocab.lessonId, isCorrect)
-            repository.evaluateTwoTierGates(vocab.lessonId)
+            if (isFirstAttemptInSession) {
+                repository.recordAnswer(vocab.lessonId, isCorrect)
+                repository.evaluateTwoTierGates(vocab.lessonId)
+            }
         }
     }
 
@@ -174,14 +177,15 @@ class LanguageLearnerViewModel(application: Application) : AndroidViewModel(appl
                 rating = rating,
                 isFirstAttemptInSession = isFirstAttemptInSession
             )
-            repository.recordMatrixCellAttempt(
-                lessonId = sentence.lessonId,
-                coordinateKey = sentence.matrixCoordinateKey(),
-                isCorrect = isCorrect,
-                latencyMs = latencyMs
-            )
-            repository.recordAnswer(sentence.lessonId, isCorrect)
-            repository.evaluateTwoTierGates(sentence.lessonId)
+            if (isFirstAttemptInSession) {
+                repository.recordAnswer(sentence.lessonId, isCorrect)
+                repository.recordMatrixCellAttempt(
+                    lessonId = sentence.lessonId,
+                    coordinateKey = sentence.matrixCoordinateKey(),
+                    isCorrect = isCorrect,
+                    latencyMs = latencyMs
+                )
+            }
         }
     }
 

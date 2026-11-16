@@ -42,12 +42,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.LessonEntity
-import com.example.data.model.MatrixCellStat
 import com.example.data.model.MatrixCellStatus
+import com.example.data.repository.CurriculumRepository
+import com.example.ui.theme.AccentIndigo
 import com.example.ui.theme.ErrorCoral
+import com.example.ui.theme.NeutralSlate
 import com.example.ui.theme.SuccessEmerald
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import java.util.Locale
 
 @Composable
@@ -188,17 +188,7 @@ private fun MatrixHeatmapSection(
     onDrillWeakCells: (Set<String>) -> Unit
 ) {
     val statsMap = remember(matrixStatsJson) {
-        if (matrixStatsJson.isBlank() || matrixStatsJson == "{}") {
-            emptyMap()
-        } else {
-            try {
-                val moshi = Moshi.Builder().build()
-                val type = Types.newParameterizedType(Map::class.java, String::class.java, MatrixCellStat::class.java)
-                moshi.adapter<Map<String, MatrixCellStat>>(type).fromJson(matrixStatsJson) ?: emptyMap()
-            } catch (_: Exception) {
-                emptyMap()
-            }
-        }
+        CurriculumRepository.parseMatrixStatsJson(matrixStatsJson)
     }
     val weakCoords = statsMap.filterValues { it.cellStatus == MatrixCellStatus.WEAK }.keys
     val tenses = listOf("PAST" to "Past", "PRESENT" to "Present", "FUTURE" to "Future")
@@ -225,10 +215,10 @@ private fun MatrixHeatmapSection(
                     val coord = "${tenseKey}_${formKey}"
                     val stat = statsMap[coord]
                     val bgColor = when (stat?.cellStatus) {
-                        MatrixCellStatus.WEAK -> ErrorCoral // #EF4444
-                        MatrixCellStatus.PROFICIENT -> Color(0xFF6366F1)
-                        MatrixCellStatus.MASTERED -> SuccessEmerald // #10B981
-                        else -> Color(0xFF64748B) // UNTESTED
+                        MatrixCellStatus.WEAK -> ErrorCoral
+                        MatrixCellStatus.PROFICIENT -> AccentIndigo
+                        MatrixCellStatus.MASTERED -> SuccessEmerald
+                        else -> NeutralSlate
                     }
                     Box(
                         modifier = Modifier

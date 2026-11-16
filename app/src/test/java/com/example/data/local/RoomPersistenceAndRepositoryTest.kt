@@ -266,6 +266,10 @@ class RoomPersistenceAndRepositoryTest {
                 sentences.any { it.lessonId == lesson.id } &&
                 guides.any { it.lessonId == lesson.id }
         })
+        assertTrue(lessons.all { lesson ->
+            val coords = sentences.filter { it.lessonId == lesson.id }.map { it.matrixCoordinateKey() }.toSet()
+            coords.containsAll(CurriculumRepository.ALL_MATRIX_COORDS)
+        })
         assertTrue(sentences.all {
             it.matrixTense in setOf("PAST", "PRESENT", "FUTURE") &&
                 it.matrixForm in setOf("AFFIRMATIVE", "NEGATIVE", "INTERROGATIVE")

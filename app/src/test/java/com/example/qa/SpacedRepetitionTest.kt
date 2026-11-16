@@ -696,7 +696,7 @@ class SpacedRepetitionTest {
         assertEquals(0, updated.repetition)
         assertEquals(1, updated.intervalDays)
         assertEquals(1, updated.lastQuality)
-        assertEquals(1.96f, updated.easeFactor, 0.001f)
+        assertEquals("RELEARNING", updated.state)
     }
 
     // -------------------------------------------------------------------------
@@ -763,27 +763,27 @@ class SpacedRepetitionTest {
 
     @Test
     fun `TC-028 pairwise config 3 HARD Latin SENTENCE`() =
-        runPairwiseConfigTest("pw_3", ReviewGrade.HARD, isLatin = true, itemType = "SENTENCE", expectedQuality = 2, expectedRepetition = 0, expectedIntervalDays = 1)
+        runPairwiseConfigTest("pw_3", ReviewGrade.HARD, isLatin = true, itemType = "SENTENCE", expectedQuality = 2, expectedRepetition = 1, expectedIntervalDays = 1)
 
     @Test
     fun `TC-029 pairwise config 4 HARD TargetScript VOCAB`() =
-        runPairwiseConfigTest("pw_4", ReviewGrade.HARD, isLatin = false, itemType = "VOCAB", expectedQuality = 2, expectedRepetition = 0, expectedIntervalDays = 1)
+        runPairwiseConfigTest("pw_4", ReviewGrade.HARD, isLatin = false, itemType = "VOCAB", expectedQuality = 2, expectedRepetition = 1, expectedIntervalDays = 1)
 
     @Test
     fun `TC-030 pairwise config 5 GOOD Latin VOCAB`() =
-        runPairwiseConfigTest("pw_5", ReviewGrade.GOOD, isLatin = true, itemType = "VOCAB", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 1)
+        runPairwiseConfigTest("pw_5", ReviewGrade.GOOD, isLatin = true, itemType = "VOCAB", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 3)
 
     @Test
     fun `TC-031 pairwise config 6 GOOD TargetScript SENTENCE`() =
-        runPairwiseConfigTest("pw_6", ReviewGrade.GOOD, isLatin = false, itemType = "SENTENCE", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 1)
+        runPairwiseConfigTest("pw_6", ReviewGrade.GOOD, isLatin = false, itemType = "SENTENCE", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 3)
 
     @Test
     fun `TC-032 pairwise config 7 EASY Latin SENTENCE`() =
-        runPairwiseConfigTest("pw_7", ReviewGrade.EASY, isLatin = true, itemType = "SENTENCE", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 1)
+        runPairwiseConfigTest("pw_7", ReviewGrade.EASY, isLatin = true, itemType = "SENTENCE", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 7)
 
     @Test
     fun `TC-033 pairwise config 8 EASY TargetScript VOCAB`() =
-        runPairwiseConfigTest("pw_8", ReviewGrade.EASY, isLatin = false, itemType = "VOCAB", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 1)
+        runPairwiseConfigTest("pw_8", ReviewGrade.EASY, isLatin = false, itemType = "VOCAB", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 7)
 
     // -------------------------------------------------------------------------
     // Error Guessing Tests (TC-034 .. TC-038)

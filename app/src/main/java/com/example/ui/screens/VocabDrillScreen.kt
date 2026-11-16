@@ -5,6 +5,8 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -51,7 +54,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.model.LessonEntity
@@ -308,11 +313,20 @@ fun VocabDrillScreen(
                             }
 
                             val animatedBg by animateColorAsState(targetValue = targetBgColor, label = "card_color")
+                            val shakeOffset = remember(currentIndex, optionText) { Animatable(0f) }
+                            LaunchedEffect(isSelected, isCorrectState) {
+                                if (isSelected && isCorrectState == false) {
+                                    listOf(-14f, 14f, -10f, 10f, 0f).forEach { target ->
+                                        shakeOffset.animateTo(target, animationSpec = tween(durationMillis = 45))
+                                    }
+                                }
+                            }
 
                             Card(
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(64.dp)
+                                    .offset { IntOffset(shakeOffset.value.roundToInt(), 0) }
                                     .clip(RoundedCornerShape(12.dp))
                                     .clickable(enabled = selectedOption == null) {
                                         selectedOption = optionText

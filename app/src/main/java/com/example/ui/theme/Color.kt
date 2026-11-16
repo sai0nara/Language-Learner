@@ -38,5 +38,7 @@ val OutlineDark = Color(0xFF374151)
 
 // Functional Semantic Colors
 val SuccessEmerald = Color(0xFF10B981)
+val AccentIndigo = Color(0xFF6366F1)
+val NeutralSlate = Color(0xFF64748B)
 val ErrorCoral = Color(0xFFEF4444)
 val WarningAmber = Color(0xFFF59E0B)

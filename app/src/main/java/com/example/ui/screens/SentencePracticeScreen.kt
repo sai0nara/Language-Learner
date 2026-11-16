@@ -399,10 +399,16 @@ fun SentencePracticeScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
+                        val expectedForHighlight = remember(currentSentence, isLatin) {
+                            val t = if (isLatin) currentSentence.targetSentenceLatin else currentSentence.targetSentence
+                            t.split(" ").map { cleanToken(it) }.filter { it.isNotBlank() }
+                        }
                         placedTokens.forEachIndexed { index, token ->
+                            val isMisplaced = validationResult == false && token != expectedForHighlight.getOrNull(index)
                             WordChip(
                                 text = token, // strictly lowercase
                                 isPlaced = true,
+                                isMisplaced = isMisplaced,
                                 onClick = {
                                     placedTokens.removeAt(index)
                                     poolTokens.add(token)
@@ -419,16 +425,27 @@ fun SentencePracticeScreen(
 
             // Feedback Message on check
             AnimatedVisibility(visible = feedbackMessage.isNotBlank()) {
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 8.dp)
+                        .padding(horizontal = 20.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = feedbackMessage,
                         style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                        color = if (validationResult == true) SuccessEmerald else ErrorCoral
+                        color = if (validationResult == true) SuccessEmerald else ErrorCoral,
+                        modifier = Modifier.weight(1f)
                     )
+                    if (validationResult == false) {
+                        TextButton(
+                            onClick = { showHelpDialog = true },
+                            modifier = Modifier.testTag("error_grammar_link")
+                        ) {
+                            Text("Правило")
+                        }
+                    }
                 }
             }
 
@@ -474,7 +491,7 @@ fun SentencePracticeScreen(
             ) {
                 Button(
                     onClick = {
-                        if (validationResult == true) return@Button
+                        if (validationResult != null) return@Button
                         val currentTarget = if (isLatin) currentSentence.targetSentenceLatin else currentSentence.targetSentence
                         val expectedTokens = currentTarget.split(" ").map { cleanToken(it) }.filter { it.isNotBlank() }
                         val userTokens = placedTokens.map { cleanToken(it) }.filter { it.isNotBlank() }
@@ -522,7 +539,7 @@ fun SentencePracticeScreen(
                             sentenceQueue.add(currentSentence)
                         }
                     },
-                    enabled = placedTokens.isNotEmpty(),
+                    enabled = placedTokens.isNotEmpty() && validationResult == null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -576,15 +593,24 @@ private fun WordChip(
     text: String,
     isPlaced: Boolean,
     onClick: () -> Unit,
-    testTag: String
+    testTag: String,
+    isMisplaced: Boolean = false
 ) {
     Card(
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
+            .then(
+                if (isMisplaced) Modifier.border(2.dp, ErrorCoral, RoundedCornerShape(10.dp))
+                else Modifier
+            )
             .clickable(onClick = onClick)
             .testTag(testTag),
         colors = CardDefaults.cardColors(
-            containerColor = if (isPlaced) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+            containerColor = when {
+                isMisplaced -> ErrorCoral.copy(alpha = 0.2f)
+                isPlaced -> MaterialTheme.colorScheme.primaryContainer
+                else -> MaterialTheme.colorScheme.surfaceVariant
+            }
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {

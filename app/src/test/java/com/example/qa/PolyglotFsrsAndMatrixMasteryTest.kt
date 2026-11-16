@@ -230,4 +230,59 @@ class PolyglotFsrsAndMatrixMasteryTest {
 
         runBlocking(Dispatchers.IO) { singletonDb.clearAllTables() }
     }
+
+    @Test
+    fun `unlock gate requires MIN_PRACTICE_SAMPLE before unlocking next lesson at 70 percent`() = runBlocking {
+        val l1 = LessonEntity("l1_min", 1, "L1", "Sub", "Focus", isUnlocked = true)
+        val l2 = LessonEntity("l2_min", 2, "L2", "Sub", "Focus", isUnlocked = false)
+        db.lessonDao().insertLessons(listOf(l1, l2))
+
+        // 1 correct answer -> 100% accuracy but below MIN_PRACTICE_SAMPLE (5) -> must NOT unlock L2
+        db.lessonAnswerDao().insertAnswer(LessonAnswerEntity(lessonId = "l1_min", isCorrect = true))
+        repository.evaluateTwoTierGates("l1_min")
+        assertFalse(db.lessonDao().getLessonById("l2_min")!!.isUnlocked)
+
+        // 4 more answers (3 correct, 1 wrong -> 4/5 = 80% >= 70% with sample == 5) -> unlocks L2
+        repeat(3) { db.lessonAnswerDao().insertAnswer(LessonAnswerEntity(lessonId = "l1_min", isCorrect = true)) }
+        db.lessonAnswerDao().insertAnswer(LessonAnswerEntity(lessonId = "l1_min", isCorrect = false))
+        repository.evaluateTwoTierGates("l1_min")
+        assertTrue(db.lessonDao().getLessonById("l2_min")!!.isUnlocked)
+    }
+
+    @Test
+    fun `daily blended queue never exceeds 70 percent overdue even when active lesson has fewer than 6 items`() {
+        val now = 1_000_000_000L
+        val overdue = (1..20).map { i ->
+            SrsReviewEntity(
+                id = "o_$i",
+                itemType = "VOCAB",
+                lessonId = "lesson_1",
+                prompt = "p$i",
+                answer = "a$i",
+                state = "REVIEW",
+                stability = i.toFloat(),
+                lastReviewedAt = now - 86_400_000L,
+                nextReviewTimestamp = now - 1_000L
+            )
+        }
+        val activeOnly2 = (1..2).map { i ->
+            SrsReviewEntity(
+                id = "a_$i",
+                itemType = "VOCAB",
+                lessonId = "lesson_2",
+                prompt = "ap$i",
+                answer = "aa$i",
+                state = "NEW",
+                nextReviewTimestamp = now + 86_400_000L
+            )
+        }
+        val queue = com.example.srs.SpacedRepetitionAlgorithm.buildDailyBlendedQueue(
+            overdueItems = overdue,
+            activeLessonItems = activeOnly2,
+            reviewedTodayCount = 0,
+            nowMs = now
+        )
+        assertTrue(queue.count { it.id.startsWith("o_") } <= 14)
+        assertEquals(2, queue.count { it.id.startsWith("a_") })
+    }
 }
