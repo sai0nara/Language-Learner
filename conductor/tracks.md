@@ -10,5 +10,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Implement Polyglot FSRS v5, 3x3 Matrix Mastery Gates, and Weak-Cell Remediation**
+- [~] **Track: Implement Polyglot FSRS v5, 3x3 Matrix Mastery Gates, and Weak-Cell Remediation**
   *Link: [./tracks/polyglot_fsrs_matrix_mastery_20261116/](./tracks/polyglot_fsrs_matrix_mastery_20261116/)*

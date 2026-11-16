@@ -1,16 +1,16 @@
 # Implementation Plan: Polyglot FSRS v5, 3x3 Matrix Mastery Gates & Weak-Cell Remediation
 
 ## Phase 1: Room Schema, Matrix Models & 16-Lesson Seed Data
-- [ ] Task: Write failing unit & Room tests for evolved `LessonEntity`, `SentenceEntity` (`matrixCoordinate`), `SrsReviewEntity` (FSRS v5 fields), `MatrixCellStat`, and 16-lesson `InitialCurriculumData`
-    - [ ] Add DAO & entity serialization tests in `RoomPersistenceAndRepositoryTest.kt` for `matrixStatsJson`, `matrixCoordinate`, and FSRS fields
-    - [ ] Add seed verification tests confirming `InitialCurriculumData` provides 16 ordered lessons with vocabulary, grammar guides, and `matrixCoordinate`-tagged sentences
-- [ ] Task: Implement evolved Room entities, `MatrixCellStat`, DAOs, `AppDatabase` version bump, and 16-lesson `InitialCurriculumData`
-    - [ ] Update `Entities.kt`, `Converters.kt`, `LessonDao.kt`, `SentenceDao.kt`, `SrsDao.kt`, and `AppDatabase.kt`
-    - [ ] Expand `InitialCurriculumData.kt` to 16 lessons (`orderIndex` `1..16`) with `matrixCoordinate` tags
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Room Schema, Matrix Models & 16-Lesson Seed Data' (Protocol in workflow.md)
+- [x] Task: Write failing unit & Room tests for evolved `LessonEntity`, `SentenceEntity` (`matrixCoordinate`), `SrsReviewEntity` (FSRS v5 fields), `MatrixCellStat`, and 16-lesson `InitialCurriculumData`
+    - [x] Add DAO & entity serialization tests in `RoomPersistenceAndRepositoryTest.kt` for `matrixStatsJson`, `matrixCoordinate`, and FSRS fields
+    - [x] Add seed verification tests confirming `InitialCurriculumData` provides 16 ordered lessons with vocabulary, grammar guides, and `matrixCoordinate`-tagged sentences
+- [x] Task: Implement evolved Room entities, `MatrixCellStat`, DAOs, `AppDatabase` version bump, and 16-lesson `InitialCurriculumData`
+    - [x] Update `Entities.kt`, `Converters.kt`, `LessonDao.kt`, `SentenceDao.kt`, `SrsDao.kt`, and `AppDatabase.kt`
+    - [x] Expand `InitialCurriculumData.kt` to 16 lessons (`orderIndex` `1..16`) with `matrixCoordinate` tags
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Room Schema, Matrix Models & 16-Lesson Seed Data' (Protocol in workflow.md)
 
 ## Phase 2: FSRS v5 Scheduler, Implicit Rating Engine & 70/30 Daily Blended Queue
-- [ ] Task: Write failing unit tests for FSRS v5 scheduling, retrievability `R`, implicit rating mapping (`1–4`), first-attempt guard, and 70/30 `DAILY_REVIEW` blending
+- [~] Task: Write failing unit tests for FSRS v5 scheduling, retrievability `R`, implicit rating mapping (`1–4`), first-attempt guard, and 70/30 `DAILY_REVIEW` blending
     - [ ] Test FSRS v5 `NEW`/`LEARNING`/`REVIEW`/`RELEARNING` transitions, `stability`, `difficulty` (`1.0..10.0`), and retrievability sorting
     - [ ] Test Vocab (`<=2.5s`, `2.5–6.0s`, `>6.0s`, wrong) & Sentence (`<=6.0s` + `0` returns, `6.0–15.0s` + `<=2`, `>15.0s` or `>2`, wrong/drawer) implicit rating derivation
     - [ ] Test First-Attempt Scoring Guard and `DAILY_REVIEW` 20-item blend (`<=14` overdue + `>=6` `IN_PROGRESS`, `30`/day soft cap, non-blocking backlogs)

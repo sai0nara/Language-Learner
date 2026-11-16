@@ -1,57 +1,59 @@
 # Curriculum Progression & Mastery Unlocking — Product Requirements
 
-> Provides a structured lesson dashboard with rolling 100-answer mastery scoring, automatic lesson unlocking, script toggling (Cyrillic/Latin), and theme switching.
+> Polyglot 16-inspired structured lesson dashboard (Lessons 1–16) with two-tier progression gates, 3x3 matrix heatmap tracking, targeted remediation micro-sessions, and client state machine.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-16
 
 ## Overview
 
-Learners progress through ordered lessons seeded from `app/src/main/java/com/example/data/initial/InitialCurriculumData.kt` or imported decks. `app/src/main/java/com/example/ui/screens/CurriculumScreen.kt`, `app/src/main/java/com/example/ui/screens/LessonDetailScreen.kt`, and `app/src/main/java/com/example/ui/viewmodel/LanguageLearnerViewModel.kt` present lesson status, mastery scores, script preferences (Serbian Cyrillic vs. Latin), and entry points into drills and grammar guides.
+`app/src/main/java/com/example/ui/screens/CurriculumScreen.kt`, `app/src/main/java/com/example/ui/screens/LessonDetailScreen.kt`, and `app/src/main/java/com/example/ui/viewmodel/LanguageLearnerViewModel.kt` present a vertical curriculum stream from conceptual grammar understanding through passive vocabulary recognition to active sentence synthesis.
 
 ## Goals / Non-goals
 
 **Goals**
 
-- Seed an offline 6-lesson Serbian-for-Russian-speakers B1 curriculum (`orderIndex` `1..6`) on first launch.
-- Track rolling accuracy over the last 100 answers per lesson and calculate a `0.0f..5.0f` mastery grade.
-- Unlock the next sequential lesson (`orderIndex + 1`) automatically once the learner reaches a mastery score of `4.5f` or higher (`90/100` correct).
-- Let learners toggle between Cyrillic and Latin script and between dark and light Material 3 themes during their session.
+- Present a progressive, numbered curriculum (Phase 1 MVP: Lessons 1–4; Phase 2 full catalog: Lessons 1–16) with clear grammatical focus tags, completion statuses (`LOCKED`, `AVAILABLE`, `IN_PROGRESS`, `MASTERED`), and direct shortcuts to Vocabulary Primer, Grammar Guide, and Sentence Practice.
+- Enforce two-tier progression gates: `>= 70%` lesson completion score to unlock Lesson `N+1` (`AVAILABLE`), and a 4-condition `MASTERED` gate combining lexical stability, 9/9 3x3 matrix coverage, zero unresolved lapses, and reflex latency `<= 12000ms`.
+- Visualize 3x3 matrix mastery via a heatmap (`UNTESTED`, `WEAK`, `PROFICIENT`, `MASTERED`) and launch targeted 6–8 item remediation micro-sessions for `WEAK` coordinates.
+- Support Cyrillic/Latin script toggling and Slate-neutral Material 3 design tokens with `48dp x 48dp` minimum touch targets.
 
 **Non-goals**
 
-- Server-side leaderboards or remote user profile synchronization.
-- Cross-process persistence of script/theme toggles (held in-memory in `LanguageLearnerViewModel`).
+- Gamified streaks, leaderboards, or disconnected phrasebook memorization.
+- Blocking access to new unlocked lessons due to overdue spaced-repetition review backlogs.
 
 ## User stories
 
-- As a learner, I want Lesson 1 (`orderIndex = 1`) unlocked out of the box and subsequent lessons (`orderIndex = 2..6`) unlocked sequentially as I master each topic (`>= 4.5f` grade) so that I follow a clear progression.
-- As a learner of Serbian, I want to toggle between Cyrillic and Latin script across the app so that I can practice reading both alphabets.
-- As a learner, I want to open a lesson's detail screen and choose between sentence construction, vocabulary drills, and the 3x3 grammar matrix.
+- As a learner, I want Lesson 1 available immediately and Lesson `N+1` unlocked once I finish Lesson `N` with `>= 70%` accuracy so that I maintain momentum without artificial bottlenecks.
+- As a learner, I want a 3x3 matrix heatmap on the Lesson Detail modal and Summary screen so that I can spot `WEAK` tense/form coordinates and launch a focused "Drill Weak Cells" micro-session.
+- As a learner, I want a clear `MASTERED` badge awarded only when my vocabulary stability, 9/9 matrix accuracy, unresolved lapses, and assembly speed all meet fluency targets.
 
 ## Functional requirements
 
-- **FR-1 (Idempotent 1-based initial seeding):** When the `lessons` table is empty on `LanguageLearnerViewModel` init, `CurriculumRepository.ensureInitialDataLoaded()` seeds 6 lessons (`lesson_1`..`lesson_6` with 1-based `orderIndex` `1..6`, where `lesson_1` has `isUnlocked = true` and `lesson_2`..`lesson_6` have `isUnlocked = false`, `isCompleted = false`, `masteryScore = 0f`), along with their vocabulary, grammar guides, sentences, and initial SRS cards. If `lessons` is non-empty, seeding is a no-op.
-- **FR-2 (Rolling 100-answer window & mastery calculation):** Every drill/practice answer invokes `CurriculumRepository.recordAnswer(lessonId, isCorrect)`, which:
-  1. Inserts a `LessonAnswerEntity(lessonId, isCorrect, timestamp = System.currentTimeMillis())` into `lesson_answers`.
-  2. Executes `LessonAnswerDao.pruneOldAnswers(lessonId)` (`DELETE FROM lesson_answers WHERE lessonId = :lessonId AND id NOT IN (SELECT id FROM lesson_answers WHERE lessonId = :lessonId ORDER BY timestamp DESC LIMIT 100)`) and fetches the retained rows via `getRecentAnswers(lessonId, limit = 100)` (`ORDER BY timestamp DESC LIMIT 100`; equal-timestamp rows follow SQLite's internal rowid/id scan order).
-  3. Computes `correctCount = recentAnswers.count { it.isCorrect }`, `totalCount = recentAnswers.size`, `masteryScore = (correctCount.toFloat() / 100f) * 5.0f`, and `isCompleted = masteryScore >= 4.5f` (`>= 90` correct out of 100), persisting all four fields to `lessons` via `LessonDao.updateGradeStats`.
-- **FR-3 (Sequential unlocking, final-lesson boundary, and regression behavior):**
-  - When `isCompleted` is `true` (`masteryScore >= 4.5f`), `recordAnswer` looks up the current lesson and invokes `LessonDao.unlockLessonByOrder(current.orderIndex + 1)` (`UPDATE lessons SET isUnlocked = 1 WHERE orderIndex = :orderIndex`).
-  - If the mastered lesson is the final lesson (no row exists at `orderIndex + 1`), `unlockLessonByOrder` completes safely as a 0-row no-op while the final lesson is marked `isCompleted = true`.
-  - If subsequent wrong answers in the rolling 100-answer window drop `masteryScore < 4.5f`, `updateGradeStats` reverts `isCompleted` to `false` on that lesson (`Mastered` → `Unlocked`), while any previously unlocked next lesson (`orderIndex + 1`) remains `isUnlocked = true` (never re-locked).
-  - For imported curricula (specified in `Docs/prd/curriculum-import.md`), imported lessons use 1-based `orderIndex` (`1..L`, `99`, or `100`), force the first imported lesson (`idx == 0`) to `isUnlocked = true` (`idx > 0` `isUnlocked = false`, `masteryScore = 0f`), and upsert via `OnConflictStrategy.REPLACE` (cascading `ON DELETE CASCADE` on `lesson_answers` only when an existing `lessonId` is replaced).
-- **FR-4 (Locked-lesson guard & `CurriculumScreen` / `LessonDetailScreen` UX):**
-  - Tapping an unlocked lesson card (`lesson.isUnlocked == true`) selects the lesson in `LanguageLearnerViewModel` and navigates to `LessonDetailScreen`.
-  - Tapping a locked lesson card (`lesson.isUnlocked == false`) blocks navigation and shows a `Toast.LENGTH_SHORT` with the exact text `"Урок заблокирован. Наберите оценку 4.5 (90/100) в Уроке ${lesson.orderIndex - 1}"`, while the card itself renders `"Заблокировано (требуется оценка 4.5 в предыдущем уроке)"`.
-  - The floating bottom button (`resume_active_lesson_button`, `"Продолжить: ${active.title}"`) targets the first unlocked incomplete lesson (`lessons.firstOrNull { it.isUnlocked && !it.isCompleted } ?: lessons.firstOrNull { it.isUnlocked } ?: lessons.first()`).
-- **FR-5 (Script & theme toggles):**
-  - `LanguageLearnerViewModel` initializes `isLatinScript = false` (Cyrillic default, displaying `"Српски језик (B1 • Ћирилица)"` in the top bar) and `isDarkTheme = true` (Dark theme default) in-memory.
-  - Tapping `toggle_script_button` flips `isLatinScript` (updating the top-bar subtitle to `"Srpski jezik (B1 • Latinica)"` when `true` and toggling script in drills/practice); tapping `toggle_theme_button` flips `isDarkTheme` (`LanguageLearnerTheme(darkTheme = isDark)`). Toggles remain active for the `ViewModel` session and reset to defaults on cold process restart.
+- **FR-1 (Main Menu & Lesson Item Metadata):** Each lesson card in the vertical curriculum stream renders:
+  - Identification: Lesson number (`orderIndex`) and primary focus `title` (e.g., `Lesson 1: The Core Verb Matrix`).
+  - Grammatical Focus Tag: Categorization pill (`grammarFocus`).
+  - Status & Progress: `LOCKED`, `AVAILABLE`, `IN_PROGRESS`, or `MASTERED` indicator alongside aggregate completion percentage / `practiceScore`.
+  - Interactions: Progress bar view; tapping a Lesson Card opens the Lesson Detail modal (objectives, estimated time, 3x3 matrix heatmap, sub-module navigation); Quick Action shortcuts jump directly to Vocabulary Primer, Grammar Guide, or Sentence Practice if unlocked.
+- **FR-2 (Two-Tier Progression Gates):**
+  - **Lesson Unlock Gate (`AVAILABLE` for Lesson `N+1`):** Completing the core lesson cycle for Lesson `N` with `practiceScore >= 0.70` (`>= 70%`) unlocks Lesson `N+1`.
+  - **Lesson Mastery Gate (`MASTERED` for Lesson `N`):** Awarded only when all four conditions hold simultaneously:
+    1. Lexical stability: `vocabMastery >= 0.85` (at least 85% of lesson vocabulary in `REVIEW` state with `stability >= 3` days).
+    2. Full 9/9 matrix coverage: Every cell in `matrixStats` has `attempts >= 3` and `accuracy >= 0.80` (zero `UNTESTED` or `WEAK` cells).
+    3. Zero unresolved lapses: `unresolvedLapses == 0` (all `AGAIN`-rated items cleared).
+    4. Reflex latency threshold: `medianAssemblyMs <= 12000`.
+- **FR-3 (3x3 Matrix Heatmap & Targeted Remediation):**
+  - Render `matrixStats` across all 9 `(tense × form)` coordinates using design tokens: `UNTESTED` (`attempts < 3`) `#64748B`, `WEAK` (`accuracy < 70%`) `#EF4444`, `PROFICIENT` (`accuracy 70%–84%` or `avgLatencyMs > 12000`) `#6366F1`, `MASTERED` (`accuracy >= 85%` and `avgLatencyMs <= 12000`) `#10B981`.
+  - Whenever `>= 1` cell is `WEAK`, surface a `"Drill Weak Cells"` action launching a focused `6`–`8` item sentence construction session filtered strictly by those `matrixCoordinate` keys.
+- **FR-4 (Client State Machine & Data Model):**
+  - Enforce transitions: `IDLE -> DAILY_REVIEW -> (VOCAB_PRACTICE / SENTENCE_PRACTICE) -> SUMMARY_RESULT`, or `IDLE -> VOCAB_PRACTICE -> GRAMMAR_VIEW -> SENTENCE_PRACTICE -> SUMMARY_RESULT -> REPEAT / EXIT`.
+  - Track `Lesson` (`id`, `orderIndex`, `title`, `grammarFocus`, `prerequisites`) and `UserProgress` (`userId`, `lessonId`, `vocabMastery`, `practiceScore`, `unresolvedLapses`, `medianAssemblyMs`, `matrixStats`, `status`, `lastAttemptedAt`).
+- **FR-5 (Script & Theme Toggles):** Support Cyrillic/Latin script toggling and Slate-neutral light/dark theme switching (`#0F172A`, `#64748B`, `#F8FAFC`, `#10B981`, `#EF4444`, `#6366F1`).
 
 ## Non-functional requirements
 
-- **Offline-first:** Initial seeding and mastery calculations run locally in Room.
-- **Zero-friction UX:** Lesson cards clearly indicate locked (lock icon), unlocked (formatted `0.0`–`4.4` grade badge), or mastered (`isCompleted == true`, emerald checkmark badge) states.
+- **Offline-first (Phase 2):** Curriculum catalog, progress tracking, and matrix stats persist locally for offline sessions.
+- **Ergonomics & Adaptability:** All interactive elements maintain a minimum touch target of `48dp x 48dp`, optimized for single-handed mobile use and responsive multi-column desktop layouts.
 
 ## Acceptance criteria
 
@@ -59,24 +61,24 @@ Defined in `Docs/psd/curriculum-progression.md` and verified in `Docs/tests/curr
 
 ## Out of scope
 
-- Multi-user profile switching.
-- Persistent storage of `isLatinScript` / `isDarkTheme` across process death.
+- Multi-user cloud leaderboards or speech-to-text oral grading (deferred to Phase 3).
 
 ## Cross-references
 
 - `Docs/psd/curriculum-progression.md` — the specification that implements these requirements.
 - `Docs/tests/curriculum-progression.md` — the test cases that verify them.
-- `Docs/prd/curriculum-import.md` — imported curriculum `orderIndex`, unlock, and `OnConflictStrategy.REPLACE` rules.
-- [[ui-layer]] — where the screens and ViewModel state are explained.
+- `Docs/prd/spaced-repetition.md` — FSRS v5 scheduling and `DAILY_REVIEW` blending.
+- `Docs/prd/curriculum-import.md` — custom curriculum import rules.
+- [[ui-layer]] — UI layer overview.
 
 ## Sources
 
-- `app/src/main/java/com/example/ui/screens/CurriculumScreen.kt` — main dashboard with tabs, script/theme toggles, locked-lesson toast, and lesson cards.
-- `app/src/main/java/com/example/ui/screens/LessonDetailScreen.kt` — per-lesson hub linking to sentence practice, vocab drills, and grammar matrix.
-- `app/src/main/java/com/example/ui/viewmodel/LanguageLearnerViewModel.kt` — `isLatinScript` and `isDarkTheme` defaults/toggles, `allLessons`, and `recordAnswer`.
-- `app/src/main/java/com/example/data/repository/CurriculumRepository.kt` — initial seeding and rolling 100-answer mastery calculation.
-- `app/src/main/java/com/example/data/local/LessonDao.kt` — `updateGradeStats` and `unlockLessonByOrder`.
-- `app/src/main/java/com/example/data/local/LessonAnswerDao.kt` — `pruneOldAnswers` and `getRecentAnswers`.
-- `app/src/main/java/com/example/data/initial/InitialCurriculumData.kt` — built-in 6-lesson offline curriculum seed data.
+- `app/src/main/java/com/example/ui/screens/CurriculumScreen.kt` — main curriculum dashboard.
+- `app/src/main/java/com/example/ui/screens/LessonDetailScreen.kt` — per-lesson detail and sub-module hub.
+- `app/src/main/java/com/example/ui/viewmodel/LanguageLearnerViewModel.kt` — ViewModel state and progression actions.
+- `app/src/main/java/com/example/data/repository/CurriculumRepository.kt` — local persistence and progression orchestration.
+- `app/src/main/java/com/example/data/local/LessonDao.kt` — Room DAO for lessons.
+- `app/src/main/java/com/example/data/local/LessonAnswerDao.kt` — Room DAO for lesson answers.
+- `app/src/main/java/com/example/data/initial/InitialCurriculumData.kt` — offline seed curriculum.
 - `Docs/psd/curriculum-progression.md` — product specification.
 - `Docs/tests/curriculum-progression.md` — test cases.

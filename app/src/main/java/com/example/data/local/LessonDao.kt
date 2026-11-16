@@ -31,8 +31,25 @@ interface LessonDao {
     @Query("UPDATE lessons SET isCompleted = :completed, masteryScore = :score, correctAnswersInLast100 = :correct, totalAnswersInLast100 = :total WHERE id = :id")
     suspend fun updateGradeStats(id: String, completed: Boolean, score: Float, correct: Int, total: Int)
 
-    @Query("UPDATE lessons SET isUnlocked = 1 WHERE orderIndex = :orderIndex")
+    @Query("UPDATE lessons SET isUnlocked = 1, status = CASE WHEN status = 'LOCKED' THEN 'AVAILABLE' ELSE status END WHERE orderIndex = :orderIndex")
     suspend fun unlockLessonByOrder(orderIndex: Int)
+
+    @Query(
+        "UPDATE lessons SET status = :status, isCompleted = :completed, isUnlocked = :unlocked, " +
+            "vocabMastery = :vocabMastery, practiceScore = :practiceScore, unresolvedLapses = :unresolvedLapses, " +
+            "medianAssemblyMs = :medianAssemblyMs, matrixStatsJson = :matrixStatsJson WHERE id = :id"
+    )
+    suspend fun updatePolyglotProgress(
+        id: String,
+        status: String,
+        completed: Boolean,
+        unlocked: Boolean,
+        vocabMastery: Float,
+        practiceScore: Float,
+        unresolvedLapses: Int,
+        medianAssemblyMs: Long,
+        matrixStatsJson: String
+    )
 
     @Query("DELETE FROM lessons WHERE id = :id")
     suspend fun deleteLesson(id: String)

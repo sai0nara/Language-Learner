@@ -176,4 +176,99 @@ class RoomPersistenceAndRepositoryTest {
         assertEquals(1, db.vocabDao().getVocabForLessonSync("imp1").size)
         assertNotNull(db.srsDao().getSrsItemById("iv1"))
     }
+
+    @Test
+    fun `evolved entities persist FSRS v5 fields, matrixCoordinate, and matrixStatsJson`() = runTest {
+        val matrixStat = com.example.data.model.MatrixCellStat(
+            attempts = 4,
+            correct = 4,
+            accuracy = 1.0f,
+            avgLatencyMs = 4200L,
+            cellStatus = com.example.data.model.MatrixCellStatus.MASTERED
+        )
+        val lesson = LessonEntity(
+            id = "l_fsrs",
+            orderIndex = 1,
+            title = "Lesson 1",
+            subtitle = "Core Matrix",
+            grammarFocus = "Regular Verbs",
+            isUnlocked = true,
+            status = "IN_PROGRESS",
+            vocabMastery = 0.85f,
+            practiceScore = 0.75f,
+            unresolvedLapses = 0,
+            medianAssemblyMs = 5500L,
+            matrixStatsJson = """{"PAST_AFFIRMATIVE":{"attempts":4,"correct":4,"accuracy":1.0,"avgLatencyMs":4200,"cellStatus":"MASTERED"}}"""
+        )
+        val sentence = SentenceEntity(
+            id = "s_coord",
+            lessonId = "l_fsrs",
+            sourceSentence = "Я работал",
+            targetSentence = "Ја сам радио",
+            targetSentenceLatin = "Ja sam radio",
+            tokensJson = """["ја","сам","радио"]""",
+            distractorTokensJson = "[]",
+            matrixTense = "PAST",
+            matrixForm = "AFFIRMATIVE",
+            personGroup = "1SG"
+        )
+        val srs = SrsReviewEntity(
+            id = "srs_fsrs",
+            itemType = "VOCAB",
+            lessonId = "l_fsrs",
+            prompt = "радити",
+            answer = "работать",
+            state = "REVIEW",
+            stability = 4.5f,
+            difficulty = 3.2f,
+            elapsedDays = 2,
+            scheduledDays = 5,
+            reps = 3,
+            lapses = 1,
+            lastReviewedAt = 123456789L
+        )
+        db.lessonDao().insertLesson(lesson)
+        db.sentenceDao().insertSentences(listOf(sentence))
+        db.srsDao().insertOrUpdate(srs)
+
+        val loadedLesson = db.lessonDao().getLessonById("l_fsrs")!!
+        val loadedSentence = db.sentenceDao().getSentencesForLessonSync("l_fsrs").single()
+        val loadedSrs = db.srsDao().getSrsItemById("srs_fsrs")!!
+
+        assertEquals(com.example.data.model.MatrixCellStatus.MASTERED, matrixStat.cellStatus)
+        assertEquals("IN_PROGRESS", loadedLesson.status)
+        assertEquals(0.85f, loadedLesson.vocabMastery, 0.001f)
+        assertEquals(0.75f, loadedLesson.practiceScore, 0.001f)
+        assertEquals(5500L, loadedLesson.medianAssemblyMs)
+        assertTrue(loadedLesson.matrixStatsJson.contains("PAST_AFFIRMATIVE"))
+        assertEquals("PAST_AFFIRMATIVE", loadedSentence.matrixCoordinateKey())
+        assertEquals("1SG", loadedSentence.personGroup)
+        assertEquals("REVIEW", loadedSrs.state)
+        assertEquals(4.5f, loadedSrs.stability, 0.001f)
+        assertEquals(3.2f, loadedSrs.difficulty, 0.001f)
+        assertEquals(1, loadedSrs.lapses)
+        assertEquals(123456789L, loadedSrs.lastReviewedAt)
+    }
+
+    @Test
+    fun `initialCurriculumData seeds all 16 progressive lessons with matrixCoordinate sentences`() {
+        val lessons = com.example.data.initial.InitialCurriculumData.getInitialLessons()
+        val sentences = com.example.data.initial.InitialCurriculumData.getInitialSentences()
+        val vocab = com.example.data.initial.InitialCurriculumData.getInitialVocab()
+        val guides = com.example.data.initial.InitialCurriculumData.getInitialGrammarGuides()
+
+        assertEquals(16, lessons.size)
+        assertEquals((1..16).toList(), lessons.map { it.orderIndex })
+        assertTrue(lessons.first().isUnlocked)
+        assertTrue(lessons.drop(1).none { it.isUnlocked })
+        assertTrue(lessons.all { lesson ->
+            vocab.any { it.lessonId == lesson.id } &&
+                sentences.any { it.lessonId == lesson.id } &&
+                guides.any { it.lessonId == lesson.id }
+        })
+        assertTrue(sentences.all {
+            it.matrixTense in setOf("PAST", "PRESENT", "FUTURE") &&
+                it.matrixForm in setOf("AFFIRMATIVE", "NEGATIVE", "INTERROGATIVE")
+        })
+    }
 }
