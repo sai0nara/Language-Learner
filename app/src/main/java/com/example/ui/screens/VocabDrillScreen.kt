@@ -88,6 +88,8 @@ fun VocabDrillScreen(
     var isCompleted by remember { mutableStateOf(false) }
     var correctCount by remember { mutableIntStateOf(0) }
     var initialTotal by remember { mutableIntStateOf(0) }
+    var cardStartMs by remember { mutableStateOf(System.currentTimeMillis()) }
+    val attemptedIdsInSession = remember { mutableSetOf<String>() }
 
     // Load initial queue
     LaunchedEffect(rawVocabList) {
@@ -103,8 +105,9 @@ fun VocabDrillScreen(
     val currentItem = drillQueue.getOrNull(currentIndex)
 
     // Automatically pronounce target word on display
-    LaunchedEffect(currentItem) {
+    LaunchedEffect(currentItem, currentIndex) {
         if (currentItem != null) {
+            cardStartMs = System.currentTimeMillis()
             val wordToSpeak = if (isLatin) currentItem.targetWordLatin else currentItem.targetWord
             viewModel.playAudio(wordToSpeak, currentItem.audioUri, isTargetLanguage = true)
         }
@@ -313,10 +316,17 @@ fun VocabDrillScreen(
                                     .clip(RoundedCornerShape(12.dp))
                                     .clickable(enabled = selectedOption == null) {
                                         selectedOption = optionText
+                                        val latencyMs = (System.currentTimeMillis() - cardStartMs).coerceAtLeast(0L)
+                                        val isFirstAttempt = attemptedIdsInSession.add(currentItem.id)
+                                        viewModel.recordImplicitVocabAttempt(
+                                            vocab = currentItem,
+                                            isCorrect = isTarget,
+                                            latencyMs = latencyMs,
+                                            isFirstAttemptInSession = isFirstAttempt
+                                        )
                                         if (isTarget) {
                                             isCorrectState = true
                                             correctCount++
-                                            viewModel.recordAnswer(lesson.id, isCorrect = true)
                                             // Haptic feedback
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                 vibrator?.vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -334,7 +344,6 @@ fun VocabDrillScreen(
                                             }
                                         } else {
                                             isCorrectState = false
-                                            viewModel.recordAnswer(lesson.id, isCorrect = false)
                                             // Vibrate error
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                 vibrator?.vibrate(VibrationEffect.createOneShot(120, VibrationEffect.DEFAULT_AMPLITUDE))

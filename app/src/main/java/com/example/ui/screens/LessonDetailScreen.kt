@@ -2,10 +2,12 @@ package com.example.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,27 +15,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.LessonEntity
+import com.example.data.model.MatrixCellStat
+import com.example.data.model.MatrixCellStatus
+import com.example.ui.theme.ErrorCoral
 import com.example.ui.theme.SuccessEmerald
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import java.util.Locale
 
 @Composable
@@ -42,13 +56,15 @@ fun LessonDetailScreen(
     onBack: () -> Unit,
     onOpenSentencePractice: () -> Unit,
     onOpenVocabDrill: () -> Unit,
-    onOpenGrammarMatrix: () -> Unit
+    onOpenGrammarMatrix: () -> Unit,
+    onDrillWeakCells: (Set<String>) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
     ) {
         // Top navigation bar matching screenshot
         Row(
@@ -156,6 +172,103 @@ fun LessonDetailScreen(
             onClick = onOpenGrammarMatrix,
             testTag = "action_grammar_matrix"
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MatrixHeatmapSection(
+            matrixStatsJson = lesson.matrixStatsJson,
+            onDrillWeakCells = onDrillWeakCells
+        )
+    }
+}
+
+@Composable
+private fun MatrixHeatmapSection(
+    matrixStatsJson: String,
+    onDrillWeakCells: (Set<String>) -> Unit
+) {
+    val statsMap = remember(matrixStatsJson) {
+        if (matrixStatsJson.isBlank() || matrixStatsJson == "{}") {
+            emptyMap()
+        } else {
+            try {
+                val moshi = Moshi.Builder().build()
+                val type = Types.newParameterizedType(Map::class.java, String::class.java, MatrixCellStat::class.java)
+                moshi.adapter<Map<String, MatrixCellStat>>(type).fromJson(matrixStatsJson) ?: emptyMap()
+            } catch (_: Exception) {
+                emptyMap()
+            }
+        }
+    }
+    val weakCoords = statsMap.filterValues { it.cellStatus == MatrixCellStatus.WEAK }.keys
+    val tenses = listOf("PAST" to "Past", "PRESENT" to "Present", "FUTURE" to "Future")
+    val forms = listOf("AFFIRMATIVE" to "+", "NEGATIVE" to "-", "INTERROGATIVE" to "?")
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .testTag("matrix_heatmap_section")
+    ) {
+        Text(
+            text = "Прогресс матрицы 3x3",
+            style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        tenses.forEach { (tenseKey, tenseLabel) ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                forms.forEach { (formKey, formSymbol) ->
+                    val coord = "${tenseKey}_${formKey}"
+                    val stat = statsMap[coord]
+                    val bgColor = when (stat?.cellStatus) {
+                        MatrixCellStatus.WEAK -> ErrorCoral // #EF4444
+                        MatrixCellStatus.PROFICIENT -> Color(0xFF6366F1)
+                        MatrixCellStatus.MASTERED -> SuccessEmerald // #10B981
+                        else -> Color(0xFF64748B) // UNTESTED
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .defaultMinSize(minHeight = 48.dp)
+                            .padding(vertical = 3.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(bgColor.copy(alpha = 0.85f))
+                            .testTag("heatmap_cell_$coord"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "$tenseLabel ($formSymbol)",
+                            color = Color.White,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+        if (weakCoords.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Button(
+                onClick = { onDrillWeakCells(weakCoords) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = 48.dp)
+                    .testTag("drill_weak_cells_button"),
+                colors = ButtonDefaults.buttonColors(containerColor = ErrorCoral),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text(
+                    text = "Drill Weak Cells (${weakCoords.size})",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
     }
 }
 

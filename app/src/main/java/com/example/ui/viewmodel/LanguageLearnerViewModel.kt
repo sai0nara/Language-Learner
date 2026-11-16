@@ -9,9 +9,11 @@ import com.example.data.importer.ImportResult
 import com.example.data.local.AppDatabase
 import com.example.data.model.GrammarGuideEntity
 import com.example.data.model.LessonEntity
+import com.example.data.model.MatrixCellStat
 import com.example.data.model.SentenceEntity
 import com.example.data.model.SrsReviewEntity
 import com.example.data.model.VocabItemEntity
+import com.example.srs.SpacedRepetitionAlgorithm
 import com.example.data.repository.CurriculumRepository
 import com.example.srs.ReviewGrade
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,6 +55,12 @@ class LanguageLearnerViewModel(application: Application) : AndroidViewModel(appl
 
     private val _isDarkTheme = MutableStateFlow(true) // Default to sleek modern dark theme
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
+
+    private val _dailyBlendedQueue = MutableStateFlow<List<SrsReviewEntity>>(emptyList())
+    val dailyBlendedQueue: StateFlow<List<SrsReviewEntity>> = _dailyBlendedQueue.asStateFlow()
+
+    private val _weakFilterCoords = MutableStateFlow<Set<String>>(emptySet())
+    val weakFilterCoords: StateFlow<Set<String>> = _weakFilterCoords.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -114,8 +122,85 @@ class LanguageLearnerViewModel(application: Application) : AndroidViewModel(appl
     fun recordAnswer(lessonId: String, isCorrect: Boolean) {
         viewModelScope.launch {
             repository.recordAnswer(lessonId, isCorrect)
+            repository.evaluateTwoTierGates(lessonId)
         }
     }
+
+    fun recordImplicitVocabAttempt(
+        vocab: VocabItemEntity,
+        isCorrect: Boolean,
+        latencyMs: Long,
+        isFirstAttemptInSession: Boolean
+    ) {
+        viewModelScope.launch {
+            val rating = SpacedRepetitionAlgorithm.deriveVocabRating(isCorrect, latencyMs)
+            repository.recordImplicitSrsAttempt(
+                itemId = vocab.id,
+                itemType = "VOCAB",
+                lessonId = vocab.lessonId,
+                prompt = vocab.targetWord,
+                answer = vocab.sourceTranslation,
+                secondaryText = vocab.targetWordLatin,
+                rating = rating,
+                isFirstAttemptInSession = isFirstAttemptInSession
+            )
+            repository.recordAnswer(vocab.lessonId, isCorrect)
+            repository.evaluateTwoTierGates(vocab.lessonId)
+        }
+    }
+
+    fun recordImplicitSentenceAttempt(
+        sentence: SentenceEntity,
+        isCorrect: Boolean,
+        latencyMs: Long,
+        tileReturns: Int,
+        grammarOpenedMidAttempt: Boolean,
+        isFirstAttemptInSession: Boolean
+    ) {
+        viewModelScope.launch {
+            val rating = SpacedRepetitionAlgorithm.deriveSentenceRating(
+                isCorrect = isCorrect,
+                latencyMs = latencyMs,
+                tileReturns = tileReturns,
+                grammarOpenedMidAttempt = grammarOpenedMidAttempt
+            )
+            repository.recordImplicitSrsAttempt(
+                itemId = sentence.id,
+                itemType = "SENTENCE",
+                lessonId = sentence.lessonId,
+                prompt = sentence.sourceSentence,
+                answer = sentence.targetSentence,
+                secondaryText = sentence.targetSentenceLatin,
+                rating = rating,
+                isFirstAttemptInSession = isFirstAttemptInSession
+            )
+            repository.recordMatrixCellAttempt(
+                lessonId = sentence.lessonId,
+                coordinateKey = sentence.matrixCoordinateKey(),
+                isCorrect = isCorrect,
+                latencyMs = latencyMs
+            )
+            repository.recordAnswer(sentence.lessonId, isCorrect)
+            repository.evaluateTwoTierGates(sentence.lessonId)
+        }
+    }
+
+    fun refreshDailyBlendedQueue() {
+        viewModelScope.launch {
+            _dailyBlendedQueue.value = repository.buildDailyBlendedReviewQueue()
+        }
+    }
+
+    fun setWeakCellFilter(coords: Set<String>) {
+        _weakFilterCoords.value = coords
+    }
+
+    fun clearWeakCellFilter() {
+        _weakFilterCoords.value = emptySet()
+    }
+
+    fun parseMatrixStats(json: String): Map<String, MatrixCellStat> =
+        repository.parseMatrixStats(json)
 
     suspend fun importData(content: String, format: String): ImportResult {
         val result = when (format.uppercase()) {

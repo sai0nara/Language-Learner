@@ -81,6 +81,7 @@ fun SentencePracticeScreen(
     val vibrator = remember { context.getSystemService(Vibrator::class.java) }
     val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
     val rawSentences by viewModel.activeSentences.collectAsStateWithLifecycle()
+    val weakCoords by viewModel.weakFilterCoords.collectAsStateWithLifecycle()
     val activeLessonState by viewModel.activeLesson.collectAsStateWithLifecycle()
 
     val currentLessonData = activeLessonState ?: lesson
@@ -104,6 +105,10 @@ fun SentencePracticeScreen(
     var validationResult by remember { mutableStateOf<Boolean?>(null) }
     var feedbackMessage by remember { mutableStateOf("") }
     var isFinished by remember { mutableStateOf(false) }
+    var attemptStartMs by remember { mutableStateOf(System.currentTimeMillis()) }
+    var tileReturns by remember { mutableIntStateOf(0) }
+    var grammarOpenedMidAttempt by remember { mutableStateOf(false) }
+    val attemptedIdsInSession = remember { mutableSetOf<String>() }
 
     // Helper to clean tokens: lowercase and remove all Unicode punctuation
     fun cleanToken(raw: String): String =
@@ -114,6 +119,9 @@ fun SentencePracticeScreen(
         poolTokens.clear()
         validationResult = null
         feedbackMessage = ""
+        attemptStartMs = System.currentTimeMillis()
+        tileReturns = 0
+        grammarOpenedMidAttempt = false
 
         val correctTokensRaw = try {
             strListAdapter.fromJson(sentence.tokensJson) ?: emptyList()
@@ -134,10 +142,16 @@ fun SentencePracticeScreen(
         poolTokens.addAll((correctTokens + distractors).shuffled())
     }
 
-    LaunchedEffect(rawSentences) {
+    LaunchedEffect(rawSentences, weakCoords) {
         if (rawSentences.isNotEmpty() && sentenceQueue.isEmpty()) {
+            val filtered = if (weakCoords.isNotEmpty()) {
+                rawSentences.filter { it.matrixCoordinateKey() in weakCoords }.take(8)
+                    .ifEmpty { rawSentences }
+            } else {
+                rawSentences
+            }
             sentenceQueue.clear()
-            sentenceQueue.addAll(rawSentences.shuffled())
+            sentenceQueue.addAll(filtered.shuffled())
             currentIndex = 0
             correctCount = 0
             wrongCount = 0
@@ -242,7 +256,10 @@ fun SentencePracticeScreen(
 
                 // Help question icon
                 IconButton(
-                    onClick = { showHelpDialog = true },
+                    onClick = {
+                        grammarOpenedMidAttempt = true
+                        showHelpDialog = true
+                    },
                     modifier = Modifier.testTag("sentence_hint_button")
                 ) {
                     Icon(
@@ -389,6 +406,7 @@ fun SentencePracticeScreen(
                                 onClick = {
                                     placedTokens.removeAt(index)
                                     poolTokens.add(token)
+                                    tileReturns++
                                     validationResult = null
                                     feedbackMessage = ""
                                 },
@@ -456,18 +474,27 @@ fun SentencePracticeScreen(
             ) {
                 Button(
                     onClick = {
+                        if (validationResult == true) return@Button
                         val currentTarget = if (isLatin) currentSentence.targetSentenceLatin else currentSentence.targetSentence
                         val expectedTokens = currentTarget.split(" ").map { cleanToken(it) }.filter { it.isNotBlank() }
                         val userTokens = placedTokens.map { cleanToken(it) }.filter { it.isNotBlank() }
 
                         val isCorrect = userTokens == expectedTokens
+                        val latencyMs = (System.currentTimeMillis() - attemptStartMs).coerceAtLeast(0L)
+                        val isFirstAttempt = attemptedIdsInSession.add(currentSentence.id)
+                        viewModel.recordImplicitSentenceAttempt(
+                            sentence = currentSentence,
+                            isCorrect = isCorrect,
+                            latencyMs = latencyMs,
+                            tileReturns = tileReturns,
+                            grammarOpenedMidAttempt = grammarOpenedMidAttempt,
+                            isFirstAttemptInSession = isFirstAttempt
+                        )
 
                         if (isCorrect) {
                             validationResult = true
                             correctCount++
                             feedbackMessage = "Правильно!"
-                            // Update 100-answer window
-                            viewModel.recordAnswer(lesson.id, isCorrect = true)
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -487,8 +514,6 @@ fun SentencePracticeScreen(
                             validationResult = false
                             wrongCount++
                             feedbackMessage = "Правильный ответ: $currentTarget"
-                            // Update 100-answer window
-                            viewModel.recordAnswer(lesson.id, isCorrect = false)
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 vibrator?.vibrate(VibrationEffect.createOneShot(120, VibrationEffect.DEFAULT_AMPLITUDE))

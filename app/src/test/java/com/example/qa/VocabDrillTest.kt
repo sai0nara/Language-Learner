@@ -240,8 +240,14 @@ class VocabDrillTest {
                 db.lessonDao().getLessonById(lesson.id)?.correctAnswersInLast100 == 1
             }
         }
+        composeRule.waitUntil(timeoutMillis = 5_000) {
+            ShadowLooper.idleMainLooper()
+            runBlocking(Dispatchers.IO) {
+                db.srsDao().getSrsItemById(item1.id) != null
+            }
+        }
         val srsEntry = runBlocking(Dispatchers.IO) { db.srsDao().getSrsItemById(item1.id) }
-        assertNull(srsEntry)
+        org.junit.Assert.assertNotNull(srsEntry)
 
         // Act - advance 500ms delay
         page.advanceDelay(550L)

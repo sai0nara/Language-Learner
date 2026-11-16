@@ -91,6 +91,11 @@ fun AppNavigation(viewModel: LanguageLearnerViewModel) {
                 lesson = screen.lesson,
                 onBack = { navigateBack() },
                 onOpenSentencePractice = {
+                    viewModel.clearWeakCellFilter()
+                    navigateTo(Screen.SentencePractice(screen.lesson))
+                },
+                onDrillWeakCells = { weakCoords ->
+                    viewModel.setWeakCellFilter(weakCoords)
                     navigateTo(Screen.SentencePractice(screen.lesson))
                 },
                 onOpenVocabDrill = {
@@ -121,11 +126,17 @@ fun AppNavigation(viewModel: LanguageLearnerViewModel) {
         }
 
         is Screen.SentencePractice -> {
-            BackHandler { navigateBack() }
+            BackHandler {
+                viewModel.clearWeakCellFilter()
+                navigateBack()
+            }
             SentencePracticeScreen(
                 lesson = screen.lesson,
                 viewModel = viewModel,
-                onBack = { navigateBack() }
+                onBack = {
+                    viewModel.clearWeakCellFilter()
+                    navigateBack()
+                }
             )
         }
 

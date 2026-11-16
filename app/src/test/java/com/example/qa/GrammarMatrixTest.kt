@@ -53,6 +53,7 @@ class GrammarMatrixTest {
         db = AppDatabase.getInstance(app as Context)
         runBlocking(Dispatchers.IO) {
             db.clearAllTables()
+            com.example.data.repository.CurriculumRepository(db).ensureInitialDataLoaded()
         }
         viewModel = LanguageLearnerViewModel(app)
         ShadowTextToSpeech.getLastTextToSpeechInstance()?.let { tts ->
@@ -211,6 +212,7 @@ class GrammarMatrixTest {
         }
         if (expectGuide) {
             composeRule.waitUntil(timeoutMillis = 5_000) {
+                org.robolectric.shadows.ShadowLooper.idleMainLooper()
                 viewModel.activeGrammar.value?.lessonId == lesson.id
             }
         }
