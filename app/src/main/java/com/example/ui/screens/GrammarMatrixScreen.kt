@@ -416,11 +416,11 @@ private fun FallbackMatrixTable() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "• Презент: радим, радиш, ради, радимо, радите, раде\n" +
-                        "• Перфекат: ја сам радио, ти си радио, он је радио...\n" +
-                        "• Футур I: ја ћу радити / радићу, радићеш, радиће...\n" +
-                        "• Отрицание: не радим (наст.) / нисам радио (прош.) / нећу радити (буд.)\n" +
-                        "• Вопрос: Да ли радиш? / Јеси ли радио? / Хоћеш ли радити?",
+                text = "• Презент: radim, radiš, radi, radimo, radite, rade\n" +
+                        "• Перфекат: ja sam radio, ti si radio, on je radio...\n" +
+                        "• Футур I: ja ću raditi / radiću, radićeš, radiće...\n" +
+                        "• Отрицание: ne radim (наст.) / nisam radio (прош.) / neću raditi (буд.)\n" +
+                        "• Вопрос: Da li radiš? / Jesi li radio? / Hoćeš li raditi?",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 20.sp

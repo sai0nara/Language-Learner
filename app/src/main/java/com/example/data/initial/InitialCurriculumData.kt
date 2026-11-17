@@ -31,9 +31,9 @@ object InitialCurriculumData {
         LessonEntity(
             id = "lesson_2",
             orderIndex = 2,
-            title = "Урок 2: Возвратные глаголы с частицей 'СЕ'",
-            subtitle = "Сећати се, надати се, бавити се. Позиция энклитик",
-            grammarFocus = "Повратни глаголи (се)",
+            title = "Урок 2: Возвратные глаголы с частицей 'SE'",
+            subtitle = "Sećati se, nadati se, baviti se. Позиция энклитик",
+            grammarFocus = "Возвратные глаголы (se)",
             level = "B1",
             masteryScore = 0f,
             isCompleted = false,
@@ -46,9 +46,9 @@ object InitialCurriculumData {
         LessonEntity(
             id = "lesson_3",
             orderIndex = 3,
-            title = "Урок 3: Модальные конструкции (Хтети / Моћи / Морати)",
-            subtitle = "Замена инфинитива союзом 'ДА + Презент'",
-            grammarFocus = "Модални глаголи + ДА",
+            title = "Урок 3: Модальные конструкции (Hteti / Moći / Morati)",
+            subtitle = "Замена инфинитива союзом 'DA + Презент'",
+            grammarFocus = "Модальные глаголы + DA",
             level = "B1",
             masteryScore = 0f,
             isCompleted = false,
@@ -62,8 +62,8 @@ object InitialCurriculumData {
             id = "lesson_4",
             orderIndex = 4,
             title = "Урок 4: Прошедшее время (Перфекат)",
-            subtitle = "Вспомогательный глагол 'бити' + л-форма причастия",
-            grammarFocus = "Перфекат (Прошло време)",
+            subtitle = "Вспомогательный глагол 'biti' + л-форма причастия",
+            grammarFocus = "Перфекат (Prošlo vreme)",
             level = "B1",
             masteryScore = 0f,
             isCompleted = false,
@@ -77,8 +77,8 @@ object InitialCurriculumData {
             id = "lesson_5",
             orderIndex = 5,
             title = "Урок 5: Будущее время I (Футур I)",
-            subtitle = "Краткие формы глагола 'хтети': ћу, ћеш, ће / радићу vs ћу радити",
-            grammarFocus = "Футур I (Будуће време)",
+            subtitle = "Краткие формы глагола 'hteti': ću, ćeš, će / radiću vs ću raditi",
+            grammarFocus = "Футур I (Buduće vreme)",
             level = "B1",
             masteryScore = 0f,
             isCompleted = false,
@@ -92,8 +92,8 @@ object InitialCurriculumData {
             id = "lesson_6",
             orderIndex = 6,
             title = "Урок 6: Видовые пары глаголов",
-            subtitle = "Свршени и несвршени вид (писати/написати, куповати/купити)",
-            grammarFocus = "Глаголски вид (Аспект)",
+            subtitle = "Совершенный и несовершенный вид (pisati/napisati, kupovati/kupiti)",
+            grammarFocus = "Глагольный вид (Аспект)",
             level = "B1",
             masteryScore = 0f,
             isCompleted = false,
@@ -106,42 +106,42 @@ object InitialCurriculumData {
         LessonEntity(
             id = "lesson_7", orderIndex = 7,
             title = "Урок 7: Повелительное наклонение",
-            subtitle = "Императив: ради! радите! немој да радиш!",
+            subtitle = "Императив: radi! radite! nemoj da radiš!",
             grammarFocus = "Императив", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
         LessonEntity(
             id = "lesson_8", orderIndex = 8,
             title = "Урок 8: Условное наклонение",
-            subtitle = "Потенцијал: бих, би, бисмо, бисте + радни придев",
+            subtitle = "Потенциал: bih, bi, bismo, biste + radni pridev",
             grammarFocus = "Потенцијал", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
         LessonEntity(
             id = "lesson_9", orderIndex = 9,
             title = "Урок 9: Глаголы движения",
-            subtitle = "Ићи, доћи, отићи, ући, изаћи с предлозима",
+            subtitle = "Ići, doći, otići, ući, izaći с предлогами",
             grammarFocus = "Глаголы движения", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
         LessonEntity(
             id = "lesson_10", orderIndex = 10,
             title = "Урок 10: Дательный падеж и кому/чему",
-            subtitle = "Личные местоимения и клитики ми, ти, му, јој, нам",
+            subtitle = "Личные местоимения и клитики mi, ti, mu, joj, nam",
             grammarFocus = "Датив (Дательный падеж)", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
         LessonEntity(
             id = "lesson_11", orderIndex = 11,
             title = "Урок 11: Винительный и локатив",
-            subtitle = "Куда vs Где (у град / у граду)",
+            subtitle = "Куда vs Где (u grad / u gradu)",
             grammarFocus = "Акузатив и Локатив", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
         LessonEntity(
             id = "lesson_12", orderIndex = 12,
             title = "Урок 12: Притяжательные местоимения",
-            subtitle = "Мој, твој, његов, њен, наш, ваш, њихов",
+            subtitle = "Moj, tvoj, njegov, njen, naš, vaš, njihov",
             grammarFocus = "Притяжательные формы", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
@@ -155,14 +155,14 @@ object InitialCurriculumData {
         LessonEntity(
             id = "lesson_14", orderIndex = 14,
             title = "Урок 14: Сложные союзы",
-            subtitle = "Зато што, иако, док, чим, пошто",
+            subtitle = "Zato što, iako, dok, čim, pošto",
             grammarFocus = "Придаточные предложения", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
         LessonEntity(
             id = "lesson_15", orderIndex = 15,
             title = "Урок 15: Пассив и безличные конструкции",
-            subtitle = "Овде се говори српски / Треба да...",
+            subtitle = "Ovde se govori srpski / Treba da...",
             grammarFocus = "Безличные конструкции", level = "B1",
             vocabCount = 1, sentenceCount = 1
         ),
@@ -332,83 +332,83 @@ object InitialCurriculumData {
                 ConjugationCell(
                     formType = "Affirmative (+)",
                     tense = "Past",
-                    formula = "Радио/Радила сам (ja)",
+                    formula = "Radio/Radila sam (ja)",
                     exampleSerbian = "Ја сам јуче дуго радио.",
                     exampleSerbianLatin = "Ja sam juče dugo radio.",
                     exampleRussian = "Я вчера долго работал.",
-                    notes = "Энклитика 'сам' ставится сразу после ударного первого слова."
+                    notes = "Энклитика 'sam' ставится сразу после ударного первого слова."
                 ),
                 ConjugationCell(
                     formType = "Affirmative (+)",
                     tense = "Present",
-                    formula = "Радим, радиш, ради, радимо, радите, раде",
+                    formula = "Radim, radiš, radi, radimo, radite, rade",
                     exampleSerbian = "Ја радим у овој компанији.",
                     exampleSerbianLatin = "Ja radim u ovoj kompaniji.",
                     exampleRussian = "Я работаю в этой компании.",
-                    notes = "Глаголы на -ити в презенте имеют окончания -им, -иш, -и..."
+                    notes = "Глаголы на -iti в презенте имеют окончания -im, -iš, -i..."
                 ),
                 ConjugationCell(
                     formType = "Affirmative (+)",
                     tense = "Future",
-                    formula = "Радићу или Ја ћу радити",
+                    formula = "Radiću ili Ja ću raditi",
                     exampleSerbian = "Сутра ћу радити од куће.",
                     exampleSerbianLatin = "Sutra ću raditi od kuće.",
                     exampleRussian = "Завтра я буду работать из дома.",
-                    notes = "Если местоимение опущено: Радићу. Если стоит впереди: Ја ћу радити."
+                    notes = "Если местоимение опущено: Radiću. Если стоит впереди: Ja ću raditi."
                 ),
                 ConjugationCell(
                     formType = "Negative (-)",
                     tense = "Past",
-                    formula = "Нисам радио/радила",
+                    formula = "Nisam radio/radila",
                     exampleSerbian = "Нисам радио ништа лоше.",
                     exampleSerbianLatin = "Nisam radio ništa loše.",
                     exampleRussian = "Я не делал ничего плохого.",
-                    notes = "Отрицательные формы: нисам, ниси, није, нисмо, нисте, нису."
+                    notes = "Отрицательные формы: nisam, nisi, nije, nismo, niste, nisu."
                 ),
                 ConjugationCell(
                     formType = "Negative (-)",
                     tense = "Present",
-                    formula = "Не радим, не радиш, не ради...",
+                    formula = "Ne radim, ne radiš, ne radi...",
                     exampleSerbian = "Данас не радим, имам слободан дан.",
                     exampleSerbianLatin = "Danas ne radim, imam slobodan dan.",
                     exampleRussian = "Сегодня я не работаю, у меня выходной.",
-                    notes = "Частица 'не' пишется раздельно с глаголом (кроме нећу, немам, нисам, немој)."
+                    notes = "Частица 'ne' пишется раздельно с глаголом (кроме neću, nemam, nisam, nemoj)."
                 ),
                 ConjugationCell(
                     formType = "Negative (-)",
                     tense = "Future",
-                    formula = "Нећу радити",
+                    formula = "Neću raditi",
                     exampleSerbian = "Нећу радити за викенд.",
                     exampleSerbianLatin = "Neću raditi za vikend.",
                     exampleRussian = "Я не буду работать на выходных.",
-                    notes = "Формы: нећу, нећеш, неће, нећемо, нећете, неће + инфинитив."
+                    notes = "Формы: neću, nećeš, neće, nećemo, nećете, neće + инфинитив."
                 ),
                 ConjugationCell(
                     formType = "Interrogative (?)",
                     tense = "Past",
-                    formula = "Да ли си радио? / Јеси ли радио?",
+                    formula = "Da li si radio? / Jesi li radio?",
                     exampleSerbian = "Да ли си радио на овом пројекту?",
                     exampleSerbianLatin = "Da li si radio na ovom projektu?",
                     exampleRussian = "Ты работал над этим проектом?",
-                    notes = "Вопрос строится через 'Да ли + краткая связка' или полная форма + ли."
+                    notes = "Вопрос строится через 'Da li + краткая связка' или полная форма + li."
                 ),
                 ConjugationCell(
                     formType = "Interrogative (?)",
                     tense = "Present",
-                    formula = "Да ли радиш? / Радиш ли?",
+                    formula = "Da li radiš? / Radiš li?",
                     exampleSerbian = "Да ли радиш у Београду?",
                     exampleSerbianLatin = "Da li radiš u Beogradu?",
                     exampleRussian = "Ты работаешь в Белграде?",
-                    notes = "Две равноправные модели вопроса: Да ли + глагол или Глагол + ли."
+                    notes = "Две равноправные модели вопроса: Da li + глагол или Глагол + li."
                 ),
                 ConjugationCell(
                     formType = "Interrogative (?)",
                     tense = "Future",
-                    formula = "Да ли ћеш радити? / Хоћеш ли радити?",
+                    formula = "Da li ćeš raditi? / Hoćeš li raditi?",
                     exampleSerbian = "Хоћеш ли сутра радити са нама?",
                     exampleSerbianLatin = "Hoćeš li sutra raditi sa nama?",
                     exampleRussian = "Будешь ли ты завтра работать с нами?",
-                    notes = "Вопрос: Хоћеш ли радити? или Да ли ћеш радити?"
+                    notes = "Вопрос: Hoćeš li raditi? или Da li ćeš raditi?"
                 )
             )
         )
