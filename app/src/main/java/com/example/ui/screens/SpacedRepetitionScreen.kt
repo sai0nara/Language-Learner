@@ -57,7 +57,6 @@ fun SpacedRepetitionScreen(
 ) {
     val dueItemsRaw by viewModel.dueSrsItems.collectAsStateWithLifecycle()
     val dailyBlended by viewModel.dailyBlendedQueue.collectAsStateWithLifecycle()
-    val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
 
     androidx.compose.runtime.LaunchedEffect(Unit) {
         viewModel.refreshDailyBlendedQueue()
@@ -174,7 +173,7 @@ fun SpacedRepetitionScreen(
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val promptText = if (isLatin && currentItem.secondaryText.isNotBlank()) currentItem.secondaryText else currentItem.prompt
+                    val promptText = currentItem.secondaryText.ifBlank { currentItem.prompt }
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -204,14 +203,6 @@ fun SpacedRepetitionScreen(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
-                    }
-
-                    if (currentItem.secondaryText.isNotBlank() && !isLatin) {
-                        Text(
-                            text = currentItem.secondaryText,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -259,7 +250,7 @@ fun SpacedRepetitionScreen(
                     Button(
                         onClick = {
                             isRevealed = true
-                            val word = if (isLatin && currentItem.secondaryText.isNotBlank()) currentItem.secondaryText else currentItem.prompt
+                            val word = currentItem.secondaryText.ifBlank { currentItem.prompt }
                             viewModel.playAudio(word, isTargetLanguage = true)
                         },
                         modifier = Modifier

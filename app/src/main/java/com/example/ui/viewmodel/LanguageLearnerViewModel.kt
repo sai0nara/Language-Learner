@@ -50,9 +50,6 @@ class LanguageLearnerViewModel(application: Application) : AndroidViewModel(appl
     private val _activeSentences = MutableStateFlow<List<SentenceEntity>>(emptyList())
     val activeSentences: StateFlow<List<SentenceEntity>> = _activeSentences.asStateFlow()
 
-    private val _isLatinScript = MutableStateFlow(false)
-    val isLatinScript: StateFlow<Boolean> = _isLatinScript.asStateFlow()
-
     private val _isDarkTheme = MutableStateFlow(true) // Default to sleek modern dark theme
     val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
@@ -94,10 +91,6 @@ class LanguageLearnerViewModel(application: Application) : AndroidViewModel(appl
                 }
             }
         }
-    }
-
-    fun toggleScript() {
-        _isLatinScript.value = !_isLatinScript.value
     }
 
     fun toggleDarkTheme() {

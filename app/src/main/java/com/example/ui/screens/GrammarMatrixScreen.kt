@@ -57,7 +57,6 @@ fun GrammarMatrixScreen(
     onBack: () -> Unit
 ) {
     val grammarGuide by viewModel.activeGrammar.collectAsStateWithLifecycle()
-    val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
 
     val moshi = remember { Moshi.Builder().build() }
     val matrixAdapter = remember { moshi.adapter(ConjugationMatrixData::class.java) }
@@ -199,23 +198,18 @@ fun GrammarMatrixScreen(
                 // Render 3x3 Grid
                 Matrix3x3Table(
                     matrixData = matrixData,
-                    isLatin = isLatin,
                     selectedCell = selectedCell,
                     onSelectCell = { selectedCell = it }
                 )
             } else {
                 // Default polyglot matrix overview
-                FallbackMatrixTable(isLatin = isLatin)
+                FallbackMatrixTable()
             }
 
             // Selected Cell Detail Card
             if (selectedCell != null) {
                 val cell = selectedCell!!
-                val displayExampleSerbian = if (isLatin && cell.exampleSerbianLatin.isNotBlank()) {
-                    cell.exampleSerbianLatin
-                } else {
-                    cell.exampleSerbian
-                }
+                val displayExampleSerbian = cell.exampleSerbianLatin.ifBlank { cell.exampleSerbian }
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Card(
@@ -294,7 +288,6 @@ fun GrammarMatrixScreen(
 @Composable
 private fun Matrix3x3Table(
     matrixData: ConjugationMatrixData,
-    isLatin: Boolean,
     selectedCell: ConjugationCell?,
     onSelectCell: (ConjugationCell) -> Unit
 ) {
@@ -410,7 +403,7 @@ private fun Matrix3x3Table(
 }
 
 @Composable
-private fun FallbackMatrixTable(isLatin: Boolean) {
+private fun FallbackMatrixTable() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)

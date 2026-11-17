@@ -386,11 +386,10 @@ class SpacedRepetitionTest {
     // -------------------------------------------------------------------------
 
     @Test
-    fun `TC-014 Latin mode with non-blank secondaryText shows secondaryText as prompt`() {
+    fun `TC-014 Latin-only mode with non-blank secondaryText shows secondaryText as prompt`() {
         // Arrange
         seedSrsCards(buildCard(prompt = "салам", secondaryText = "salam"))
         val vm = createViewModel()
-        vm.toggleScript()
         val page = SpacedRepetitionPage(composeRule)
 
         // Act
@@ -406,11 +405,10 @@ class SpacedRepetitionTest {
     }
 
     @Test
-    fun `TC-015 Latin mode with blank secondaryText falls back to prompt`() {
+    fun `TC-015 Latin-only mode with blank secondaryText falls back to prompt`() {
         // Arrange
         seedSrsCards(buildCard(prompt = "салам", secondaryText = ""))
         val vm = createViewModel()
-        vm.toggleScript()
         val page = SpacedRepetitionPage(composeRule)
 
         // Act
@@ -440,8 +438,8 @@ class SpacedRepetitionTest {
         }
 
         // Assert
-        page.assertPromptText("салам")
-            .assertTextDisplayed("salam")
+        page.assertPromptText("salam")
+            .assertTextNotDisplayed("салам")
     }
 
     @Test
@@ -508,7 +506,7 @@ class SpacedRepetitionTest {
             .assertTextDisplayed("Интервал:", substring = true)
 
         val shadowTts = Shadows.shadowOf(ShadowTextToSpeech.getLastTextToSpeechInstance())
-        assertEquals("здраво", shadowTts.lastSpokenText)
+        assertEquals("zdravo", shadowTts.lastSpokenText)
         assertEquals(Locale("sr", "RS"), shadowTts.currentLanguage)
 
         page.tapGradeGood()
@@ -540,7 +538,7 @@ class SpacedRepetitionTest {
         }
 
         // Act
-        page.assertPromptText("први")
+        page.assertPromptText("prvi")
             .tapShowAnswer()
             .assertAnswerText("первый")
             .tapGradeEasy()
@@ -549,7 +547,7 @@ class SpacedRepetitionTest {
         page.waitForCondition {
             runBlocking(Dispatchers.IO) { db.srsDao().getSrsItemById("card_0")?.lastQuality == 5 }
         }
-        page.assertPromptText("други")
+        page.assertPromptText("drugi")
             .assertShowAnswerDisplayed()
             .assertAnswerNotDisplayed()
     }
@@ -568,12 +566,12 @@ class SpacedRepetitionTest {
         }
 
         // Act
-        page.assertPromptText("хвала")
+        page.assertPromptText("hvala")
             .tapSpeakerButton()
 
         // Assert
         val shadowTts = Shadows.shadowOf(ShadowTextToSpeech.getLastTextToSpeechInstance())
-        assertEquals("хвала", shadowTts.lastSpokenText)
+        assertEquals("hvala", shadowTts.lastSpokenText)
         assertEquals(Locale("sr", "RS"), shadowTts.currentLanguage)
         page.assertShowAnswerDisplayed()
             .assertAnswerNotDisplayed()
@@ -594,7 +592,7 @@ class SpacedRepetitionTest {
         }
 
         // Act
-        page.assertPromptText("салам")
+        page.assertPromptText("salam")
             .tapBackFromSrs()
 
         // Assert
@@ -724,7 +722,6 @@ class SpacedRepetitionTest {
         )
         seedSrsCards(card)
         val vm = createViewModel()
-        if (isLatin) vm.toggleScript()
         val page = SpacedRepetitionPage(composeRule)
 
         composeRule.setContent {
@@ -734,7 +731,7 @@ class SpacedRepetitionTest {
         }
 
         // Act
-        page.assertPromptText(if (isLatin) "dobar dan" else "добар дан")
+        page.assertPromptText("dobar dan")
             .tapShowAnswer()
         when (grade) {
             ReviewGrade.AGAIN -> page.tapGradeAgain()

@@ -31,7 +31,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -75,7 +74,6 @@ fun CurriculumScreen(
     val context = LocalContext.current
     val lessons by viewModel.allLessons.collectAsStateWithLifecycle()
     val dueCount by viewModel.dueSrsCount.collectAsStateWithLifecycle()
-    val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
     val isDark by viewModel.isDarkTheme.collectAsStateWithLifecycle()
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -104,25 +102,13 @@ fun CurriculumScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = if (isLatin) "Srpski jezik (B1 • Latinica)" else "Српски језик (B1 • Ћирилица)",
+                    text = "Srpski jezik (B1)",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Script toggle (Cyrillic / Latin)
-                IconButton(
-                    onClick = { viewModel.toggleScript() },
-                    modifier = Modifier.testTag("toggle_script_button")
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Translate,
-                        contentDescription = "Переключить алфавит (Кириллица / Латиница)",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-
                 // Dark / Light Theme toggle
                 IconButton(
                     onClick = { viewModel.toggleDarkTheme() },

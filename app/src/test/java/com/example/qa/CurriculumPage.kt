@@ -13,16 +13,12 @@ import androidx.compose.ui.test.performScrollTo
  */
 class CurriculumPage(private val composeRule: ComposeContentTestRule) {
 
-    fun assertHeaderDisplayed(isLatin: Boolean): CurriculumPage = apply {
-        val expected = if (isLatin) "Srpski jezik (B1 • Latinica)" else "Српски језик (B1 • Ћирилица)"
+    fun assertHeaderDisplayed(): CurriculumPage = apply {
+        val expected = "Srpski jezik (B1)"
         composeRule.waitUntil(timeoutMillis = 5_000) {
             composeRule.onAllNodesWithText(expected).fetchSemanticsNodes().isNotEmpty()
         }
         composeRule.onNodeWithText(expected).assertIsDisplayed()
-    }
-
-    fun toggleScript(): CurriculumPage = apply {
-        composeRule.onNodeWithTag("toggle_script_button").performClick()
     }
 
     fun toggleTheme(): CurriculumPage = apply {

@@ -50,6 +50,13 @@ class CurriculumAndImportUiTest {
         }
 
         composeRule.onNodeWithText("Полиглот").assertIsDisplayed()
+        composeRule.onNodeWithText("Srpski jezik (B1)").assertIsDisplayed()
+        composeRule.onNodeWithTag("toggle_script_button").assertDoesNotExist()
+        assertTrue(
+            LanguageLearnerViewModel::class.java.declaredMethods.none {
+                it.name == "toggleScript" || it.name == "getIsLatinScript"
+            }
+        )
         composeRule.onNodeWithTag("tab_lessons").assertIsDisplayed()
         composeRule.onNodeWithTag("tab_srs").performClick()
         composeRule.onNodeWithTag("start_srs_review_button").performClick()

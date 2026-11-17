@@ -79,7 +79,6 @@ fun SentencePracticeScreen(
 ) {
     val context = LocalContext.current
     val vibrator = remember { context.getSystemService(Vibrator::class.java) }
-    val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
     val rawSentences by viewModel.activeSentences.collectAsStateWithLifecycle()
     val weakCoords by viewModel.weakFilterCoords.collectAsStateWithLifecycle()
     val activeLessonState by viewModel.activeLesson.collectAsStateWithLifecycle()
@@ -347,14 +346,14 @@ fun SentencePracticeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = if (isLatin) "Преведите на српски (латиница)" else "Преведите на српски (ћирилица)",
+                        text = "Преведите на српски",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
 
                     IconButton(
                         onClick = {
-                            val text = if (isLatin) currentSentence.targetSentenceLatin else currentSentence.targetSentence
+                            val text = currentSentence.targetSentenceLatin.ifBlank { currentSentence.targetSentence }
                             viewModel.playAudio(text, currentSentence.audioUri, isTargetLanguage = true)
                         }
                     ) {
@@ -399,8 +398,8 @@ fun SentencePracticeScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        val expectedForHighlight = remember(currentSentence, isLatin) {
-                            val t = if (isLatin) currentSentence.targetSentenceLatin else currentSentence.targetSentence
+                        val expectedForHighlight = remember(currentSentence) {
+                            val t = currentSentence.targetSentenceLatin.ifBlank { currentSentence.targetSentence }
                             t.split(" ").map { cleanToken(it) }.filter { it.isNotBlank() }
                         }
                         placedTokens.forEachIndexed { index, token ->
@@ -492,7 +491,7 @@ fun SentencePracticeScreen(
                 Button(
                     onClick = {
                         if (validationResult != null) return@Button
-                        val currentTarget = if (isLatin) currentSentence.targetSentenceLatin else currentSentence.targetSentence
+                        val currentTarget = currentSentence.targetSentenceLatin.ifBlank { currentSentence.targetSentence }
                         val expectedTokens = currentTarget.split(" ").map { cleanToken(it) }.filter { it.isNotBlank() }
                         val userTokens = placedTokens.map { cleanToken(it) }.filter { it.isNotBlank() }
 

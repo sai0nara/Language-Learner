@@ -1,6 +1,7 @@
 package com.example
 
 import com.example.data.importer.CurriculumImporter
+import com.example.data.initial.InitialCurriculumData
 import com.example.data.model.SrsReviewEntity
 import com.example.srs.ReviewGrade
 import com.example.srs.SpacedRepetitionAlgorithm
@@ -98,5 +99,22 @@ class ExampleUnitTest {
         assertTrue(result.vocabItems.isNotEmpty())
         assertTrue(result.sentences.isNotEmpty())
         assertEquals("Урок: Модальные глаголы (Хтети / Моћи)", result.lessons[0].title)
+    }
+
+    @Test
+    fun testInitialSentencesUseLatinLowercaseTokens() {
+        val cyrillicRegex = Regex("[\\p{InCyrillic}]")
+        val sentences = InitialCurriculumData.getInitialSentences()
+        assertTrue(sentences.isNotEmpty())
+        sentences.forEach { sentence ->
+            assertTrue(
+                "tokensJson should not contain Cyrillic for ${sentence.id}: ${sentence.tokensJson}",
+                !cyrillicRegex.containsMatchIn(sentence.tokensJson)
+            )
+            assertTrue(
+                "distractorTokensJson should not contain Cyrillic for ${sentence.id}: ${sentence.distractorTokensJson}",
+                !cyrillicRegex.containsMatchIn(sentence.distractorTokensJson)
+            )
+        }
     }
 }

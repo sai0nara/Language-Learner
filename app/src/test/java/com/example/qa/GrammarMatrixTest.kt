@@ -167,8 +167,7 @@ class GrammarMatrixTest {
                 cells = buildNineCells()
             )
         ),
-        insertGuide: Boolean = true,
-        isLatinScript: Boolean = false
+        insertGuide: Boolean = true
     ): LessonEntity {
         val lesson = LessonEntity(
             id = lessonId,
@@ -192,9 +191,6 @@ class GrammarMatrixTest {
                     )
                 )
             }
-        }
-        if (isLatinScript != viewModel.isLatinScript.value) {
-            viewModel.toggleScript()
         }
         viewModel.selectLesson(lesson)
         return lesson
@@ -227,9 +223,9 @@ class GrammarMatrixTest {
     }
 
     @Test
-    fun `TC-001 Load grammar guide, select Affirmative Past cell in Cyrillic, and trigger audio playback`() {
+    fun `TC-001 Load grammar guide, select Affirmative Past cell, and trigger Latin audio playback`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = false)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -242,16 +238,16 @@ class GrammarMatrixTest {
         // Assert
         page.assertDetailCardDisplayed()
             .assertTextDisplayed("Формула: Ја сам радио")
-            .assertTextDisplayed("Ја сам јуче радио.")
+            .assertTextDisplayed("Ja sam juče radio.")
             .assertTextDisplayed("Я вчера работал.")
             .assertTextDisplayed("Примечание: Перфекат с глаголом бити")
-        assertLastSpokenText("Ја сам јуче радио.")
+        assertLastSpokenText("Ja sam juče radio.")
     }
 
     @Test
     fun `TC-002 Switch from selected cell to Negative Present cell and re-trigger audio without UI lock`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = false)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
         page.tapCellByFormula("Ја сам радио")
             .tapAudioButton()
@@ -263,15 +259,15 @@ class GrammarMatrixTest {
         // Assert
         page.assertDetailCardDisplayed()
             .assertTextDisplayed("Формула: Ја не радим")
-            .assertTextDisplayed("Ја данас не радим.")
+            .assertTextDisplayed("Ja danas ne radim.")
             .assertTextDisplayed("Я сегодня не работаю.")
-        assertLastSpokenText("Ја данас не радим.")
+        assertLastSpokenText("Ja danas ne radim.")
     }
 
     @Test
-    fun `TC-003 Render and play Latin example when isLatinScript is true and exampleSerbianLatin is populated`() {
+    fun `TC-003 Render and play Latin example when exampleSerbianLatin is populated`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = true)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -286,7 +282,7 @@ class GrammarMatrixTest {
     }
 
     @Test
-    fun `TC-004 Fallback to Cyrillic exampleSerbian when isLatinScript is true and exampleSerbianLatin is blank`() {
+    fun `TC-004 Fallback to primary exampleSerbian when exampleSerbianLatin is blank`() {
         // Arrange
         val cellsWithBlankLatin = buildNineCells().map { cell ->
             if (cell.formType == "Affirmative" && cell.tense == "Present") {
@@ -298,8 +294,7 @@ class GrammarMatrixTest {
         val lesson = seedLessonAndGuide(
             matrixJson = matrixAdapter.toJson(
                 ConjugationMatrixData("Радити", "Raditi", "Работать", cells = cellsWithBlankLatin)
-            ),
-            isLatinScript = true
+            )
         )
         val page = launchScreen(lesson)
 
@@ -454,15 +449,15 @@ class GrammarMatrixTest {
         // Assert
         page.assertDetailCardDisplayed()
             .assertTextDisplayed("Формула: Ја сам радио")
-            .assertTextDisplayed("Ја сам јуче радио.")
+            .assertTextDisplayed("Ja sam juče radio.")
             .assertTextDisplayed("Я вчера работал.")
             .assertNotesAbsent()
     }
 
     @Test
-    fun `TC-013 Pairwise config 3 Affirmative Future Cyrillic`() {
+    fun `TC-013 Pairwise config 3 Affirmative Future Latin`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = false)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -470,14 +465,14 @@ class GrammarMatrixTest {
 
         // Assert
         page.assertDetailCardDisplayed()
-            .assertTextDisplayed("Ја ћу сутра радити.")
+            .assertTextDisplayed("Ja ću sutra raditi.")
             .assertTextDisplayed("Я завтра буду работать.")
     }
 
     @Test
     fun `TC-014 Pairwise config 4 Negative Past Latin`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = true)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -492,7 +487,7 @@ class GrammarMatrixTest {
     @Test
     fun `TC-015 Pairwise config 6 Negative Future Latin`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = true)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -505,9 +500,9 @@ class GrammarMatrixTest {
     }
 
     @Test
-    fun `TC-016 Pairwise config 7 Interrogative Past Cyrillic`() {
+    fun `TC-016 Pairwise config 7 Interrogative Past Latin`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = false)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -515,14 +510,14 @@ class GrammarMatrixTest {
 
         // Assert
         page.assertDetailCardDisplayed()
-            .assertTextDisplayed("Да ли сам јуче радио?")
+            .assertTextDisplayed("Da li sam juče radio?")
             .assertTextDisplayed("Работал ли я вчера?")
     }
 
     @Test
     fun `TC-017 Pairwise config 8 Interrogative Present Latin`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = true)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -535,9 +530,9 @@ class GrammarMatrixTest {
     }
 
     @Test
-    fun `TC-018 Pairwise config 9 Interrogative Future Cyrillic`() {
+    fun `TC-018 Pairwise config 9 Interrogative Future Latin`() {
         // Arrange
-        val lesson = seedLessonAndGuide(isLatinScript = false)
+        val lesson = seedLessonAndGuide()
         val page = launchScreen(lesson)
 
         // Act
@@ -545,7 +540,7 @@ class GrammarMatrixTest {
 
         // Assert
         page.assertDetailCardDisplayed()
-            .assertTextDisplayed("Да ли ћу сутра радити?")
+            .assertTextDisplayed("Da li ću sutra raditi?")
             .assertTextDisplayed("Буду ли я работать завтра?")
     }
 }

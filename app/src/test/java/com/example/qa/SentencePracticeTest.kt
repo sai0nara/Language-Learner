@@ -131,9 +131,6 @@ class SentencePracticeTest {
                 db.sentenceDao().insertSentences(sentences)
             }
         }
-        if (viewModel.isLatinScript.value != isLatin) {
-            viewModel.toggleScript()
-        }
         viewModel.selectLesson(lesson)
         composeRule.setContent {
             LanguageLearnerTheme {
@@ -442,14 +439,15 @@ class SentencePracticeTest {
         val lesson = buildLesson()
         val sentence = buildSentence(
             targetSentence = "Ја сам",
-            tokensJson = """["ја","сам"]""",
+            targetSentenceLatin = "Ja sam",
+            tokensJson = """["ja","sam"]""",
             distractorTokensJson = "[]"
         )
         val page = launchSentencePractice(lesson, listOf(sentence))
 
         // Act
-        page.tapPoolChip("ја")
-            .tapPoolChip("сам")
+        page.tapPoolChip("ja")
+            .tapPoolChip("sam")
             .tapCheckAnswer()
 
         // Assert - immediate feedback
@@ -500,25 +498,25 @@ class SentencePracticeTest {
             sourceSentence = "Я здесь",
             targetSentence = "Ја сам овде",
             targetSentenceLatin = "Ja sam ovde",
-            tokensJson = """["ја","сам","овде"]""",
-            distractorTokensJson = """["тамо"]"""
+            tokensJson = """["ja","sam","ovde"]""",
+            distractorTokensJson = """["tamo"]"""
         )
         val s2 = buildSentence(
             id = "qa_sp_s2",
             sourceSentence = "Ты дома",
             targetSentence = "Ти си код куће",
             targetSentenceLatin = "Ti si kod kuće",
-            tokensJson = """["ти","си","код","куће"]""",
-            distractorTokensJson = """["овде"]"""
+            tokensJson = """["ti","si","kod","kuće"]""",
+            distractorTokensJson = """["ovde"]"""
         )
-        val page = launchSentencePractice(lesson, listOf(s1, s2), isLatin = false)
+        val page = launchSentencePractice(lesson, listOf(s1, s2))
         val firstIsS1 = runCatching {
             composeRule.onNodeWithTag("source_sentence_text").assertExists()
             page.assertSourceSentenceDisplayed("Я здесь")
             true
         }.getOrDefault(false)
-        val activeTokens = if (firstIsS1) listOf("ја", "сам", "овде") else listOf("ти", "си", "код", "куће")
-        val activeTarget = if (firstIsS1) s1.targetSentence else s2.targetSentence
+        val activeTokens = if (firstIsS1) listOf("ja", "sam", "ovde") else listOf("ti", "si", "kod", "kuće")
+        val activeTarget = if (firstIsS1) s1.targetSentenceLatin else s2.targetSentenceLatin
         val nextSource = if (firstIsS1) s2.sourceSentence else s1.sourceSentence
 
         // Act
@@ -544,7 +542,7 @@ class SentencePracticeTest {
         page.assertSourceSentenceDisplayed(nextSource)
     }
 
-    // TC-013 (P0): Incorrect Cyrillic answer check reveals target, records false, vibrates 120 ms, and re-queues sentence (DT Col 3)
+    // TC-013 (P0): Incorrect Latin answer check reveals target, records false, vibrates 120 ms, and re-queues sentence (DT Col 3)
     @Test
     fun tc013_incorrectCyrillicAnswer_revealsTargetRecordsFalseVibratesAndRequeues() {
         // Arrange
@@ -553,18 +551,19 @@ class SentencePracticeTest {
             id = "qa_sp_s1",
             sourceSentence = "Я студент",
             targetSentence = "Ја сам студент",
-            tokensJson = """["ја","сам","студент"]""",
-            distractorTokensJson = """["нисам"]"""
+            targetSentenceLatin = "Ja sam student",
+            tokensJson = """["ja","sam","student"]""",
+            distractorTokensJson = """["nisam"]"""
         )
-        val page = launchSentencePractice(lesson, listOf(s1), isLatin = false)
+        val page = launchSentencePractice(lesson, listOf(s1))
         val ttsShadow = Shadows.shadowOf(ShadowTextToSpeech.getLastTextToSpeechInstance())
 
         // Act - submit wrong token
-        page.tapPoolChip("нисам")
+        page.tapPoolChip("nisam")
             .tapCheckAnswer()
 
         // Assert - wrong feedback, 120ms vibration, no TTS, DB false
-        page.assertFeedbackDisplayed("Правильный ответ: Ја сам студент")
+        page.assertFeedbackDisplayed("Правильный ответ: Ja sam student")
         assertNull(ttsShadow.lastSpokenText)
         val vibratorShadow = Shadows.shadowOf(app.getSystemService(Vibrator::class.java))
         assertEquals(120L, vibratorShadow.milliseconds)
@@ -577,10 +576,10 @@ class SentencePracticeTest {
         assertEquals(0, dbLesson.correctAnswersInLast100)
 
         // Act - fix and complete first pass; re-queued s1 should appear again
-        page.tapPlacedChip("нисам")
-            .tapPoolChip("ја")
-            .tapPoolChip("сам")
-            .tapPoolChip("студент")
+        page.tapPlacedChip("nisam")
+            .tapPoolChip("ja")
+            .tapPoolChip("sam")
+            .tapPoolChip("student")
             .tapCheckAnswer()
             .advanceAutoAdvanceDelay(1300L)
 
@@ -688,24 +687,25 @@ class SentencePracticeTest {
         val lesson = buildLesson()
         val sentence = buildSentence(
             targetSentence = "Ја сам",
-            tokensJson = """["ја","сам"]""",
-            distractorTokensJson = """["ти"]"""
+            targetSentenceLatin = "Ja sam",
+            tokensJson = """["ja","sam"]""",
+            distractorTokensJson = """["ti"]"""
         )
         val page = launchSentencePractice(lesson, listOf(sentence))
-        page.tapPoolChip("ти")
+        page.tapPoolChip("ti")
             .tapCheckAnswer()
-            .assertFeedbackDisplayed("Правильный ответ: Ја сам")
+            .assertFeedbackDisplayed("Правильный ответ: Ja sam")
 
         // Act - S5 -> S3
-        page.tapPoolChip("ја")
+        page.tapPoolChip("ja")
 
         // Assert - feedback cleared, button still enabled
-        page.assertFeedbackAbsent("Правильный ответ: Ја сам")
+        page.assertFeedbackAbsent("Правильный ответ: Ja sam")
             .assertCheckButtonEnabled()
 
         // Act - S3 -> S2
-        page.tapPlacedChip("ти")
-            .tapPlacedChip("ја")
+        page.tapPlacedChip("ti")
+            .tapPlacedChip("ja")
 
         // Assert - button disabled
         page.assertCheckButtonDisabled()
@@ -884,7 +884,7 @@ class SentencePracticeTest {
 
         // Assert
         val ttsShadow = Shadows.shadowOf(ShadowTextToSpeech.getLastTextToSpeechInstance())
-        assertEquals("Ја сам студент", ttsShadow.lastSpokenText)
+        assertEquals("Ja sam student", ttsShadow.lastSpokenText)
         val dbLesson = runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)!! }
         assertEquals(0, dbLesson.totalAnswersInLast100)
     }
