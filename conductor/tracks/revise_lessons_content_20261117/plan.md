@@ -23,4 +23,4 @@
   - [x] Update `Docs/Defects.md`, `Docs/psd/`, and `Docs/tests/` for revised 16-lesson curriculum counts and Russian vocab distractors
   - [x] Run `./gradlew --no-daemon testDebugUnitTest` and verify all tests pass
   - [x] Run `python3 wiki/lint.py` and verify exit code 0
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Documentation Sync & Full Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Documentation Sync & Full Verification' (Protocol in workflow.md)
