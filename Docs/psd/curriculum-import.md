@@ -2,7 +2,7 @@
 
 > Stateless Moshi/CSV/XmlPullParser parsing in `CurriculumImporter` paired with Room persistence in `CurriculumRepository` and a Compose UI in `ImportExportScreen`.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-17
 
 ## Overview
 

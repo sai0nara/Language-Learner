@@ -233,10 +233,15 @@ class ExampleUnitTest {
             assertEquals("Lesson ${lesson.id} sentenceCount should be 9", 9, lesson.sentenceCount)
             assertEquals(expectedCoords, lessonSentences.map { it.matrixCoordinateKey() }.toSet())
             lessonSentences.forEach { s ->
+                val tokens = adapter.fromJson(s.tokensJson) ?: emptyList()
                 val distractors = adapter.fromJson(s.distractorTokensJson) ?: emptyList()
                 assertTrue(
                     "Sentence ${s.id} should have 1..2 distractors, got ${distractors.size}",
                     distractors.size in 1..2
+                )
+                assertTrue(
+                    "Sentence ${s.id} distractors should be disjoint from tokens: $tokens vs $distractors",
+                    (tokens.toSet() intersect distractors.toSet()).isEmpty()
                 )
             }
         }
