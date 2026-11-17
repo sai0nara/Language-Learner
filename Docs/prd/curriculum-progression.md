@@ -2,7 +2,7 @@
 
 > Polyglot 16-inspired structured lesson dashboard (Lessons 1–16) with two-tier progression gates, 3x3 matrix heatmap tracking, targeted remediation micro-sessions, and client state machine.
 
-Last updated: 2026-11-16
+Last updated: 2026-11-17
 
 ## Overview
 

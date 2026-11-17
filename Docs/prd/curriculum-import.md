@@ -2,7 +2,7 @@
 
 > Enables self-directed learners to import custom XML, CSV, and JSON curricula offline and export sample templates.
 
-Last updated: 2026-11-14
+Last updated: 2026-11-17
 
 ## Overview
 
