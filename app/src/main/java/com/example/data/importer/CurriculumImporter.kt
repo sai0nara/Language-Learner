@@ -395,7 +395,7 @@ object CurriculumImporter {
           "targetWordLatin": "hteti",
           "sourceTranslation": "хотеть",
           "partOfSpeech": "Глагол",
-          "distractors": ["моћи", "знати", "имати"],
+          "distractors": ["moći", "znati", "imati"],
           "audioUri": ""
         },
         {
@@ -403,13 +403,13 @@ object CurriculumImporter {
           "targetWordLatin": "moći",
           "sourceTranslation": "мочь",
           "partOfSpeech": "Глагол",
-          "distractors": ["хтети", "морати", "бити"],
+          "distractors": ["hteti", "morati", "biti"],
           "audioUri": ""
         }
       ],
       "grammar": {
         "title": "Конструкция 'Хтети + ДА + Презент'",
-        "explanation": "В сербском языке инфинитив после модальных глаголов часто заменяется союзом 'да' с личной формой настоящего времени: Хоћу да радим (Я хочу работать).",
+        "explanation": "В сербском языке инфинитив после модальных глаголов часто заменяется союзом 'da' с личной формой настоящего времени: Hoću da radim (Я хочу работать).",
         "matrix": {
           "verbInfinitive": "Хтети",
           "verbInfinitiveLatin": "Hteti",
@@ -419,8 +419,8 @@ object CurriculumImporter {
             {
               "formType": "Affirmative",
               "tense": "Present",
-              "formula": "хоћу, хоћеш, хоће, хоћемо, хоћете, хоће",
-              "exampleSerbian": "Ја хоћу да учим српски језик.",
+              "formula": "hoću, hoćeš, hoće, hoćemo, hoćete, hoće",
+              "exampleSerbian": "Ja hoću da učim srpski jezik.",
               "exampleRussian": "Я хочу учить сербский язык."
             }
           ]

@@ -1,10 +1,14 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
 import java.text.SimpleDateFormat
 import java.util.Date
+import org.gradle.api.provider.ValueSource
+import org.gradle.api.provider.ValueSourceParameters
 
-fun buildTimestamp(): String {
-  val formatter = SimpleDateFormat("yyyyMMdd-HHmm")
-  return formatter.format(Date())
+abstract class BuildTimestampValueSource : ValueSource<String, ValueSourceParameters.None> {
+  override fun obtain(): String {
+    val formatter = SimpleDateFormat("yyyyMMdd-HHmm")
+    return formatter.format(Date())
+  }
 }
 
 plugins {
@@ -30,7 +34,7 @@ android {
     versionCode = 1
     versionName = "1.0"
 
-    buildConfigField("String", "BUILD_TIMESTAMP", "\"${buildTimestamp()}\"")
+    buildConfigField("String", "BUILD_TIMESTAMP", "\"${providers.of(BuildTimestampValueSource::class.java) {}.get()}\"")
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -97,11 +101,13 @@ android {
 }
 
 androidComponents {
+  val buildTimestampProvider = providers.of(BuildTimestampValueSource::class.java) {}
   onVariants { variant ->
+    val variantName = variant.name
     variant.outputs.forEach { output ->
       val version = output.versionName.get()
       (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set(
-        "lang-learn-${variant.name}-v$version-${buildTimestamp()}.apk"
+        buildTimestampProvider.map { ts -> "lang-learn-$variantName-v$version-$ts.apk" }
       )
     }
   }

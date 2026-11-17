@@ -181,43 +181,43 @@ object InitialCurriculumData {
             id = "v_1_1", lessonId = "lesson_1",
             targetWord = "радити", targetWordLatin = "raditi",
             sourceTranslation = "работать / делать", partOfSpeech = "Глагол",
-            exampleSentence = "Сваког дана вредно радим у канцеларији.",
-            distractorsJson = "[\"учити\", \"путовати\", \"спавати\", \"радим\"]"
+            exampleSentence = "Svakog dana vredno radim u kancelariji.",
+            distractorsJson = "[\"učiti\", \"putovati\", \"spavati\", \"radim\"]"
         ),
         VocabItemEntity(
             id = "v_1_2", lessonId = "lesson_1",
             targetWord = "говорити", targetWordLatin = "govoriti",
             sourceTranslation = "говорить / разговаривать", partOfSpeech = "Глагол",
-            exampleSentence = "Да ли добро говорите српски језик?",
-            distractorsJson = "[\"видети\", \"читати\", \"писати\", \"говоримо\"]"
+            exampleSentence = "Da li dobro govorite srpski jezik?",
+            distractorsJson = "[\"videti\", \"čitati\", \"pisati\", \"govorimo\"]"
         ),
         VocabItemEntity(
             id = "v_1_3", lessonId = "lesson_1",
             targetWord = "разумети", targetWordLatin = "razumeti",
             sourceTranslation = "понимать", partOfSpeech = "Глагол",
-            exampleSentence = "Све савршено разумем кад причате споро.",
-            distractorsJson = "[\"мислити\", \"знати\", \"чути\", \"разуме\"]"
+            exampleSentence = "Sve savršeno razumem kad pričate sporo.",
+            distractorsJson = "[\"misliti\", \"znati\", \"čuti\", \"razume\"]"
         ),
         VocabItemEntity(
             id = "v_1_4", lessonId = "lesson_1",
             targetWord = "питање", targetWordLatin = "pitanje",
             sourceTranslation = "вопрос", partOfSpeech = "Существительное",
-            exampleSentence = "Имам једно важно питање за професора.",
-            distractorsJson = "[\"одговор\", \"реч\", \"реченица\", \"питања\"]"
+            exampleSentence = "Imam jedno važno pitanje za profesora.",
+            distractorsJson = "[\"odgovor\", \"reč\", \"rečenica\", \"pitanja\"]"
         ),
         VocabItemEntity(
             id = "v_1_5", lessonId = "lesson_1",
             targetWord = "одговор", targetWordLatin = "odgovor",
             sourceTranslation = "ответ", partOfSpeech = "Существительное",
-            exampleSentence = "Чекам тачан одговор на своју поруку.",
-            distractorsJson = "[\"питање\", \"разговор\", \"књига\", \"одговори\"]"
+            exampleSentence = "Čekam tačan odgovor na svoju poruku.",
+            distractorsJson = "[\"pitanje\", \"razgovor\", \"knjiga\", \"odgovori\"]"
         ),
         VocabItemEntity(
             id = "v_1_6", lessonId = "lesson_1",
             targetWord = "пажљиво", targetWordLatin = "pažljivo",
             sourceTranslation = "внимательно", partOfSpeech = "Наречие",
-            exampleSentence = "Молим вас, пажљиво слушајте упутства.",
-            distractorsJson = "[\"брзо\", \"гласно\", \"споро\", \"пажљив\"]"
+            exampleSentence = "Molim vas, pažljivo slušajte uputstva.",
+            distractorsJson = "[\"brzo\", \"glasno\", \"sporo\", \"pažljiv\"]"
         ),
 
         // Lesson 2
@@ -225,43 +225,43 @@ object InitialCurriculumData {
             id = "v_2_1", lessonId = "lesson_2",
             targetWord = "сећати се", targetWordLatin = "sećati se",
             sourceTranslation = "помнить / вспоминать", partOfSpeech = "Возвратный глагол",
-            exampleSentence = "Добро се сећам тог лепог дана.",
-            distractorsJson = "[\"смејати се\", \"надати се\", \"бавити се\", \"сећам\"]"
+            exampleSentence = "Dobro se sećam tog lepog dana.",
+            distractorsJson = "[\"smejati se\", \"nadati se\", \"baviti se\", \"sećam\"]"
         ),
         VocabItemEntity(
             id = "v_2_2", lessonId = "lesson_2",
             targetWord = "надати се", targetWordLatin = "nadati se",
             sourceTranslation = "надеяться", partOfSpeech = "Возвратный глагол",
-            exampleSentence = "Надамо се да ће време сутра бити сунчано.",
-            distractorsJson = "[\"плашити се\", \"чудити се\", \"љутити се\", \"нада\"]"
+            exampleSentence = "Nadamo se da će vreme sutra biti sunčano.",
+            distractorsJson = "[\"plašiti se\", \"čuditi se\", \"ljutiti se\", \"nada\"]"
         ),
         VocabItemEntity(
             id = "v_2_3", lessonId = "lesson_2",
             targetWord = "бавити се", targetWordLatin = "baviti se",
             sourceTranslation = "заниматься (спортом/делом)", partOfSpeech = "Возвратный глагол",
-            exampleSentence = "Којим спортом се обично бавите?",
-            distractorsJson = "[\"допадати се\", \"одмарати се\", \"налазити се\", \"бавимо\"]"
+            exampleSentence = "Kojim sportom se obično bavite?",
+            distractorsJson = "[\"dopadati se\", \"odmarati se\", \"nalaziti se\", \"bavimo\"]"
         ),
         VocabItemEntity(
             id = "v_2_4", lessonId = "lesson_2",
             targetWord = "смејати се", targetWordLatin = "smejati se",
             sourceTranslation = "смеяться", partOfSpeech = "Возвратный глагол",
-            exampleSentence = "Сви се гласно смеју његовој шали.",
-            distractorsJson = "[\"плакати\", \"љутити се\", \"стидети се\", \"смех\"]"
+            exampleSentence = "Svi se glasno smeju njegovoj šali.",
+            distractorsJson = "[\"plakati\", \"ljutiti se\", \"stideti se\", \"smeh\"]"
         ),
         VocabItemEntity(
             id = "v_2_5", lessonId = "lesson_2",
             targetWord = "допадати се", targetWordLatin = "dopadati se",
             sourceTranslation = "нравиться", partOfSpeech = "Возвратный глагол",
-            exampleSentence = "Много ми се допада Београд увече.",
-            distractorsJson = "[\"сметати\", \"помагати\", \"користити\", \"допао\"]"
+            exampleSentence = "Mnogo mi se dopada Beograd uveče.",
+            distractorsJson = "[\"smetati\", \"pomagati\", \"koristiti\", \"dopao\"]"
         ),
         VocabItemEntity(
             id = "v_2_6", lessonId = "lesson_2",
             targetWord = "навика", targetWordLatin = "navika",
             sourceTranslation = "привычка", partOfSpeech = "Существительное",
-            exampleSentence = "Јутарње учење је моја најбоља навика.",
-            distractorsJson = "[\"одлука\", \"правило\", \"особина\", \"навике\"]"
+            exampleSentence = "Jutarnje učenje je moja najbolja navika.",
+            distractorsJson = "[\"odluka\", \"pravilo\", \"osobina\", \"navike\"]"
         ),
 
         // Lesson 3
@@ -269,57 +269,57 @@ object InitialCurriculumData {
             id = "v_3_1", lessonId = "lesson_3",
             targetWord = "морати", targetWordLatin = "morati",
             sourceTranslation = "быть должным / обязанным", partOfSpeech = "Модальный глагол",
-            exampleSentence = "Данас морам да завршим сав посао.",
-            distractorsJson = "[\"моћи\", \"хтети\", \"смети\", \"морамо\"]"
+            exampleSentence = "Danas moram da završim sav posao.",
+            distractorsJson = "[\"moći\", \"hteti\", \"smeti\", \"moramo\"]"
         ),
         VocabItemEntity(
             id = "v_3_2", lessonId = "lesson_3",
             targetWord = "моћи", targetWordLatin = "moći",
             sourceTranslation = "мочь / иметь возможность", partOfSpeech = "Модальный глагол",
-            exampleSentence = "Могу ли да добијем чашу воде, молим вас?",
-            distractorsJson = "[\"морати\", \"знати\", \"требати\", \"можемо\"]"
+            exampleSentence = "Mogu li da dobijem čašu vode, molim vas?",
+            distractorsJson = "[\"morati\", \"znati\", \"trebati\", \"možemo\"]"
         ),
         VocabItemEntity(
             id = "v_3_3", lessonId = "lesson_3",
             targetWord = "хтети", targetWordLatin = "hteti",
             sourceTranslation = "хотеть", partOfSpeech = "Модальный глагол",
-            exampleSentence = "Хоћу да купим ову занимљиву књигу.",
-            distractorsJson = "[\"желети\", \"волети\", \"тражити\", \"нећу\"]"
+            exampleSentence = "Hoću da kupim ovu zanimljivu knjigu.",
+            distractorsJson = "[\"želeti\", \"voleti\", \"tražiti\", \"neću\"]"
         ),
         VocabItemEntity(
             id = "v_3_4", lessonId = "lesson_3",
             targetWord = "смети", targetWordLatin = "smeti",
             sourceTranslation = "сметь / разрешено", partOfSpeech = "Модальный глагол",
-            exampleSentence = "Овде не смете да паркирате аутомобил.",
-            distractorsJson = "[\"моћи\", \"морати\", \"требати\", \"смем\"]"
+            exampleSentence = "Ovde ne smete da parkirate automobil.",
+            distractorsJson = "[\"moći\", \"morati\", \"trebati\", \"smem\"]"
         ),
         VocabItemEntity(
             id = "v_3_5", lessonId = "lesson_3",
             targetWord = "састанак", targetWordLatin = "sastanak",
             sourceTranslation = "встреча / собрание", partOfSpeech = "Существительное",
-            exampleSentence = "Имамо важан пословни састанак у подне.",
-            distractorsJson = "[\"разговор\", \"предавање\", \"договор\", \"састанци\"]"
+            exampleSentence = "Imamo važan poslovni sastanak u podne.",
+            distractorsJson = "[\"razgovor\", \"predavanje\", \"dogovor\", \"sastanci\"]"
         ),
         VocabItemEntity(
             id = "v_3_6", lessonId = "lesson_3",
             targetWord = "одмах", targetWordLatin = "odmah",
             sourceTranslation = "сейчас же / сразу", partOfSpeech = "Наречие",
-            exampleSentence = "Морамо одмах да позовемо такси.",
-            distractorsJson = "[\"касније\", \"сутра\", \"јуче\", \"брзо\"]"
+            exampleSentence = "Moramo odmah da pozovemo taksi.",
+            distractorsJson = "[\"kasnije\", \"sutra\", \"juče\", \"brzo\"]"
         ),
-        VocabItemEntity("v_4_1", "lesson_4", "јуче", "juče", "вчера", "Наречие", distractorsJson = "[\"данас\",\"сутра\",\"увек\"]"),
-        VocabItemEntity("v_5_1", "lesson_5", "сутра", "sutra", "завтра", "Наречие", distractorsJson = "[\"јуче\",\"данас\",\"сада\"]"),
-        VocabItemEntity("v_6_1", "lesson_6", "написати", "napisati", "написать", "Глагол", distractorsJson = "[\"писати\",\"читати\",\"рећи\"]"),
-        VocabItemEntity("v_7_1", "lesson_7", "помоћи", "pomoći", "помочь", "Глагол", distractorsJson = "[\"радити\",\"учити\",\"дати\"]"),
-        VocabItemEntity("v_8_1", "lesson_8", "желети", "želeti", "желать", "Глагол", distractorsJson = "[\"моћи\",\"имати\",\"знати\"]"),
-        VocabItemEntity("v_9_1", "lesson_9", "доћи", "doći", "прийти", "Глагол", distractorsJson = "[\"отићи\",\"ићи\",\"ући\"]"),
-        VocabItemEntity("v_10_1", "lesson_10", "поклон", "poklon", "подарок", "Существительное", distractorsJson = "[\"писмо\",\"књига\",\"посао\"]"),
-        VocabItemEntity("v_11_1", "lesson_11", "град", "grad", "город", "Существительное", distractorsJson = "[\"село\",\"улица\",\"кућа\"]"),
-        VocabItemEntity("v_12_1", "lesson_12", "наш", "naš", "наш", "Местоимение", distractorsJson = "[\"мој\",\"твој\",\"ваш\"]"),
-        VocabItemEntity("v_13_1", "lesson_13", "бољи", "bolji", "лучше", "Прилагательное", distractorsJson = "[\"гори\",\"већи\",\"мањи\"]"),
-        VocabItemEntity("v_14_1", "lesson_14", "зато што", "zato što", "потому что", "Союз", distractorsJson = "[\"иако\",\"док\",\"кад\"]"),
-        VocabItemEntity("v_15_1", "lesson_15", "требати", "trebati", "быть нужным", "Глагол", distractorsJson = "[\"морати\",\"моћи\",\"смети\"]"),
-        VocabItemEntity("v_16_1", "lesson_16", "разумевање", "razumevanje", "понимание", "Существительное", distractorsJson = "[\"питање\",\"одговор\",\"знање\"]")
+        VocabItemEntity("v_4_1", "lesson_4", "јуче", "juče", "вчера", "Наречие", distractorsJson = "[\"danas\",\"sutra\",\"uvek\"]"),
+        VocabItemEntity("v_5_1", "lesson_5", "сутра", "sutra", "завтра", "Наречие", distractorsJson = "[\"juče\",\"danas\",\"sada\"]"),
+        VocabItemEntity("v_6_1", "lesson_6", "написати", "napisati", "написать", "Глагол", distractorsJson = "[\"pisati\",\"čitati\",\"reći\"]"),
+        VocabItemEntity("v_7_1", "lesson_7", "помоћи", "pomoći", "помочь", "Глагол", distractorsJson = "[\"raditi\",\"učiti\",\"dati\"]"),
+        VocabItemEntity("v_8_1", "lesson_8", "желети", "želeti", "желать", "Глагол", distractorsJson = "[\"moći\",\"imati\",\"znati\"]"),
+        VocabItemEntity("v_9_1", "lesson_9", "доћи", "doći", "прийти", "Глагол", distractorsJson = "[\"otići\",\"ići\",\"ući\"]"),
+        VocabItemEntity("v_10_1", "lesson_10", "поклон", "poklon", "подарок", "Существительное", distractorsJson = "[\"pismo\",\"knjiga\",\"posao\"]"),
+        VocabItemEntity("v_11_1", "lesson_11", "град", "grad", "город", "Существительное", distractorsJson = "[\"selo\",\"ulica\",\"kuća\"]"),
+        VocabItemEntity("v_12_1", "lesson_12", "наш", "naš", "наш", "Местоимение", distractorsJson = "[\"moj\",\"tvoj\",\"vaš\"]"),
+        VocabItemEntity("v_13_1", "lesson_13", "бољи", "bolji", "лучше", "Прилагательное", distractorsJson = "[\"gori\",\"veći\",\"manji\"]"),
+        VocabItemEntity("v_14_1", "lesson_14", "зато што", "zato što", "потому что", "Союз", distractorsJson = "[\"iako\",\"dok\",\"kad\"]"),
+        VocabItemEntity("v_15_1", "lesson_15", "требати", "trebati", "быть нужным", "Глагол", distractorsJson = "[\"morati\",\"moći\",\"smeti\"]"),
+        VocabItemEntity("v_16_1", "lesson_16", "разумевање", "razumevanje", "понимание", "Существительное", distractorsJson = "[\"pitanje\",\"odgovor\",\"znanje\"]")
     )
 
     fun getInitialGrammarGuides(): List<GrammarGuideEntity> {

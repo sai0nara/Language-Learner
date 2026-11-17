@@ -125,4 +125,21 @@ class ExampleUnitTest {
             )
         }
     }
+
+    @Test
+    fun testInitialVocabUsesLatinDistractorsAndExamples() {
+        val cyrillicRegex = Regex("[\\p{InCyrillic}]")
+        val vocab = InitialCurriculumData.getInitialVocab()
+        assertTrue(vocab.isNotEmpty())
+        vocab.forEach { item ->
+            assertTrue(
+                "distractorsJson should not contain Cyrillic for ${item.id}: ${item.distractorsJson}",
+                !cyrillicRegex.containsMatchIn(item.distractorsJson)
+            )
+            assertTrue(
+                "exampleSentence should not contain Cyrillic for ${item.id}: ${item.exampleSentence}",
+                !cyrillicRegex.containsMatchIn(item.exampleSentence)
+            )
+        }
+    }
 }
