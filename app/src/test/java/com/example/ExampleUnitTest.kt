@@ -127,19 +127,59 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun testInitialVocabUsesLatinDistractorsAndExamples() {
+    fun testInitialVocabMeetsLessonVolumeRussianDistractorsAndLatinExamples() {
         val cyrillicRegex = Regex("[\\p{InCyrillic}]")
+        val moshi = com.squareup.moshi.Moshi.Builder().build()
+        val listType = com.squareup.moshi.Types.newParameterizedType(List::class.java, String::class.java)
+        val adapter = moshi.adapter<List<String>>(listType)
+
+        val lessons = InitialCurriculumData.getInitialLessons()
         val vocab = InitialCurriculumData.getInitialVocab()
-        assertTrue(vocab.isNotEmpty())
+        assertEquals(16, lessons.size)
+
+        lessons.forEach { lesson ->
+            val lessonVocab = vocab.filter { it.lessonId == lesson.id }
+            assertTrue(
+                "Lesson ${lesson.id} should have 10..15 vocab items, got ${lessonVocab.size}",
+                lessonVocab.size in 10..15
+            )
+            assertEquals(
+                "Lesson ${lesson.id} vocabCount should match actual seeded items",
+                lessonVocab.size,
+                lesson.vocabCount
+            )
+        }
+
         vocab.forEach { item ->
             assertTrue(
-                "distractorsJson should not contain Cyrillic for ${item.id}: ${item.distractorsJson}",
-                !cyrillicRegex.containsMatchIn(item.distractorsJson)
+                "targetWordLatin should not be blank for ${item.id}",
+                item.targetWordLatin.isNotBlank() && !cyrillicRegex.containsMatchIn(item.targetWordLatin)
             )
             assertTrue(
-                "exampleSentence should not contain Cyrillic for ${item.id}: ${item.exampleSentence}",
-                !cyrillicRegex.containsMatchIn(item.exampleSentence)
+                "exampleSentence should be non-blank Latin Serbian for ${item.id}: ${item.exampleSentence}",
+                item.exampleSentence.isNotBlank() && !cyrillicRegex.containsMatchIn(item.exampleSentence)
             )
+            val distractors = adapter.fromJson(item.distractorsJson) ?: emptyList()
+            assertEquals(
+                "distractorsJson should have exactly 3 distractors for ${item.id}",
+                3,
+                distractors.size
+            )
+            assertEquals(
+                "distractorsJson should have 3 distinct entries for ${item.id}",
+                3,
+                distractors.toSet().size
+            )
+            assertTrue(
+                "distractorsJson should not contain sourceTranslation for ${item.id}",
+                item.sourceTranslation !in distractors
+            )
+            distractors.forEach { d ->
+                assertTrue(
+                    "Distractor '$d' for ${item.id} should be Russian (Cyrillic)",
+                    cyrillicRegex.containsMatchIn(d)
+                )
+            }
         }
     }
 }
