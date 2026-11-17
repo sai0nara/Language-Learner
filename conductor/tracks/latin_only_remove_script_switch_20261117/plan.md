@@ -24,4 +24,4 @@
 - [x] Task: Run full test suite and wiki linter 995e796
   - [x] Run `./gradlew testDebugUnitTest` and verify all unit & Compose UI tests pass
   - [x] Run `python3 wiki/lint.py` and verify exit code 0
-- [~] Task: Conductor - User Manual Verification 'Phase 3: Documentation, QA Artifacts, & Full Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Documentation, QA Artifacts, & Full Verification' (Protocol in workflow.md)
