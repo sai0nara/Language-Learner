@@ -57,7 +57,6 @@ fun GrammarMatrixScreen(
     onBack: () -> Unit
 ) {
     val grammarGuide by viewModel.activeGrammar.collectAsStateWithLifecycle()
-    val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
 
     val moshi = remember { Moshi.Builder().build() }
     val matrixAdapter = remember { moshi.adapter(ConjugationMatrixData::class.java) }
@@ -199,23 +198,18 @@ fun GrammarMatrixScreen(
                 // Render 3x3 Grid
                 Matrix3x3Table(
                     matrixData = matrixData,
-                    isLatin = isLatin,
                     selectedCell = selectedCell,
                     onSelectCell = { selectedCell = it }
                 )
             } else {
                 // Default polyglot matrix overview
-                FallbackMatrixTable(isLatin = isLatin)
+                FallbackMatrixTable()
             }
 
             // Selected Cell Detail Card
             if (selectedCell != null) {
                 val cell = selectedCell!!
-                val displayExampleSerbian = if (isLatin && cell.exampleSerbianLatin.isNotBlank()) {
-                    cell.exampleSerbianLatin
-                } else {
-                    cell.exampleSerbian
-                }
+                val displayExampleSerbian = cell.exampleSerbianLatin.ifBlank { cell.exampleSerbian }
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Card(
@@ -294,7 +288,6 @@ fun GrammarMatrixScreen(
 @Composable
 private fun Matrix3x3Table(
     matrixData: ConjugationMatrixData,
-    isLatin: Boolean,
     selectedCell: ConjugationCell?,
     onSelectCell: (ConjugationCell) -> Unit
 ) {
@@ -410,7 +403,7 @@ private fun Matrix3x3Table(
 }
 
 @Composable
-private fun FallbackMatrixTable(isLatin: Boolean) {
+private fun FallbackMatrixTable() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -423,11 +416,11 @@ private fun FallbackMatrixTable(isLatin: Boolean) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "• Презент: радим, радиш, ради, радимо, радите, раде\n" +
-                        "• Перфекат: ја сам радио, ти си радио, он је радио...\n" +
-                        "• Футур I: ја ћу радити / радићу, радићеш, радиће...\n" +
-                        "• Отрицание: не радим (наст.) / нисам радио (прош.) / нећу радити (буд.)\n" +
-                        "• Вопрос: Да ли радиш? / Јеси ли радио? / Хоћеш ли радити?",
+                text = "• Prezent: radim, radiš, radi, radimo, radite, rade\n" +
+                        "• Perfekat: ja sam radio, ti si radio, on je radio...\n" +
+                        "• Futur I: ja ću raditi / radiću, radićeš, radiće...\n" +
+                        "• Отрицание: ne radim (наст.) / nisam radio (прош.) / neću raditi (буд.)\n" +
+                        "• Вопрос: Da li radiš? / Jesi li radio? / Hoćeš li raditi?",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 20.sp

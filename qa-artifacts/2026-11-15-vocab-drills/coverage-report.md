@@ -3,6 +3,7 @@
 **Run:** `2026-11-15-vocab-drills`  
 **Scope:** `VocabDrillScreen` (`app/src/main/java/com/example/ui/screens/VocabDrillScreen.kt`) & `CurriculumRepository.recordAnswer`  
 **Gate Status:** `approved` (Stage 1–3 complete using resolved gap context)
+**Status Note (2026-11-17):** `isLatinScript` script-toggle dimensions and Cyrillic-only cases are **Obsolete** following track `latin_only_remove_script_switch_20261117` (UI renders Latin target words with primary fallback).
 
 ---
 

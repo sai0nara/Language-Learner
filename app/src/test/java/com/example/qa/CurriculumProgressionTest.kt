@@ -433,27 +433,26 @@ class CurriculumProgressionTest {
             }
         }
         val initialTheme = viewModel.isDarkTheme.value
-        page.assertHeaderDisplayed(isLatin = false)
+        page.assertHeaderDisplayed()
 
         // Act
-        page.toggleScript().toggleTheme()
+        page.toggleTheme()
 
         // Assert
-        page.assertHeaderDisplayed(isLatin = true)
-        assertTrue(viewModel.isLatinScript.value)
+        page.assertHeaderDisplayed()
         assertEquals(!initialTheme, viewModel.isDarkTheme.value)
     }
 
     @Test
-    fun `TC-019 pairwise UI config matrix across script theme and lesson states`() {
+    fun `TC-019 pairwise UI config matrix across theme and lesson states`() {
         // Arrange
         val configs = listOf(
-            Triple(false, false, "Locked"),
-            Triple(true, true, "Locked"),
-            Triple(false, true, "Unlocked"),
-            Triple(true, false, "Unlocked"),
-            Triple(false, false, "Mastered"),
-            Triple(true, true, "Mastered")
+            Pair(false, "Locked"),
+            Pair(true, "Locked"),
+            Pair(true, "Unlocked"),
+            Pair(false, "Unlocked"),
+            Pair(false, "Mastered"),
+            Pair(true, "Mastered")
         )
         val page = CurriculumPage(composeRule)
         composeRule.setContent {
@@ -468,10 +467,9 @@ class CurriculumProgressionTest {
         }
 
         // Act & Assert
-        configs.forEach { (wantLatin, wantDark, _) ->
-            if (viewModel.isLatinScript.value != wantLatin) page.toggleScript()
+        configs.forEach { (wantDark, _) ->
             if (viewModel.isDarkTheme.value != wantDark) page.toggleTheme()
-            page.assertHeaderDisplayed(isLatin = wantLatin)
+            page.assertHeaderDisplayed()
                 .assertLessonCardDisplayed("lesson_1")
         }
     }

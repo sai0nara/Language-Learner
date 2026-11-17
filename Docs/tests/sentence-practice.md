@@ -2,7 +2,7 @@
 
 > Verifies inner-case token cleaning, sentence DAO persistence, and mastery score updates from sentence practice answers.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Automated coverage
 

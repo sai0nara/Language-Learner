@@ -99,7 +99,7 @@ object CurriculumImporter {
                         val src = (sMap["sourceSentence"] as? String) ?: ""
                         val tgt = (sMap["targetSentence"] as? String) ?: ""
                         val tgtLatin = (sMap["targetSentenceLatin"] as? String) ?: ""
-                        val tokens = (sMap["tokens"] as? List<String>) ?: tgt.split(" ")
+                        val tokens = (sMap["tokens"] as? List<String>) ?: tgtLatin.ifBlank { tgt }.split(" ")
                         val distractors = (sMap["distractors"] as? List<String>) ?: emptyList()
                         val hint = (sMap["hint"] as? String) ?: ""
                         val audioUri = (sMap["audioUri"] as? String) ?: ""
@@ -330,7 +330,7 @@ object CurriculumImporter {
                                     val src = parser.getAttributeValue(null, "source") ?: ""
                                     val tgt = parser.getAttributeValue(null, "target") ?: ""
                                     val latin = parser.getAttributeValue(null, "latin") ?: ""
-                                    val tokensRaw = parser.getAttributeValue(null, "tokens") ?: tgt
+                                    val tokensRaw = parser.getAttributeValue(null, "tokens") ?: latin.ifBlank { tgt }.replace(" ", ",")
                                     val distractorsRaw = parser.getAttributeValue(null, "distractors") ?: ""
                                     val hint = parser.getAttributeValue(null, "hint") ?: ""
                                     val audio = parser.getAttributeValue(null, "audio") ?: ""
@@ -395,7 +395,7 @@ object CurriculumImporter {
           "targetWordLatin": "hteti",
           "sourceTranslation": "хотеть",
           "partOfSpeech": "Глагол",
-          "distractors": ["моћи", "знати", "имати"],
+          "distractors": ["moći", "znati", "imati"],
           "audioUri": ""
         },
         {
@@ -403,13 +403,13 @@ object CurriculumImporter {
           "targetWordLatin": "moći",
           "sourceTranslation": "мочь",
           "partOfSpeech": "Глагол",
-          "distractors": ["хтети", "морати", "бити"],
+          "distractors": ["hteti", "morati", "biti"],
           "audioUri": ""
         }
       ],
       "grammar": {
         "title": "Конструкция 'Хтети + ДА + Презент'",
-        "explanation": "В сербском языке инфинитив после модальных глаголов часто заменяется союзом 'да' с личной формой настоящего времени: Хоћу да радим (Я хочу работать).",
+        "explanation": "В сербском языке инфинитив после модальных глаголов часто заменяется союзом 'da' с личной формой настоящего времени: Hoću da radim (Я хочу работать).",
         "matrix": {
           "verbInfinitive": "Хтети",
           "verbInfinitiveLatin": "Hteti",
@@ -419,8 +419,8 @@ object CurriculumImporter {
             {
               "formType": "Affirmative",
               "tense": "Present",
-              "formula": "хоћу, хоћеш, хоће, хоћемо, хоћете, хоће",
-              "exampleSerbian": "Ја хоћу да учим српски језик.",
+              "formula": "hoću, hoćeš, hoće, hoćemo, hoćete, hoće",
+              "exampleSerbian": "Ja hoću da učim srpski jezik.",
               "exampleRussian": "Я хочу учить сербский язык."
             }
           ]
@@ -431,9 +431,9 @@ object CurriculumImporter {
           "sourceSentence": "Я хочу говорить по-сербски.",
           "targetSentence": "Ја хоћу да говорим српски.",
           "targetSentenceLatin": "Ja hoću da govorim srpski.",
-          "tokens": ["Ја", "хоћу", "да", "говорим", "српски."],
-          "distractors": ["нећу", "могу", "радим"],
-          "hint": "Используйте связку 'хоћу да + презенс'",
+          "tokens": ["ja", "hoću", "da", "govorim", "srpski."],
+          "distractors": ["neću", "mogu", "radim"],
+          "hint": "Используйте связку 'hoću da + prezent'",
           "audioUri": ""
         }
       ]
@@ -454,7 +454,7 @@ object CurriculumImporter {
   <lesson id="xml_lesson_1" title="Урок 1: Будущее время" grammarFocus="Futur I" level="B1">
     <vocab target="путовати" latin="putovati" translation="путешествовать" pos="Глагол" audio="" />
     <vocab target="куповати" latin="kupovati" translation="покупать" pos="Глагол" audio="" />
-    <sentence source="Мы завтра будем путешествовать." target="Ми ћемо сутра путовати." latin="Mi ćemo sutra putovati." tokens="Ми,ћемо,сутра,путовати." distractors="бићемо,јесте" hint="Будущее время Futur I" audio="" />
+    <sentence source="Мы завтра будем путешествовать." target="Ми ћемо сутра путовати." latin="Mi ćemo sutra putovati." tokens="mi,ćemo,sutra,putovati." distractors="bićemo,jeste" hint="Будущее время Futur I" audio="" />
   </lesson>
 </curriculum>"""
 }

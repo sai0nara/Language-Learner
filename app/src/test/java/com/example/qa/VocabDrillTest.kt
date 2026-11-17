@@ -20,7 +20,9 @@ import com.example.ui.screens.VocabDrillProgressBar
 import com.example.ui.screens.VocabDrillScreen
 import com.example.ui.theme.LanguageLearnerTheme
 import com.example.ui.viewmodel.LanguageLearnerViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -75,6 +77,7 @@ class VocabDrillTest {
     @After
     fun tearDown() {
         composeRule.mainClock.autoAdvance = true
+        viewModel.viewModelScope.cancel()
         tempFiles.forEach { it.delete() }
         tempFiles.clear()
         runBlocking(Dispatchers.IO) {
@@ -132,6 +135,7 @@ class VocabDrillTest {
     ): VocabDrillPage {
         composeRule.mainClock.autoAdvance = true
         if (activeTestLesson.value != null) {
+            viewModel.viewModelScope.cancel()
             viewModel = LanguageLearnerViewModel(app)
         }
         runBlocking(Dispatchers.IO) {
@@ -139,9 +143,6 @@ class VocabDrillTest {
             if (items.isNotEmpty()) {
                 db.vocabDao().insertVocabItems(items)
             }
-        }
-        if (viewModel.isLatinScript.value != isLatin) {
-            viewModel.toggleScript()
         }
         viewModel.selectLesson(lesson)
         composeRule.waitUntil(timeoutMillis = 5_000) {
@@ -221,8 +222,8 @@ class VocabDrillTest {
         val vibratorShadow = Shadows.shadowOf(app.getSystemService(Vibrator::class.java))
 
         // Assert initial load
-        page.assertTargetWordDisplayed("здраво")
-        assertEquals("здраво", ttsShadow.lastSpokenText)
+        page.assertTargetWordDisplayed("zdravo")
+        assertEquals("zdravo", ttsShadow.lastSpokenText)
 
         // Act - tap correct option with manual clock to observe intermediate feedback
         composeRule.mainClock.autoAdvance = false
@@ -232,7 +233,7 @@ class VocabDrillTest {
         // Assert - intermediate state: progress 100.0% (1 / 1), 40ms haptic, no Russian TTS
         page.assertProgressDisplayed("100.0% (1 / 1)")
         assertEquals(40L, vibratorShadow.milliseconds)
-        assertEquals("здраво", ttsShadow.lastSpokenText)
+        assertEquals("zdravo", ttsShadow.lastSpokenText)
 
         composeRule.waitUntil(timeoutMillis = 5_000) {
             ShadowLooper.idleMainLooper()
@@ -264,18 +265,20 @@ class VocabDrillTest {
         val item1 = buildVocabItem(
             id = "qa_vd_1",
             targetWord = "здраво",
+            targetWordLatin = "zdravo",
             sourceTranslation = "привет",
             distractorsJson = """["пока"]"""
         )
         val item2 = buildVocabItem(
             id = "qa_vd_2",
             targetWord = "хвала",
+            targetWordLatin = "hvala",
             sourceTranslation = "спасибо",
             distractorsJson = """["пожалуйста"]"""
         )
         val page = launchVocabDrill(lesson, listOf(item1, item2), isLatin = false)
         val firstPrompt = page.currentTargetWord()
-        val (firstCorrect, secondCorrect) = if (firstPrompt == item1.targetWord) {
+        val (firstCorrect, secondCorrect) = if (firstPrompt == item1.targetWordLatin) {
             item1.sourceTranslation to item2.sourceTranslation
         } else {
             item2.sourceTranslation to item1.sourceTranslation
@@ -317,12 +320,14 @@ class VocabDrillTest {
         val itemA = buildVocabItem(
             id = "qa_vd_a",
             targetWord = "здраво",
+            targetWordLatin = "zdravo",
             sourceTranslation = "привет",
             distractorsJson = """["пока"]"""
         )
         val itemB = buildVocabItem(
             id = "qa_vd_b",
             targetWord = "хвала",
+            targetWordLatin = "hvala",
             sourceTranslation = "спасибо",
             distractorsJson = """["нет"]"""
         )
@@ -330,7 +335,7 @@ class VocabDrillTest {
         val vibratorShadow = Shadows.shadowOf(app.getSystemService(Vibrator::class.java))
 
         val firstTarget = page.currentTargetWord()
-        val (firstItem, secondItem) = if (firstTarget == itemA.targetWord) itemA to itemB else itemB to itemA
+        val (firstItem, secondItem) = if (firstTarget == itemA.targetWordLatin) itemA to itemB else itemB to itemA
         val firstDistractor = if (firstItem.id == itemA.id) "пока" else "нет"
 
         // Act - tap incorrect option on first item
@@ -351,14 +356,14 @@ class VocabDrillTest {
 
         // Act - advance 800ms to second item, answer second item correctly
         page.advanceDelay(850L)
-            .assertTargetWordDisplayed(secondItem.targetWord)
+            .assertTargetWordDisplayed(secondItem.targetWordLatin)
             .tapOption(secondItem.sourceTranslation)
             .advanceFrame()
             .assertProgressDisplayed("50.0% (1 / 2)")
             .advanceDelay(550L)
 
         // Assert - re-queued first item appears again
-        page.assertTargetWordDisplayed(firstItem.targetWord)
+        page.assertTargetWordDisplayed(firstItem.targetWordLatin)
 
         // Act - answer re-queued item correctly
         page.tapOption(firstItem.sourceTranslation)
@@ -379,12 +384,14 @@ class VocabDrillTest {
         val item1 = buildVocabItem(
             id = "qa_vd_1",
             targetWord = "здраво",
+            targetWordLatin = "zdravo",
             sourceTranslation = "привет",
             distractorsJson = """["пока"]"""
         )
         val item2 = buildVocabItem(
             id = "qa_vd_2",
             targetWord = "хвала",
+            targetWordLatin = "hvala",
             sourceTranslation = "спасибо",
             distractorsJson = """["нет"]"""
         )
@@ -392,7 +399,7 @@ class VocabDrillTest {
         val vibratorShadow = Shadows.shadowOf(app.getSystemService(Vibrator::class.java))
 
         val firstTarget = page.currentTargetWord()
-        val (firstItem, secondItem) = if (firstTarget == item1.targetWord) item1 to item2 else item2 to item1
+        val (firstItem, secondItem) = if (firstTarget == item1.targetWordLatin) item1 to item2 else item2 to item1
         val firstDistractor = if (firstItem.id == item1.id) "пока" else "нет"
 
         // Act - tap incorrect on first item, then correct on second item
@@ -429,18 +436,20 @@ class VocabDrillTest {
         val item1 = buildVocabItem(
             id = "qa_vd_1",
             targetWord = "здраво",
+            targetWordLatin = "zdravo",
             sourceTranslation = "привет",
             distractorsJson = """["пока"]"""
         )
         val item2 = buildVocabItem(
             id = "qa_vd_2",
             targetWord = "хвала",
+            targetWordLatin = "hvala",
             sourceTranslation = "спасибо",
             distractorsJson = """["нет"]"""
         )
         val page = launchVocabDrill(lesson, listOf(item1, item2), isLatin = false)
         val firstTarget = page.currentTargetWord()
-        val firstItem = if (firstTarget == item1.targetWord) item1 else item2
+        val firstItem = if (firstTarget == item1.targetWordLatin) item1 else item2
         val firstDistractor = if (firstItem.id == item1.id) "пока" else "нет"
 
         // Act - tap correct option, then rapidly tap distractor & correct option again before 500ms elapses
@@ -503,6 +512,7 @@ class VocabDrillTest {
             id = "qa_vd_r1",
             lessonId = lesson.id,
             targetWord = "здраво",
+            targetWordLatin = "zdravo",
             sourceTranslation = "привет",
             distractorsJson = """["пока"]"""
         )
@@ -510,6 +520,7 @@ class VocabDrillTest {
             id = "qa_vd_r2",
             lessonId = lesson.id,
             targetWord = "хвала",
+            targetWordLatin = "hvala",
             sourceTranslation = "спасибо",
             distractorsJson = """["нет"]"""
         )
@@ -517,7 +528,7 @@ class VocabDrillTest {
         composeRule.mainClock.autoAdvance = false
         repeat(2) {
             val target = page.currentTargetWord()
-            val answer = if (target == item1.targetWord) item1.sourceTranslation else item2.sourceTranslation
+            val answer = if (target == item1.targetWordLatin) item1.sourceTranslation else item2.sourceTranslation
             page.tapOption(answer).advanceFrame().advanceDelay(550L)
         }
         page.assertCompletionViewDisplayed(expectedTotal = 2)
@@ -669,6 +680,7 @@ class VocabDrillTest {
         val itemA = buildVocabItem(
             id = "qa_vd_meta_a",
             targetWord = "књига",
+            targetWordLatin = "knjiga",
             sourceTranslation = "книга",
             partOfSpeech = "   ",
             exampleSentence = "",
@@ -677,6 +689,7 @@ class VocabDrillTest {
         val itemB = buildVocabItem(
             id = "qa_vd_meta_b",
             targetWord = "ђак",
+            targetWordLatin = "đak",
             sourceTranslation = "ученик",
             partOfSpeech = "сущ.",
             exampleSentence = "Ђак чита књигу.",
@@ -688,7 +701,7 @@ class VocabDrillTest {
         // Act & Assert both items in shuffled order
         repeat(2) {
             val current = page.currentTargetWord()
-            if (current == itemA.targetWord) {
+            if (current == itemA.targetWordLatin) {
                 page.assertTextAbsent("сущ.")
                     .assertTextAbsent("„Ђак чита књигу.“")
                     .tapOption(itemA.sourceTranslation)
@@ -835,7 +848,7 @@ class VocabDrillTest {
         val page2 = launchVocabDrill(lesson2, listOf(item2), isLatin = false)
 
         // Assert Config 2
-        page2.assertTargetWordDisplayed("хвала")
+        page2.assertTargetWordDisplayed("hvala")
             .assertTextAbsent("межд.")
             .assertOptionCount(1)
     }
@@ -878,7 +891,7 @@ class VocabDrillTest {
         val vibratorShadow = Shadows.shadowOf(app.getSystemService(Vibrator::class.java))
 
         // Assert Config 4
-        page4.assertTargetWordDisplayed("књига")
+        page4.assertTargetWordDisplayed("knjiga")
             .assertTextDisplayed("сущ.")
             .assertTextDisplayed("„Ово је књига.“")
             .assertOptionCount(4)
@@ -930,7 +943,7 @@ class VocabDrillTest {
         val page6 = launchVocabDrill(lesson6, listOf(item6), isLatin = false)
 
         // Assert Config 6
-        page6.assertTargetWordDisplayed("хвала")
+        page6.assertTargetWordDisplayed("hvala")
             .assertTextDisplayed("частица")
             .assertTextDisplayed("„Хвала лепо!“")
             .assertOptionCount(6)

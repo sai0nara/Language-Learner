@@ -2,7 +2,7 @@
 
 > Verifies SM-2 interval progression, ease factor floor, lapse resets, quality clamping, and `SrsDao` due-item persistence.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Automated coverage
 

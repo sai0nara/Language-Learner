@@ -77,7 +77,6 @@ fun VocabDrillScreen(
 ) {
     val context = LocalContext.current
     val vibrator = remember { context.getSystemService(Vibrator::class.java) }
-    val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
     val rawVocabList by viewModel.activeVocab.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -113,7 +112,7 @@ fun VocabDrillScreen(
     LaunchedEffect(currentItem, currentIndex) {
         if (currentItem != null) {
             cardStartMs = System.currentTimeMillis()
-            val wordToSpeak = if (isLatin) currentItem.targetWordLatin else currentItem.targetWord
+            val wordToSpeak = currentItem.targetWordLatin.ifBlank { currentItem.targetWord }
             viewModel.playAudio(wordToSpeak, currentItem.audioUri, isTargetLanguage = true)
         }
     }
@@ -164,7 +163,7 @@ fun VocabDrillScreen(
             IconButton(
                 onClick = {
                     if (currentItem != null) {
-                        val word = if (isLatin) currentItem.targetWordLatin else currentItem.targetWord
+                        val word = currentItem.targetWordLatin.ifBlank { currentItem.targetWord }
                         viewModel.playAudio(word, currentItem.audioUri, isTargetLanguage = true)
                     }
                 },
@@ -246,7 +245,7 @@ fun VocabDrillScreen(
             Spacer(modifier = Modifier.weight(0.4f))
 
             // Prominently centered target word matching screenshot 4
-            val targetDisplay = if (isLatin) currentItem.targetWordLatin else currentItem.targetWord
+            val targetDisplay = currentItem.targetWordLatin.ifBlank { currentItem.targetWord }
 
             Column(
                 modifier = Modifier

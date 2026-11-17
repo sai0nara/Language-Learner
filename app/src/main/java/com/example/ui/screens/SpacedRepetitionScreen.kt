@@ -57,7 +57,6 @@ fun SpacedRepetitionScreen(
 ) {
     val dueItemsRaw by viewModel.dueSrsItems.collectAsStateWithLifecycle()
     val dailyBlended by viewModel.dailyBlendedQueue.collectAsStateWithLifecycle()
-    val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
 
     androidx.compose.runtime.LaunchedEffect(Unit) {
         viewModel.refreshDailyBlendedQueue()
@@ -160,6 +159,12 @@ fun SpacedRepetitionScreen(
             // Active Flashcard
             Spacer(modifier = Modifier.weight(0.3f))
 
+            val isSentence = currentItem.itemType == "SENTENCE"
+            // Sentence cards: prompt = source language, secondaryText = Latin target (the answer).
+            val promptText = if (isSentence) currentItem.prompt else currentItem.secondaryText.ifBlank { currentItem.prompt }
+            val answerText = if (isSentence) currentItem.secondaryText.ifBlank { currentItem.answer } else currentItem.answer
+            val targetSpeech = if (isSentence) answerText else promptText
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -174,8 +179,6 @@ fun SpacedRepetitionScreen(
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val promptText = if (isLatin && currentItem.secondaryText.isNotBlank()) currentItem.secondaryText else currentItem.prompt
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
@@ -195,7 +198,7 @@ fun SpacedRepetitionScreen(
 
                         IconButton(
                             onClick = {
-                                viewModel.playAudio(promptText, isTargetLanguage = true)
+                                viewModel.playAudio(targetSpeech, isTargetLanguage = true)
                             }
                         ) {
                             Icon(
@@ -204,14 +207,6 @@ fun SpacedRepetitionScreen(
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         }
-                    }
-
-                    if (currentItem.secondaryText.isNotBlank() && !isLatin) {
-                        Text(
-                            text = currentItem.secondaryText,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -228,7 +223,7 @@ fun SpacedRepetitionScreen(
                             Spacer(modifier = Modifier.height(20.dp))
 
                             Text(
-                                text = currentItem.answer,
+                                text = answerText,
                                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center,
@@ -259,8 +254,7 @@ fun SpacedRepetitionScreen(
                     Button(
                         onClick = {
                             isRevealed = true
-                            val word = if (isLatin && currentItem.secondaryText.isNotBlank()) currentItem.secondaryText else currentItem.prompt
-                            viewModel.playAudio(word, isTargetLanguage = true)
+                            viewModel.playAudio(targetSpeech, isTargetLanguage = true)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
