@@ -182,4 +182,63 @@ class ExampleUnitTest {
             }
         }
     }
+
+    @Test
+    fun testInitialGrammarGuidesHave9CellLatinMatricesForAll16Lessons() {
+        val cyrillicRegex = Regex("[\\p{InCyrillic}]")
+        val moshi = com.squareup.moshi.Moshi.Builder().build()
+        val matrixAdapter = moshi.adapter(com.example.data.model.ConjugationMatrixData::class.java)
+        val guides = InitialCurriculumData.getInitialGrammarGuides()
+        assertEquals(16, guides.size)
+
+        val expectedTenses = setOf("Past", "Present", "Future")
+        val expectedForms = setOf("Affirmative (+)", "Negative (-)", "Interrogative (?)")
+
+        guides.forEach { guide ->
+            val matrix = matrixAdapter.fromJson(guide.matrixJson)
+            assertTrue("Matrix should parse for ${guide.lessonId}", matrix != null)
+            assertEquals("Matrix should have 9 cells for ${guide.lessonId}", 9, matrix!!.cells.size)
+            assertEquals(expectedTenses, matrix.cells.map { it.tense }.toSet())
+            assertEquals(expectedForms, matrix.cells.map { it.formType }.toSet())
+            matrix.cells.forEach { cell ->
+                assertTrue(
+                    "Cell formula should be non-blank Latin for ${guide.lessonId}: ${cell.formula}",
+                    cell.formula.isNotBlank() && !cyrillicRegex.containsMatchIn(cell.formula)
+                )
+                assertTrue(
+                    "Cell exampleSerbianLatin should be non-blank Latin for ${guide.lessonId}: ${cell.exampleSerbianLatin}",
+                    cell.exampleSerbianLatin.isNotBlank() && !cyrillicRegex.containsMatchIn(cell.exampleSerbianLatin)
+                )
+            }
+        }
+    }
+
+    @Test
+    fun testInitialSentencesCoverAll9CoordinatesPerLessonWithLessonSpecificContent() {
+        val moshi = com.squareup.moshi.Moshi.Builder().build()
+        val listType = com.squareup.moshi.Types.newParameterizedType(List::class.java, String::class.java)
+        val adapter = moshi.adapter<List<String>>(listType)
+
+        val lessons = InitialCurriculumData.getInitialLessons()
+        val sentences = InitialCurriculumData.getInitialSentences()
+        val expectedCoords = setOf(
+            "PAST_AFFIRMATIVE", "PAST_NEGATIVE", "PAST_INTERROGATIVE",
+            "PRESENT_AFFIRMATIVE", "PRESENT_NEGATIVE", "PRESENT_INTERROGATIVE",
+            "FUTURE_AFFIRMATIVE", "FUTURE_NEGATIVE", "FUTURE_INTERROGATIVE"
+        )
+
+        lessons.forEach { lesson ->
+            val lessonSentences = sentences.filter { it.lessonId == lesson.id }
+            assertEquals("Lesson ${lesson.id} should have 9 sentences", 9, lessonSentences.size)
+            assertEquals("Lesson ${lesson.id} sentenceCount should be 9", 9, lesson.sentenceCount)
+            assertEquals(expectedCoords, lessonSentences.map { it.matrixCoordinateKey() }.toSet())
+            lessonSentences.forEach { s ->
+                val distractors = adapter.fromJson(s.distractorTokensJson) ?: emptyList()
+                assertTrue(
+                    "Sentence ${s.id} should have 1..2 distractors, got ${distractors.size}",
+                    distractors.size in 1..2
+                )
+            }
+        }
+    }
 }

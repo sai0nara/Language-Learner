@@ -26,7 +26,7 @@ object InitialCurriculumData {
             correctAnswersInLast100 = 0,
             totalAnswersInLast100 = 0,
             vocabCount = 10,
-            sentenceCount = 4
+            sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_2",
@@ -41,7 +41,7 @@ object InitialCurriculumData {
             correctAnswersInLast100 = 0,
             totalAnswersInLast100 = 0,
             vocabCount = 10,
-            sentenceCount = 4
+            sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_3",
@@ -56,7 +56,7 @@ object InitialCurriculumData {
             correctAnswersInLast100 = 0,
             totalAnswersInLast100 = 0,
             vocabCount = 10,
-            sentenceCount = 4
+            sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_4",
@@ -71,7 +71,7 @@ object InitialCurriculumData {
             correctAnswersInLast100 = 0,
             totalAnswersInLast100 = 0,
             vocabCount = 10,
-            sentenceCount = 4
+            sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_5",
@@ -86,7 +86,7 @@ object InitialCurriculumData {
             correctAnswersInLast100 = 0,
             totalAnswersInLast100 = 0,
             vocabCount = 10,
-            sentenceCount = 4
+            sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_6",
@@ -101,77 +101,77 @@ object InitialCurriculumData {
             correctAnswersInLast100 = 0,
             totalAnswersInLast100 = 0,
             vocabCount = 10,
-            sentenceCount = 4
+            sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_7", orderIndex = 7,
             title = "Урок 7: Повелительное наклонение",
             subtitle = "Императив: radi! radite! nemoj da radiš!",
             grammarFocus = "Императив", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_8", orderIndex = 8,
             title = "Урок 8: Условное наклонение",
             subtitle = "Потенциал: bih, bi, bismo, biste + radni pridev",
-            grammarFocus = "Потенцијал", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            grammarFocus = "Потенциал", level = "B1",
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_9", orderIndex = 9,
             title = "Урок 9: Глаголы движения",
             subtitle = "Ići, doći, otići, ući, izaći с предлогами",
             grammarFocus = "Глаголы движения", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_10", orderIndex = 10,
             title = "Урок 10: Дательный падеж и кому/чему",
             subtitle = "Личные местоимения и клитики mi, ti, mu, joj, nam",
             grammarFocus = "Датив (Дательный падеж)", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_11", orderIndex = 11,
             title = "Урок 11: Винительный и локатив",
             subtitle = "Куда vs Где (u grad / u gradu)",
             grammarFocus = "Акузатив и Локатив", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_12", orderIndex = 12,
             title = "Урок 12: Притяжательные местоимения",
             subtitle = "Moj, tvoj, njegov, njen, naš, vaš, njihov",
             grammarFocus = "Притяжательные формы", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_13", orderIndex = 13,
             title = "Урок 13: Степени сравнения",
             subtitle = "Компаратив и суперлатив прилагательных и наречий",
             grammarFocus = "Сравнение", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_14", orderIndex = 14,
             title = "Урок 14: Сложные союзы",
             subtitle = "Zato što, iako, dok, čim, pošto",
             grammarFocus = "Придаточные предложения", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_15", orderIndex = 15,
             title = "Урок 15: Пассив и безличные конструкции",
             subtitle = "Ovde se govori srpski / Treba da...",
             grammarFocus = "Безличные конструкции", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         ),
         LessonEntity(
             id = "lesson_16", orderIndex = 16,
             title = "Урок 16: Итоговый синтез (Полиглот)",
             subtitle = "Свободное комбинирование времен, падежей и вопросов",
             grammarFocus = "Комплексная матрица", level = "B1",
-            vocabCount = 10, sentenceCount = 1
+            vocabCount = 10, sentenceCount = 9
         )
     )
 
@@ -390,314 +390,643 @@ object InitialCurriculumData {
         v("v_16_10", "lesson_16", "cilj", "цель", "Существительное", "Naš glavni cilj je prirodan i tačan govor.", "препятствие", "начало", "привычка")
     )
 
-    fun getInitialGrammarGuides(): List<GrammarGuideEntity> {
-        val lesson1Matrix = ConjugationMatrixData(
-            verbInfinitive = "Радити",
-            verbInfinitiveLatin = "Raditi",
+    private fun cell(
+        formType: String,
+        tense: String,
+        formula: String,
+        exampleLatin: String,
+        exampleRussian: String,
+        notes: String = ""
+    ) = ConjugationCell(
+        formType = formType,
+        tense = tense,
+        formula = formula,
+        exampleSerbian = exampleLatin,
+        exampleSerbianLatin = exampleLatin,
+        exampleRussian = exampleRussian,
+        notes = notes
+    )
+
+    private fun grammarGuide(
+        idx: Int,
+        title: String,
+        summary: String,
+        explanationMarkdown: String,
+        verbInfinitive: String,
+        verbTranslation: String,
+        aspect: String = "Nesvršeni (Imperfective)",
+        cells: List<ConjugationCell>
+    ) = GrammarGuideEntity(
+        id = "g_$idx",
+        lessonId = "lesson_$idx",
+        title = title,
+        summary = summary,
+        explanationMarkdown = explanationMarkdown.trimIndent(),
+        matrixJson = matrixAdapter.toJson(
+            ConjugationMatrixData(
+                verbInfinitive = verbInfinitive,
+                verbInfinitiveLatin = verbInfinitive,
+                verbTranslation = verbTranslation,
+                aspect = aspect,
+                cells = cells
+            )
+        )
+    )
+
+    fun getInitialGrammarGuides(): List<GrammarGuideEntity> = listOf(
+        grammarGuide(
+            idx = 1,
+            title = "Матрица Полиглота: Глагол 'Raditi' (3x3)",
+            summary = "Фундаментальная сетка 3x3: 3 времени × 3 формы предложения",
+            explanationMarkdown = """
+                ### Базовая структура сербского глагола (Метод Полиглот 16)
+                В сербском языке глагол спрягается по лицам, числам и временам.
+
+                **Ключевые отличия от русского:**
+                1. Личные местоимения (*ja, ti, on, mi, vi, oni*) часто опускаются.
+                2. Краткие безударные связки (*sam, si, je...* и *ću, ćeš, će*) стоят строго на втором месте.
+                3. Вопрос строится через «Da li» (*Da li radiš?*) или инверсией (*Radiš li?*).
+            """,
+            verbInfinitive = "Raditi",
             verbTranslation = "Работать / Делать",
-            aspect = "Несвршени (Imperfective)",
             cells = listOf(
-                ConjugationCell(
-                    formType = "Affirmative (+)",
-                    tense = "Past",
-                    formula = "Radio/Radila sam (ja)",
-                    exampleSerbian = "Ја сам јуче дуго радио.",
-                    exampleSerbianLatin = "Ja sam juče dugo radio.",
-                    exampleRussian = "Я вчера долго работал.",
-                    notes = "Энклитика 'sam' ставится сразу после ударного первого слова."
-                ),
-                ConjugationCell(
-                    formType = "Affirmative (+)",
-                    tense = "Present",
-                    formula = "Radim, radiš, radi, radimo, radite, rade",
-                    exampleSerbian = "Ја радим у овој компанији.",
-                    exampleSerbianLatin = "Ja radim u ovoj kompaniji.",
-                    exampleRussian = "Я работаю в этой компании.",
-                    notes = "Глаголы на -iti в презенте имеют окончания -im, -iš, -i..."
-                ),
-                ConjugationCell(
-                    formType = "Affirmative (+)",
-                    tense = "Future",
-                    formula = "Radiću ili Ja ću raditi",
-                    exampleSerbian = "Сутра ћу радити од куће.",
-                    exampleSerbianLatin = "Sutra ću raditi od kuće.",
-                    exampleRussian = "Завтра я буду работать из дома.",
-                    notes = "Если местоимение опущено: Radiću. Если стоит впереди: Ja ću raditi."
-                ),
-                ConjugationCell(
-                    formType = "Negative (-)",
-                    tense = "Past",
-                    formula = "Nisam radio/radila",
-                    exampleSerbian = "Нисам радио ништа лоше.",
-                    exampleSerbianLatin = "Nisam radio ništa loše.",
-                    exampleRussian = "Я не делал ничего плохого.",
-                    notes = "Отрицательные формы: nisam, nisi, nije, nismo, niste, nisu."
-                ),
-                ConjugationCell(
-                    formType = "Negative (-)",
-                    tense = "Present",
-                    formula = "Ne radim, ne radiš, ne radi...",
-                    exampleSerbian = "Данас не радим, имам слободан дан.",
-                    exampleSerbianLatin = "Danas ne radim, imam slobodan dan.",
-                    exampleRussian = "Сегодня я не работаю, у меня выходной.",
-                    notes = "Частица 'ne' пишется раздельно с глаголом (кроме neću, nemam, nisam, nemoj)."
-                ),
-                ConjugationCell(
-                    formType = "Negative (-)",
-                    tense = "Future",
-                    formula = "Neću raditi",
-                    exampleSerbian = "Нећу радити за викенд.",
-                    exampleSerbianLatin = "Neću raditi za vikend.",
-                    exampleRussian = "Я не буду работать на выходных.",
-                    notes = "Формы: neću, nećeš, neće, nećemo, nećete, neće + инфинитив."
-                ),
-                ConjugationCell(
-                    formType = "Interrogative (?)",
-                    tense = "Past",
-                    formula = "Da li si radio? / Jesi li radio?",
-                    exampleSerbian = "Да ли си радио на овом пројекту?",
-                    exampleSerbianLatin = "Da li si radio na ovom projektu?",
-                    exampleRussian = "Ты работал над этим проектом?",
-                    notes = "Вопрос строится через 'Da li + краткая связка' или полная форма + li."
-                ),
-                ConjugationCell(
-                    formType = "Interrogative (?)",
-                    tense = "Present",
-                    formula = "Da li radiš? / Radiš li?",
-                    exampleSerbian = "Да ли радиш у Београду?",
-                    exampleSerbianLatin = "Da li radiš u Beogradu?",
-                    exampleRussian = "Ты работаешь в Белграде?",
-                    notes = "Две равноправные модели вопроса: Da li + глагол или Глагол + li."
-                ),
-                ConjugationCell(
-                    formType = "Interrogative (?)",
-                    tense = "Future",
-                    formula = "Da li ćeš raditi? / Hoćeš li raditi?",
-                    exampleSerbian = "Хоћеш ли сутра радити са нама?",
-                    exampleSerbianLatin = "Hoćeš li sutra raditi sa nama?",
-                    exampleRussian = "Будешь ли ты завтра работать с нами?",
-                    notes = "Вопрос: Hoćeš li raditi? или Da li ćeš raditi?"
-                )
+                cell("Affirmative (+)", "Past", "Radio/Radila sam (ja)", "Ja sam juče dugo radio.", "Я вчера долго работал.", "Энклитика 'sam' ставится сразу после ударного первого слова."),
+                cell("Affirmative (+)", "Present", "Radim, radiš, radi, radimo, radite, rade", "Ja radim u ovoj kompaniji.", "Я работаю в этой компании.", "Глаголы на -iti в презенте имеют окончания -im, -iš, -i..."),
+                cell("Affirmative (+)", "Future", "Radiću ili Ja ću raditi", "Sutra ću raditi od kuće.", "Завтра я буду работать из дома.", "Если местоимение опущено: Radiću. Если стоит впереди: Ja ću raditi."),
+                cell("Negative (-)", "Past", "Nisam radio/radila", "Nisam radio ništa loše.", "Я не делал ничего плохого.", "Отрицательные формы: nisam, nisi, nije, nismo, niste, nisu."),
+                cell("Negative (-)", "Present", "Ne radim, ne radiš, ne radi...", "Danas ne radim, imam slobodan dan.", "Сегодня я не работаю, у меня выходной.", "Частица 'ne' пишется раздельно с глаголом (кроме neću, nemam, nisam, nemoj)."),
+                cell("Negative (-)", "Future", "Neću raditi", "Neću raditi za vikend.", "Я не буду работать на выходных.", "Формы: neću, nećeš, neće, nećemo, nećete, neće + инфинитив."),
+                cell("Interrogative (?)", "Past", "Da li si radio? / Jesi li radio?", "Da li si radio na ovom projektu?", "Ты работал над этим проектом?", "Вопрос строится через 'Da li + краткая связка' или полная форма + li."),
+                cell("Interrogative (?)", "Present", "Da li radiš? / Radiš li?", "Da li radiš u Beogradu?", "Ты работаешь в Белграде?", "Две равноправные модели вопроса: Da li + глагол или Глагол + li."),
+                cell("Interrogative (?)", "Future", "Da li ćeš raditi? / Hoćeš li raditi?", "Hoćeš li sutra raditi sa nama?", "Будешь ли ты завтра работать с нами?", "Вопрос: Hoćeš li raditi? или Da li ćeš raditi?")
+            )
+        ),
+        grammarGuide(
+            idx = 2,
+            title = "Возвратные глаголы с 'SE'",
+            summary = "Частица 'se' пишется раздельно и занимает строго второе место в предложении",
+            explanationMarkdown = """
+                ### Povratni glagoli u srpskom jeziku
+                В сербском языке клитика **se** пишется отдельно от глагола:
+                - *Ja **se** nadam* или *Nadam **se***.
+                - В перфекте после *sam, si, smo, ste, su* ставится **se**: *Ja sam **se** smejao*.
+                - Для 3-го лица ед. ч. в перфекте **je** перед **se** опускается: *On **se** seća* → *On **se** sećao* (без *je*!).
+            """,
+            verbInfinitive = "Sećati se",
+            verbTranslation = "Помнить / Вспоминать",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Sećao/Sećala sam se", "Dobro sam se sećao tog dana.", "Я хорошо помнил тот день."),
+                cell("Affirmative (+)", "Present", "Sećam se, sećaš se, seća se", "Dobro se sećam ovog lepog grada.", "Я хорошо помню этот красивый город."),
+                cell("Affirmative (+)", "Future", "Sećaću se / Ja ću se sećati", "Uvek ću se sećati našeg putovanja.", "Я всегда буду помнить наше путешествие."),
+                cell("Negative (-)", "Past", "Nisam se sećao/sećala", "Nisam se sećao njegovog imena.", "Я не помнил его имени."),
+                cell("Negative (-)", "Present", "Ne sećam se", "Ne sećam se te adrese.", "Я не помню этого адреса."),
+                cell("Negative (-)", "Future", "Neću se sećati", "Sutra se neću sećati detalja.", "Завтра я не вспомню деталей."),
+                cell("Interrogative (?)", "Past", "Da li si se sećao?", "Da li si se sećao našeg razgovora?", "Ты помнил наш разговор?"),
+                cell("Interrogative (?)", "Present", "Da li se sećaš?", "Kojim sportom se baviš?", "Каким спортом ты занимаешься?"),
+                cell("Interrogative (?)", "Future", "Da li ćeš se sećati?", "Hoćeš li se sećati ovog pravila?", "Ты будешь помнить это правило?")
+            )
+        ),
+        grammarGuide(
+            idx = 3,
+            title = "Модальные глаголы и конструкция 'DA + Презент'",
+            summary = "Вместо инфинитива в сербском используется 'da + личная форма глагола'",
+            explanationMarkdown = """
+                ### Конструкция: Модальный глагол + DA + Презент
+                - *Ja hoću **da radim**.* (Я хочу работать.)
+                - *Ti moraš **da učiš**.* (Ты должен учиться.)
+                - *Mi možemo **da pomognemo**.* (Мы можем помочь.)
+            """,
+            verbInfinitive = "Hteti / Moći / Morati",
+            verbTranslation = "Хотеть / Мочь / Быть должным",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Hteo / Mogao / Morao sam da...", "Morao sam odmah da krenem.", "Я должен был сразу отправиться."),
+                cell("Affirmative (+)", "Present", "Hoću / Mogu / Moram + da + prezent", "Ja hoću da govorim srpski tečno.", "Я хочу говорить по-сербски свободно."),
+                cell("Affirmative (+)", "Future", "Moći ću / Moraću da...", "Sutra ću moći da pomognem.", "Завтра я смогу помочь."),
+                cell("Negative (-)", "Past", "Nisam hteo / mogao / morao da...", "Nisam mogao da dođem na sastanak.", "Я не мог прийти на встречу."),
+                cell("Negative (-)", "Present", "Neću / Ne mogu / Ne moram + da...", "Ne mogu sada da razgovaram.", "Я не могу сейчас разговаривать."),
+                cell("Negative (-)", "Future", "Neću moći / Neću morati da...", "Neću moći da stignem na vreme.", "Я не смогу успеть вовремя."),
+                cell("Interrogative (?)", "Past", "Da li si morao / mogao da...?", "Da li si morao da čekaš dugo?", "Тебе пришлось долго ждать?"),
+                cell("Interrogative (?)", "Present", "Da li možeš / hoćeš da...?", "Možeš li da ponoviš pitanje?", "Можешь повторить вопрос?"),
+                cell("Interrogative (?)", "Future", "Da li ćeš moći da...?", "Hoćeš li moći da dođeš sutra?", "Сможешь прийти завтра?")
+            )
+        ),
+        grammarGuide(
+            idx = 4,
+            title = "Прошедшее время (Перфекат)",
+            summary = "Связка 'sam, si, je, smo, ste, su' + причастие на -o / -la / -li",
+            explanationMarkdown = """
+                ### Perfekat (Prošlo vreme)
+                1. Муж. р. ед. ч.: *radio, učio, kupio*; жен. р.: *radila, učila*; мн. ч.: *radili, radile*.
+                2. Связка стоит на втором месте: *Juče **sam** kupio rečnik.*
+                3. Отрицание: *nisam, nisi, nije, nismo, niste, nisu*.
+            """,
+            verbInfinitive = "Kupiti / Učiti",
+            verbTranslation = "Купить / Учить",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Kupio/Kupila sam", "Juče sam kupio nov rečnik.", "Вчера я купил новый словарь."),
+                cell("Affirmative (+)", "Present", "Kupujem / Učim", "Sada učim prošlo vreme.", "Сейчас я учу прошедшее время."),
+                cell("Affirmative (+)", "Future", "Kupiću / Učiću", "Sutra ću kupiti novu knjigu.", "Завтра я куплю новую книгу."),
+                cell("Negative (-)", "Past", "Nisam kupio/kupila", "Nisam zaboravio na tvoj poziv.", "Я не забыл о твоём звонке."),
+                cell("Negative (-)", "Present", "Ne kupujem", "Ne kupujem novine svaki dan.", "Я не покупаю газеты каждый день."),
+                cell("Negative (-)", "Future", "Neću kupiti", "Neću kupiti tu kartu danas.", "Я не куплю этот билет сегодня."),
+                cell("Interrogative (?)", "Past", "Da li si kupio? / Jesi li kupio?", "Da li si posetio muzej juče?", "Ты посетил музей вчера?"),
+                cell("Interrogative (?)", "Present", "Da li kupuješ?", "Da li slušaš profesora?", "Ты слушаешь профессора?"),
+                cell("Interrogative (?)", "Future", "Da li ćeš kupiti?", "Hoćeš li završiti projekat?", "Ты закончишь проект?")
+            )
+        ),
+        grammarGuide(
+            idx = 5,
+            title = "Будущее время I (Футур I)",
+            summary = "Энклитика 'ću, ćeš, će, ćemo, ćete, će' + инфинитив или 'da + презент'",
+            explanationMarkdown = """
+                ### Futur I (Buduće vreme)
+                1. С местоимением или другим словом в начале: *Sutra **ću putovati**.*
+                2. Без первого слова глагол на -ti сливается со связкой: *Putova**ću** u Beograd.* (глаголы на -ći сохраняют -ći: *Stići ću*).
+                3. Отрицание: *neću, nećeš, neće, nećemo, nećete, neće*.
+            """,
+            verbInfinitive = "Putovati",
+            verbTranslation = "Путешествовать",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Putovao/Putovala sam", "Prošle godine sam putovao vozom.", "В прошлом году я путешествовал поездом."),
+                cell("Affirmative (+)", "Present", "Putujem, putuješ, putuje", "Često putujem zbog posla.", "Я часто путешествую по работе."),
+                cell("Affirmative (+)", "Future", "Putovaću / Ja ću putovati", "Sutra ću putovati u Novi Sad.", "Завтра я поеду в Нови-Сад."),
+                cell("Negative (-)", "Past", "Nisam putovao", "Nisam putovao za vikend.", "Я не путешествовал на выходных."),
+                cell("Negative (-)", "Present", "Ne putujem", "Ove nedelje ne putujem.", "На этой неделе я не путешествую."),
+                cell("Negative (-)", "Future", "Neću putovati", "Neću putovati bez pasoša.", "Я не поеду без паспорта."),
+                cell("Interrogative (?)", "Past", "Da li si putovao?", "Da li si putovao u Srbiju?", "Ты путешествовал в Сербию?"),
+                cell("Interrogative (?)", "Present", "Da li putuješ?", "Da li često putuješ?", "Ты часто путешествуешь?"),
+                cell("Interrogative (?)", "Future", "Da li ćeš putovati? / Hoćeš li...", "Hoćeš li putovati za odmor?", "Поедешь путешествовать в отпуск?")
+            )
+        ),
+        grammarGuide(
+            idx = 6,
+            title = "Видовые пары глаголов (Аспект)",
+            summary = "Несовершенный вид (процесс) vs Совершенный вид (результат)",
+            explanationMarkdown = """
+                ### Glagolski vid (Svršeni i nesvršeni)
+                - Процесс / регулярность: *pisati, kupovati, čitati, učiti*.
+                - Завершённый результат (в перфекте, футуре или после *da*): *napisati, kupiti, pročitati, naučiti*.
+            """,
+            verbInfinitive = "Pisati / Napisati",
+            verbTranslation = "Писать / Написать",
+            aspect = "Dvovidski par",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Pisao sam / Napisao sam", "Napisao sam ceo izveštaj juče.", "Я написал весь отчёт вчера."),
+                cell("Affirmative (+)", "Present", "Pišem, pišeš, piše", "Svako jutro pišem kratke beleške.", "Каждое утро я пишу короткие заметки."),
+                cell("Affirmative (+)", "Future", "Pisaću / Napisaću", "Sutra ću napisati pismo.", "Завтра я напишу письмо."),
+                cell("Negative (-)", "Past", "Nisam napisao", "Još nisam pročitao taj članak.", "Я ещё не прочитал эту статью."),
+                cell("Negative (-)", "Present", "Ne pišem", "Sada ne pišem poruke.", "Сейчас я не пишу сообщения."),
+                cell("Negative (-)", "Future", "Neću napisati", "Neću kupovati ništa suvišno.", "Я не буду покупать ничего лишнего."),
+                cell("Interrogative (?)", "Past", "Da li si napisao?", "Da li si naučio novo pravilo?", "Ты выучил новое правило?"),
+                cell("Interrogative (?)", "Present", "Da li čitaš?", "Da li redovno ponavljaš reči?", "Ты регулярно повторяешь слова?"),
+                cell("Interrogative (?)", "Future", "Da li ćeš pročitati?", "Hoćeš li otvoriti prozor?", "Откроешь окно?")
+            )
+        ),
+        grammarGuide(
+            idx = 7,
+            title = "Повелительное наклонение (Императив)",
+            summary = "Просьба и побуждение: radi!, radite!, hajde da..., nemoj da...",
+            explanationMarkdown = """
+                ### Imperativ
+                - 2-е лицо ед. ч.: *radi! sačekaj! pomozi!*
+                - 2-е лицо мн. ч. / вежливое: *radite! otvorite! ponovite!*
+                - Запрет: *Ne radi!* или *Nemoj da radiš!* / *Nemojte da kasnite!*
+            """,
+            verbInfinitive = "Pomoći / Čekati",
+            verbTranslation = "Помочь / Ждать",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Pomogao sam", "Juče sam odmah pomogao kolegi.", "Вчера я сразу помог коллеге."),
+                cell("Affirmative (+)", "Present", "Pomozi! / Pomozite!", "Molim te, pomozi mi sa prevodom!", "Пожалуйста, помоги мне с переводом!"),
+                cell("Affirmative (+)", "Future", "Krenimo! / Poslaću", "Krenimo odmah na stanicu!", "Пойдёмте сразу на остановку!"),
+                cell("Negative (-)", "Past", "Nisam čekao", "Nisam dugo čekao ispred ulaza.", "Я недолго ждал перед входом."),
+                cell("Negative (-)", "Present", "Nemoj da... / Nemojte da...", "Nemoj da zaboraviš adresu!", "Не забудь адрес!"),
+                cell("Negative (-)", "Future", "Nećemo kasniti", "Nećemo kasniti na sastanak.", "Мы не опоздаем на встречу."),
+                cell("Interrogative (?)", "Past", "Da li si poslao?", "Da li si poslao poruku?", "Ты отправил сообщение?"),
+                cell("Interrogative (?)", "Present", "Možeš li da...?", "Možete li da otvorite knjigu?", "Можете открыть книгу?"),
+                cell("Interrogative (?)", "Future", "Hoćeš li sačekati?", "Hoćeš li me sačekati ispred ulaza?", "Подождёшь меня перед входом?")
+            )
+        ),
+        grammarGuide(
+            idx = 8,
+            title = "Условное наклонение (Потенциал)",
+            summary = "Вежливые просьбы и желания: bih, bi, bismo, biste + причастие на -o/-la/-li",
+            explanationMarkdown = """
+                ### Potencijal (Kondicional)
+                - Образуется из форм *bih, bi, bi, bismo, biste, bi* + л-причастие (*želeo, voleo, mogao*).
+                - *Želeo **bih** da naručim kafu.* — Я хотел бы заказать кофе.
+                - *Šta **biste** preporučili?* — Что бы вы порекомендовали?
+            """,
+            verbInfinitive = "Želeti / Voleti",
+            verbTranslation = "Хотеть / Любить (бы)",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Želeo sam", "Juče sam želeo da razgovaram.", "Вчера я хотел поговорить."),
+                cell("Affirmative (+)", "Present", "Želeo bih / Volela bih", "Želeo bih da naručim kafu.", "Я хотел бы заказать кофе."),
+                cell("Affirmative (+)", "Future", "Iskoristiću / Rado bih došao", "Rado bih došao na proslavu.", "Я с удовольствием пришёл бы на праздник."),
+                cell("Negative (-)", "Past", "Nisam izabrao", "Nisam izabrao drugu opciju.", "Я не выбрал другой вариант."),
+                cell("Negative (-)", "Present", "Ne bih želeo / Ne bih preporučio", "Ne bih predložio taj hotel.", "Я бы не предложил этот отель."),
+                cell("Negative (-)", "Future", "Neću odbiti", "Neću odbiti vaš dobar savet.", "Я не откажусь от вашего хорошего совета."),
+                cell("Interrogative (?)", "Past", "Da li si predložio?", "Da li si predložio novi plan?", "Ты предложил новый план?"),
+                cell("Interrogative (?)", "Present", "Da li biste... / Šta biste...?", "Šta biste nam preporučili?", "Что бы вы нам порекомендовали?"),
+                cell("Interrogative (?)", "Future", "Hoćete li doći?", "Hoćete li iskoristiti ovu priliku?", "Вы воспользуетесь этой возможностью?")
+            )
+        ),
+        grammarGuide(
+            idx = 9,
+            title = "Глаголы движения и предлоги",
+            summary = "Ići, doći, otići, ući, izaći, vratiti se с предлогами u / na / iz / pored",
+            explanationMarkdown = """
+                ### Glagoli kretanja
+                - Направление (куда? + винительный): *Idem **u grad**, dolazim **na stanicu**.*
+                - Выход (откуда? + родительный): *Izlazim **iz zgrade**, vraćam se **sa posla**.*
+            """,
+            verbInfinitive = "Ići / Doći",
+            verbTranslation = "Идти / Прийти",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Išao / Došao / Otišao sam", "Otišao je u Beograd jutros.", "Он уехал в Белград сегодня утром."),
+                cell("Affirmative (+)", "Present", "Idem, ideš, ide, idemo", "Svako jutro idem peške na posao.", "Каждое утро я иду пешком на работу."),
+                cell("Affirmative (+)", "Future", "Doći ću / Vratićemo se", "Doći ćemo kod tebe oko šest.", "Мы придём к тебе около шести."),
+                cell("Negative (-)", "Past", "Nisam ušao / izašao", "Nisam izašao iz kuće juče.", "Я не выходил из дома вчера."),
+                cell("Negative (-)", "Present", "Ne idem", "Danas ne idem na stanicu.", "Сегодня я не иду на вокзал."),
+                cell("Negative (-)", "Future", "Neću otići", "Neću otići pre kraja sastanka.", "Я не уйду до конца встречи."),
+                cell("Interrogative (?)", "Past", "Da li si prošao?", "Da li si prošao pored tvrđave?", "Ты прошёл мимо крепости?"),
+                cell("Interrogative (?)", "Present", "Kuda ideš?", "Ideš li peške do centra?", "Ты идёшь пешком до центра?"),
+                cell("Interrogative (?)", "Future", "Kada ćeš se vratiti?", "Kada ćeš se vratiti kući?", "Когда ты вернёшься домой?")
+            )
+        ),
+        grammarGuide(
+            idx = 10,
+            title = "Дательный падеж и клитики",
+            summary = "Кому / чему: mi, ti, mu, joj, nam, vam, im на втором месте",
+            explanationMarkdown = """
+                ### Dativ (Kome? Čemu?)
+                - Краткие местоимения: *mi* (мне), *ti* (тебе), *mu* (ему), *joj* (ей), *nam* (нам), *vam* (вам), *im* (им).
+                - Окончания существительных: муж. р. *-u* (*prijatelju*), жен. р. *-i* (*prijateljici*).
+            """,
+            verbInfinitive = "Dati / Reći / Objasniti",
+            verbTranslation = "Дать / Сказать / Объяснить",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Dao / Rekao / Objasnio nam je", "Profesor nam je jasno objasnio pravilo.", "Профессор ясно объяснил нам правило."),
+                cell("Affirmative (+)", "Present", "Dajem ti / Verujem vam", "Potpuno ti verujem na reč.", "Я полностью верю тебе на слово."),
+                cell("Affirmative (+)", "Future", "Javiću ti se / Poslaću mu", "Javiću ti se čim završim.", "Я позвоню тебе, как только закончу."),
+                cell("Negative (-)", "Past", "Nisam mu rekao", "Nisam joj poslao poklon juče.", "Я не отправил ей подарок вчера."),
+                cell("Negative (-)", "Present", "Ne odgovara mi", "Ovaj termin mi ne odgovara.", "Это время мне не подходит."),
+                cell("Negative (-)", "Future", "Neću im smetati", "Neću vam smetati tokom rada.", "Я не буду мешать вам во время работы."),
+                cell("Interrogative (?)", "Past", "Šta si mu rekao?", "Da li si čestitao prijatelju?", "Ты поздравил друга?"),
+                cell("Interrogative (?)", "Present", "Da li vam odgovara?", "Da li vam odgovara sreda?", "Вам подходит среда?"),
+                cell("Interrogative (?)", "Future", "Hoćeš li mi dati?", "Hoćeš li mi dati olovku?", "Дашь мне ручку?")
+            )
+        ),
+        grammarGuide(
+            idx = 11,
+            title = "Винительный и локатив (Куда vs Где)",
+            summary = "Движение (u grad, na sto) vs Местоположение (u gradu, na stolu)",
+            explanationMarkdown = """
+                ### Akuzativ (Kuda?) vs Lokativ (Gde?)
+                - Куда (движение): *Idem **u knjižaru**, stavljam **na sto**.*
+                - Где (покой): *Nalazim se **u knjižari**, ključevi su **na stolu**.*
+            """,
+            verbInfinitive = "Ići / Nalaziti se",
+            verbTranslation = "Идти / Находиться",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Bio sam u gradu / Išao sam u park", "Juče smo šetali po starom gradu.", "Вчера мы гуляли по старому городу."),
+                cell("Affirmative (+)", "Present", "Sam u kancelariji / Idem na posao", "Kolege su već u kancelariji.", "Коллеги уже в офисе."),
+                cell("Affirmative (+)", "Future", "Ići ćemo u pozorište", "Večeras ćemo ići u pozorište.", "Сегодня вечером мы пойдём в театр."),
+                cell("Negative (-)", "Past", "Nisam bio na trgu", "Nisam bio na aerodromu jutros.", "Я не был в аэропорту сегодня утром."),
+                cell("Negative (-)", "Present", "Nije na stolu", "Telefon nije na stolu.", "Телефона нет на столе."),
+                cell("Negative (-)", "Future", "Nećemo ostati u stanu", "Sutra nećemo ostati u stanu.", "Завтра мы не останемся в квартире."),
+                cell("Interrogative (?)", "Past", "Gde si bio juče?", "Da li si bio u knjižari?", "Ты был в книжном магазине?"),
+                cell("Interrogative (?)", "Present", "Gde se nalazi...?", "Gde se nalazi glavni trg?", "Где находится главная площадь?"),
+                cell("Interrogative (?)", "Future", "Kuda idete večeras?", "Hoćete li ići u park?", "Вы пойдёте в парк?")
+            )
+        ),
+        grammarGuide(
+            idx = 12,
+            title = "Притяжательные местоимения",
+            summary = "Согласование moj, tvoj, njegov, njen, naš, vaš, njihov по роду и числу",
+            explanationMarkdown = """
+                ### Prisvojne zamenice
+                - Муж. р.: *moj, tvoj, naš, vaš*; жен. р.: *moja, tvoja, naša*; ср. р.: *moje, naše*.
+                - Неизменяемая основа: *njegov* (его), *njen* (её), *njihov* (их) + окончание рода/падежа.
+            """,
+            verbInfinitive = "Imati / Živeti",
+            verbTranslation = "Иметь / Жить",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Naš tim je završio...", "Njena ideja je bila veoma korisna.", "Её идея была очень полезной."),
+                cell("Affirmative (+)", "Present", "Moj / Naš / Njihov...", "Naš tim radi na novom projektu.", "Наша команда работает над новым проектом."),
+                cell("Affirmative (+)", "Future", "Naša porodica će...", "Moja porodica će posetiti grad.", "Моя семья посетит город."),
+                cell("Negative (-)", "Past", "Nije bio moj...", "To nije bio njihov plan.", "Это не был их план."),
+                cell("Negative (-)", "Present", "Nije moj / tvoj", "Ovo nije moj telefon na stolu.", "Это не мой телефон на столе."),
+                cell("Negative (-)", "Future", "Nećemo menjati naš...", "Nećemo menjati naš raspored.", "Мы не будем менять наше расписание."),
+                cell("Interrogative (?)", "Past", "Čiji je bio...?", "Da li je tvoj brat bio ovde?", "Твой брат был здесь?"),
+                cell("Interrogative (?)", "Present", "Da li je ovo tvoj / vaš...?", "Da li je ovo tvoj telefon?", "Это твой телефон?"),
+                cell("Interrogative (?)", "Future", "Hoće li vaš komšija...?", "Hoće li vaš tim doći sutra?", "Ваша команда придёт завтра?")
+            )
+        ),
+        grammarGuide(
+            idx = 13,
+            title = "Степени сравнения прилагательных",
+            summary = "Компаратив (bolji, veći, brži) и суперлатив (najbolji, najvažniji)",
+            explanationMarkdown = """
+                ### Poređenje prideva
+                - Исключения: *dobar → bolji → najbolji*; *loš → gori → najgori*; *velik → veći*; *mali → manji*.
+                - Сравнение с «чем»: **od** + родительный падеж (*brži **od** autobusa*) или **nego** (*bolje **nego** juče*).
+            """,
+            verbInfinitive = "Biti bolji / brži",
+            verbTranslation = "Быть лучше / быстрее",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Bio je lakši / brži", "Prvi zadatak je bio lakši.", "Первое задание было легче."),
+                cell("Affirmative (+)", "Present", "Bolji je od...", "Voz je brži od autobusa.", "Поезд быстрее автобуса."),
+                cell("Affirmative (+)", "Future", "Biće još bolji", "Sledeći rezultat će biti bolji.", "Следующий результат будет лучше."),
+                cell("Negative (-)", "Past", "Nije bio skuplji", "Taj hotel nije bio skuplji.", "Этот отель не был дороже."),
+                cell("Negative (-)", "Present", "Nije gori nego juče", "Vreme danas nije gore nego juče.", "Погода сегодня не хуже, чем вчера."),
+                cell("Negative (-)", "Future", "Neće biti teži", "Sledeći test neće biti teži.", "Следующий тест не будет сложнее."),
+                cell("Interrogative (?)", "Past", "Koji je bio bolji?", "Koji metod je bio lakši?", "Какой метод был легче?"),
+                cell("Interrogative (?)", "Present", "Da li je jeftiniji?", "Da li je voće jeftinije na pijaci?", "Фрукты дешевле на рынке?"),
+                cell("Interrogative (?)", "Future", "Hoće li biti veći?", "Hoće li novi sto biti veći?", "Новый стол будет больше?")
+            )
+        ),
+        grammarGuide(
+            idx = 14,
+            title = "Сложные предложения и союзы",
+            summary = "Причина (zato što, pošto), уступка (iako), время (dok, čim, kada), цель (da bi)",
+            explanationMarkdown = """
+                ### Složene rečenice i veznici
+                - Причина: **zato što** (потому что), **pošto** (так как).
+                - Уступка: **iako** (хотя).
+                - Время и условие: **dok** (пока), **čim** (как только), **ako** (если).
+            """,
+            verbInfinitive = "Ostati / Izaći",
+            verbTranslation = "Остаться / Выйти",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Izašli smo iako...", "Izašli smo u šetnju iako je bilo hladno.", "Мы вышли на прогулку, хотя было холодно."),
+                cell("Affirmative (+)", "Present", "Čitam dok pijem...", "Čitam vesti dok pijem kafu.", "Я читаю новости, пока пью кофе."),
+                cell("Affirmative (+)", "Future", "Pozvaću te čim...", "Javiću se čim stignem u grad.", "Я позвоню, как только приеду в город."),
+                cell("Negative (-)", "Past", "Nismo išli zato što...", "Nismo išli u park zato što je padala kiša.", "Мы не пошли в парк, потому что шёл дождь."),
+                cell("Negative (-)", "Present", "Ne izlazim ako...", "Ne izlazim ako je loše vreme.", "Я не выхожу, если плохая погода."),
+                cell("Negative (-)", "Future", "Nećemo krenuti pre nego što...", "Nećemo krenuti pre nego što proverimo kartu.", "Мы не отправимся, прежде чем проверим билет."),
+                cell("Interrogative (?)", "Past", "Zašto nisi došao?", "Da li si ostao kod kuće zato što si radio?", "Ты остался дома, потому что работал?"),
+                cell("Interrogative (?)", "Present", "Šta radiš dok...?", "Šta slušaš dok putuješ vozom?", "Что ты слушаешь, пока едешь поездом?"),
+                cell("Interrogative (?)", "Future", "Hoćeš li javiti kada...?", "Hoćeš li se javiti kada stigneš?", "Позвонишь, когда приедешь?")
+            )
+        ),
+        grammarGuide(
+            idx = 15,
+            title = "Пассив и безличные конструкции",
+            summary = "Возвратно-безличные формы (govori se, čini se) и предикативы (treba, moguće je, zabranjeno)",
+            explanationMarkdown = """
+                ### Bezlične i pasivne konstrukcije
+                - Безличный глагол + *se*: *Ovde **se govori** srpski.* — Здесь говорят по-сербски.
+                - *Treba da* + презент (для всех лиц): ***Treba da** proverimo detalje.*
+                - *Zabranjeno je / Dozvoljeno je / Otvoreno je* + инфинитив или существительное.
+            """,
+            verbInfinitive = "Trebati / Govoriti se",
+            verbTranslation = "Следовать / Говорить (безл.)",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Bilo je potrebno / otvoreno", "Juče je muzej bio otvoren ceo dan.", "Вчера музей был открыт весь день."),
+                cell("Affirmative (+)", "Present", "Ovde se govori / Treba da...", "Ovde se govori srpski jezik.", "Здесь говорят по-сербски."),
+                cell("Affirmative (+)", "Future", "Biće moguće / otvoreno", "Sutra će biti moguće rezervisati sto.", "Завтра будет возможно забронировать столик."),
+                cell("Negative (-)", "Past", "Nije bilo dozvoljeno", "Parkiranje nije bilo dozvoljeno ovde.", "Парковка здесь не была разрешена."),
+                cell("Negative (-)", "Present", "Zabranjeno je / Nije moguće", "Ovde je zabranjeno fotografisanje.", "Здесь запрещено фотографировать."),
+                cell("Negative (-)", "Future", "Neće biti otvoreno", "U nedelju banke neće biti otvorene.", "В воскресенье банки не будут открыты."),
+                cell("Interrogative (?)", "Past", "Da li je bilo moguće?", "Da li je bilo potrebno poneti pasoš?", "Нужно было взять паспорт?"),
+                cell("Interrogative (?)", "Present", "Da li je dozvoljeno / moguće?", "Da li je moguće rezervisati sto?", "Возможно забронировать столик?"),
+                cell("Interrogative (?)", "Future", "Da li će biti otvoreno?", "Hoće li muzej biti otvoren u subotu?", "Музей будет открыт в субботу?")
+            )
+        ),
+        grammarGuide(
+            idx = 16,
+            title = "Итоговый синтез (Полиглот)",
+            summary = "Свободное комбинирование времён, модальности, падежей и сложных союзов",
+            explanationMarkdown = """
+                ### Završna sinteza (Poliglot B1)
+                На этом этапе вы свободно соединяете все блоки:
+                1. **Время и вид:** *Naučio sam* (прош.) / *Vežbam* (наст.) / *Govoriću tečno* (буд.).
+                2. **Клитики и датив:** *Javiću **ti se** čim stignem.*
+                3. **Сложные связи:** *Iako je gramatika bila teža, sada se lako sporazumevamo.*
+            """,
+            verbInfinitive = "Sporazumeti se",
+            verbTranslation = "Договориться / Понять друг друга",
+            aspect = "Svršeni (Perfective)",
+            cells = listOf(
+                cell("Affirmative (+)", "Past", "Sporazumeli smo se", "Lako smo se sporazumeli bez rečnika.", "Мы легко договорились без словаря."),
+                cell("Affirmative (+)", "Present", "Vežbam i napredujem", "Svaki dan vežbam da bih govorio tečno.", "Каждый день я тренируюсь, чтобы говорить свободно."),
+                cell("Affirmative (+)", "Future", "Govorićete tečno", "Posle redovne vežbe govorićete tečno.", "После регулярной практики вы будете говорить свободно."),
+                cell("Negative (-)", "Past", "Nismo odustali", "Nismo odustali iako je početak bio težak.", "Мы не сдались, хотя начало было трудным."),
+                cell("Negative (-)", "Present", "Ne sumnjam u uspeh", "Ne sumnjam u tvoj brz napredak.", "Я не сомневаюсь в твоём быстром прогрессе."),
+                cell("Negative (-)", "Future", "Nećemo zaboraviti", "Nećemo zaboraviti ova korisna pravila.", "Мы не забудем эти полезные правила."),
+                cell("Interrogative (?)", "Past", "Da li ste se sporazumeli?", "Da li ste se lako sporazumeli u gradu?", "Вы легко объяснились в городе?"),
+                cell("Interrogative (?)", "Present", "Koji je vaš glavni cilj?", "Koji je vaš glavni cilj u učenju?", "Какова ваша главная цель в обучении?"),
+                cell("Interrogative (?)", "Future", "Hoćete li nastaviti?", "Hoćete li nastaviti redovnu komunikaciju?", "Вы продолжите регулярное общение?")
             )
         )
+    )
 
-        return listOf(
-            GrammarGuideEntity(
-                id = "g_1",
-                lessonId = "lesson_1",
-                title = "Матрица Полиглота: Глагол 'Радити' (3x3)",
-                summary = "Фундаментальная сетка 3x3: 3 времени × 3 формы предложения",
-                explanationMarkdown = """
-                    ### Базовая структура сербского глагола (Метод Полиглот 16)
-                    В сербском языке глагол спрягается по лицам, числам и временам.
-                    
-                    **Ключевые отличия от русского:**
-                    1. Личные местоимения (*ја, ти, он, ми, ви, они*) часто опускаются.
-                    2. Краткие безударные связки (*сам, си, је...* и *ћу, ћеш, ће*) стоят строго на втором месте.
-                    3. Вопрос строится через «Да ли» (*Да ли радиш?*) или инверсией (*Радиш ли?*).
-                """.trimIndent(),
-                matrixJson = matrixAdapter.toJson(lesson1Matrix)
-            ),
-            GrammarGuideEntity(
-                id = "g_2",
-                lessonId = "lesson_2",
-                title = "Возвратные глаголы с 'СЕ'",
-                summary = "Частица 'се' пишется раздельно и занимает строго второе место в предложении",
-                explanationMarkdown = """
-                    ### Повратни глаголи у српском језику
-                    В сербском языке клитика **се** пишется отдельно от глагола:
-                    - *Ја **се** надам* или *Надам **се***.
-                    
-                    Клитика **се** ставится сразу после первого ударного слова в предложении.
-                """.trimIndent(),
-                matrixJson = "{}"
-            ),
-            GrammarGuideEntity(
-                id = "g_3",
-                lessonId = "lesson_3",
-                title = "Модальные глаголы и конструкция 'ДА + Презент'",
-                summary = "Вместо инфинитива в сербском используется 'да + личная форма глагола'",
-                explanationMarkdown = """
-                    ### Конструкция: Модальный глагол + ДА + Презент
-                    - *Ја хоћу **да радим**.* (Я хочу работать.)
-                    - *Ти мораш **да учиш**.* (Ты должен учиться.)
-                    - *Ми можемо **да помогнемо**.* (Мы можем помочь.)
-                """.trimIndent(),
-                matrixJson = "{}"
-            )
-        ) + (4..16).map { idx ->
-            GrammarGuideEntity(
-                id = "g_$idx",
-                lessonId = "lesson_$idx",
-                title = "Грамматическая матрица урока $idx",
-                summary = "Ключевые формы и согласование местоимений для урока $idx",
-                explanationMarkdown = "### Урок $idx\nИспользуйте 3x3 матрицу времён и форм (Past / Present / Future × Affirmative / Negative / Interrogative).",
-                matrixJson = "{}"
-            )
-        }
-    }
-
-    // All tokens and distractors are provided in inner case (lowercase)
-    // with correct and wrong morphological variants
-    private fun getExplicitInitialSentences(): List<SentenceEntity> = listOf(
-        // Lesson 1
-        SentenceEntity(
-            id = "s_1_1",
-            lessonId = "lesson_1",
-            sourceSentence = "Ты работаешь сегодня в офисе?",
-            targetSentence = "Да ли данас радиш у канцеларији?",
-            targetSentenceLatin = "Da li danas radiš u kancelariji?",
-            tokensJson = "[\"da\", \"li\", \"danas\", \"radiš\", \"u\", \"kancelariji\"]",
-            distractorTokensJson = "[\"radim\", \"rade\", \"radite\", \"jesi\", \"radio\"]",
-            grammarHint = "Вопрос в настоящем времени: 'da li' + глагол во 2 лице (radiš)",
-            matrixTense = "PRESENT",
-            matrixForm = "INTERROGATIVE",
-            personGroup = "2SG_PL"
-        ),
-        SentenceEntity(
-            id = "s_1_2",
-            lessonId = "lesson_1",
-            sourceSentence = "Я не говорю по-английски быстро.",
-            targetSentence = "Ја не говорим енглески брзо.",
-            targetSentenceLatin = "Ja ne govorim engleski brzo.",
-            tokensJson = "[\"ja\", \"ne\", \"govorim\", \"engleski\", \"brzo\"]",
-            distractorTokensJson = "[\"govoriš\", \"govori\", \"govorimo\", \"nisam\", \"priča\"]",
-            grammarHint = "Отрицание в презенте: частица 'ne' перед глаголом 1 лица (govorim)",
-            matrixTense = "PRESENT",
-            matrixForm = "NEGATIVE",
-            personGroup = "1SG"
-        ),
-        SentenceEntity(
-            id = "s_1_3",
-            lessonId = "lesson_1",
-            sourceSentence = "Завтра я буду работать дома.",
-            targetSentence = "Сутра ћу радити код куће.",
-            targetSentenceLatin = "Sutra ću raditi kod kuće.",
-            tokensJson = "[\"sutra\", \"ću\", \"raditi\", \"kod\", \"kuće\"]",
-            distractorTokensJson = "[\"ćeš\", \"će\", \"biću\", \"kuća\", \"kuću\"]",
-            grammarHint = "Futur I: энклитика «ću» после первого слова",
-            matrixTense = "FUTURE",
-            matrixForm = "AFFIRMATIVE",
-            personGroup = "1SG"
-        ),
-        SentenceEntity(
-            id = "s_1_4",
-            lessonId = "lesson_1",
-            sourceSentence = "Мы вчера внимательно слушали профессора.",
-            targetSentence = "Ми смо јуче пажљиво слушали професора.",
-            targetSentenceLatin = "Mi smo juče pažljivo slušali profesora.",
-            tokensJson = "[\"mi\", \"smo\", \"juče\", \"pažljivo\", \"slušali\", \"profesora\"]",
-            distractorTokensJson = "[\"ste\", \"su\", \"slušao\", \"slušamo\", \"slušate\"]",
-            grammarHint = "Perfekat: форма множественного числа «smo slušali»",
-            matrixTense = "PAST",
-            matrixForm = "AFFIRMATIVE",
-            personGroup = "2SG_PL"
-        ),
-
-        // Lesson 2
-        SentenceEntity(
-            id = "s_2_1",
-            lessonId = "lesson_2",
-            sourceSentence = "Я хорошо помню этот красивый город.",
-            targetSentence = "Добро се сећам овог лепог града.",
-            targetSentenceLatin = "Dobro se sećam ovog lepog grada.",
-            tokensJson = "[\"dobro\", \"se\", \"sećam\", \"ovog\", \"lepog\", \"grada\"]",
-            distractorTokensJson = "[\"sećaš\", \"seća\", \"gradu\", \"grad\", \"si\"]",
-            grammarHint = "Частица 'se' на втором месте: dobro se sećam",
-            matrixTense = "PRESENT",
-            matrixForm = "AFFIRMATIVE",
-            personGroup = "1SG"
-        ),
-        SentenceEntity(
-            id = "s_2_2",
-            lessonId = "lesson_2",
-            sourceSentence = "Каким спортом ты занимаешься?",
-            targetSentence = "Којим спортом се бавиш?",
-            targetSentenceLatin = "Kojim sportom se baviš?",
-            tokensJson = "[\"kojim\", \"sportom\", \"se\", \"baviš\"]",
-            distractorTokensJson = "[\"bavim\", \"bavi\", \"bave\", \"sport\", \"ti\"]",
-            grammarHint = "Глагол 'baviti se' требует творительного падежа",
-            matrixTense = "PRESENT",
-            matrixForm = "INTERROGATIVE",
-            personGroup = "2SG_PL"
-        ),
-
-        // Lesson 3
-        SentenceEntity(
-            id = "s_3_1",
-            lessonId = "lesson_3",
-            sourceSentence = "Я хочу говорить по-сербски свободно.",
-            targetSentence = "Ја хоћу да говорим српски течно.",
-            targetSentenceLatin = "Ja hoću da govorim srpski tečno.",
-            tokensJson = "[\"ja\", \"hoću\", \"da\", \"govorim\", \"srpski\", \"tečno\"]",
-            distractorTokensJson = "[\"neću\", \"hoćeš\", \"hoće\", \"govoriti\", \"mogu\"]",
-            grammarHint = "Конструкция: hoću + DA + презенс (govorim)",
-            matrixTense = "PRESENT",
-            matrixForm = "AFFIRMATIVE",
-            personGroup = "1SG"
-        ),
-        SentenceEntity(
-            id = "s_3_2",
-            lessonId = "lesson_3",
-            sourceSentence = "Мы должны сразу позвонить врачу.",
-            targetSentence = "Морамо одмах да позовемо лекара.",
-            targetSentenceLatin = "Moramo odmah da pozovemo lekara.",
-            tokensJson = "[\"moramo\", \"odmah\", \"da\", \"pozovemo\", \"lekara\"]",
-            distractorTokensJson = "[\"moram\", \"morate\", \"pozvati\", \"lekar\", \"možemo\"]",
-            grammarHint = "Moramo + DA + глагол совершенного вида (pozovemo)",
-            matrixTense = "PRESENT",
-            matrixForm = "AFFIRMATIVE",
-            personGroup = "2SG_PL"
+    private fun s(
+        lessonIdx: Int,
+        tense: String,
+        form: String,
+        personGroup: String,
+        ru: String,
+        latin: String,
+        distractors: List<String>,
+        hint: String
+    ): SentenceEntity {
+        val tokens = latin.split(" ")
+            .map { it.trim().lowercase().replace(Regex("[\\p{P}\\p{S}]"), "") }
+            .filter { it.isNotBlank() }
+        val listAdapter = moshi.adapter<List<String>>(
+            com.squareup.moshi.Types.newParameterizedType(List::class.java, String::class.java)
         )
-    )
-
-    private data class MatrixSentenceTemplate(
-        val tense: String,
-        val form: String,
-        val personGroup: String,
-        val ru: String,
-        val sr: String,
-        val srLat: String,
-        val tokens: String,
-        val distractors: String,
-        val hint: String
-    )
-
-    private val nineMatrixTemplates = listOf(
-        MatrixSentenceTemplate("PAST", "AFFIRMATIVE", "1SG", "Я вчера работал.", "Ја сам јуче радио.", "Ja sam juče radio.", "[\"ja\",\"sam\",\"juče\",\"radio\"]", "[\"si\",\"radim\"]", "Perfekat (+): ja sam radio"),
-        MatrixSentenceTemplate("PAST", "NEGATIVE", "1SG", "Я вчера не работал.", "Ја нисам јуче радио.", "Ja nisam juče radio.", "[\"ja\",\"nisam\",\"juče\",\"radio\"]", "[\"sam\",\"ne\"]", "Perfekat (-): nisam radio"),
-        MatrixSentenceTemplate("PAST", "INTERROGATIVE", "2SG_PL", "Ты вчера работал?", "Да ли си јуче радио?", "Da li si juče radio.", "[\"da\",\"li\",\"si\",\"juče\",\"radio\"]", "[\"sam\",\"radim\"]", "Perfekat (?): da li si radio"),
-        MatrixSentenceTemplate("PRESENT", "AFFIRMATIVE", "1SG", "Я сегодня работаю.", "Ја данас радим.", "Ja danas radim.", "[\"ja\",\"danas\",\"radim\"]", "[\"radiš\",\"radio\"]", "Prezent (+): radim"),
-        MatrixSentenceTemplate("PRESENT", "NEGATIVE", "1SG", "Я сегодня не работаю.", "Ја данас не радим.", "Ja danas ne radim.", "[\"ja\",\"danas\",\"ne\",\"radim\"]", "[\"nisam\",\"neću\"]", "Prezent (-): ne radim"),
-        MatrixSentenceTemplate("PRESENT", "INTERROGATIVE", "2SG_PL", "Ты сегодня работаешь?", "Да ли данас радиш?", "Da li danas radiš?", "[\"da\",\"li\",\"danas\",\"radiš\"]", "[\"radim\",\"si\"]", "Prezent (?): da li radiš"),
-        MatrixSentenceTemplate("FUTURE", "AFFIRMATIVE", "1SG", "Я завтра буду работать.", "Ја ћу сутра радити.", "Ja ću sutra raditi.", "[\"ja\",\"ću\",\"sutra\",\"raditi\"]", "[\"neću\",\"radim\"]", "Futur I (+): ću raditi"),
-        MatrixSentenceTemplate("FUTURE", "NEGATIVE", "1SG", "Я завтра не буду работать.", "Ја сутра нећу радити.", "Ja sutra neću raditi.", "[\"ja\",\"sutra\",\"neću\",\"raditi\"]", "[\"ću\",\"nisam\"]", "Futur I (-): neću raditi"),
-        MatrixSentenceTemplate("FUTURE", "INTERROGATIVE", "2SG_PL", "Ты завтра будешь работать?", "Да ли ћеш сутра радити?", "Da li ćeš sutra raditi?", "[\"da\",\"li\",\"ćeš\",\"sutra\",\"raditi\"]", "[\"ću\",\"si\"]", "Futur I (?): da li ćeš raditi")
-    )
-
-    fun getInitialSentences(): List<SentenceEntity> {
-        val explicit = getExplicitInitialSentences()
-        val generated = (1..16).flatMap { idx ->
-            val lessonId = "lesson_$idx"
-            val existingCoords = explicit.filter { it.lessonId == lessonId }.map { it.matrixCoordinateKey() }.toSet()
-            nineMatrixTemplates
-                .filter { "${it.tense}_${it.form}" !in existingCoords }
-                .map { t ->
-                    SentenceEntity(
-                        id = "s_${idx}_${t.tense.lowercase()}_${t.form.lowercase()}",
-                        lessonId = lessonId,
-                        sourceSentence = t.ru,
-                        targetSentence = t.sr,
-                        targetSentenceLatin = t.srLat,
-                        tokensJson = t.tokens,
-                        distractorTokensJson = t.distractors,
-                        grammarHint = t.hint,
-                        matrixTense = t.tense,
-                        matrixForm = t.form,
-                        personGroup = t.personGroup
-                    )
-                }
-        }
-        return explicit + generated
+        return SentenceEntity(
+            id = "s_${lessonIdx}_${tense.lowercase()}_${form.lowercase()}",
+            lessonId = "lesson_$lessonIdx",
+            sourceSentence = ru,
+            targetSentence = latin,
+            targetSentenceLatin = latin,
+            tokensJson = listAdapter.toJson(tokens),
+            distractorTokensJson = listAdapter.toJson(distractors.take(2)),
+            grammarHint = hint,
+            matrixTense = tense,
+            matrixForm = form,
+            personGroup = personGroup
+        )
     }
+
+    fun getInitialSentences(): List<SentenceEntity> = listOf(
+        // Lesson 1: Презент и базовая матрица глагола
+        s(1, "PAST", "AFFIRMATIVE", "2SG_PL", "Мы вчера внимательно слушали профессора.", "Mi smo juče pažljivo slušali profesora.", listOf("ste", "slušamo"), "Perfekat (+): smo slušali"),
+        s(1, "PAST", "NEGATIVE", "1SG", "Я вчера не работал в офисе.", "Ja juče nisam radio u kancelariji.", listOf("sam", "ne"), "Perfekat (-): nisam radio"),
+        s(1, "PAST", "INTERROGATIVE", "2SG_PL", "Ты вчера читал эту книгу?", "Da li si juče čitao ovu knjigu?", listOf("sam", "čitaš"), "Perfekat (?): da li si čitao"),
+        s(1, "PRESENT", "AFFIRMATIVE", "1SG", "Я учу новые слова каждый день.", "Ja učim nove reči svaki dan.", listOf("učiš", "učio"), "Prezent (+): učim"),
+        s(1, "PRESENT", "NEGATIVE", "1SG", "Я не говорю по-английски быстро.", "Ja ne govorim engleski brzo.", listOf("govoriš", "nisam"), "Prezent (-): ne govorim"),
+        s(1, "PRESENT", "INTERROGATIVE", "2SG_PL", "Ты работаешь сегодня в офисе?", "Da li danas radiš u kancelariji?", listOf("radim", "jesi"), "Prezent (?): da li radiš"),
+        s(1, "FUTURE", "AFFIRMATIVE", "1SG", "Завтра я буду работать дома.", "Sutra ću raditi kod kuće.", listOf("ćeš", "biću"), "Futur I (+): ću raditi"),
+        s(1, "FUTURE", "NEGATIVE", "1SG", "Завтра я не буду писать отчёт.", "Sutra neću pisati izveštaj.", listOf("ću", "nisam"), "Futur I (-): neću pisati"),
+        s(1, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты будешь читать этот текст завтра?", "Hoćeš li sutra čitati ovaj tekst?", listOf("ću", "jesi"), "Futur I (?): hoćeš li čitati"),
+
+        // Lesson 2: Возвратные глаголы с частицей 'se'
+        s(2, "PAST", "AFFIRMATIVE", "1SG", "Я хорошо помнил тот красивый день.", "Dobro sam se sećao tog lepog dana.", listOf("si", "sećam"), "Perfekat + se: sam se sećao"),
+        s(2, "PAST", "NEGATIVE", "1SG", "Я не боялся сложных вопросов.", "Nisam se plašio teških pitanja.", listOf("sam", "ne"), "Perfekat (-): nisam se plašio"),
+        s(2, "PAST", "INTERROGATIVE", "2SG_PL", "Ты отдыхал после работы вчера?", "Da li si se odmarao posle posla?", listOf("sam", "odmaraš"), "Perfekat (?): da li si se odmarao"),
+        s(2, "PRESENT", "AFFIRMATIVE", "1SG", "Я хорошо помню этот красивый город.", "Dobro se sećam ovog lepog grada.", listOf("sećaš", "si"), "Prezent + se: dobro se sećam"),
+        s(2, "PRESENT", "NEGATIVE", "1SG", "Я не боюсь говорить по-сербски.", "Ne plašim se da govorim srpski.", listOf("plašiš", "nisam"), "Prezent (-): ne plašim se"),
+        s(2, "PRESENT", "INTERROGATIVE", "2SG_PL", "Каким спортом ты занимаешься?", "Kojim sportom se baviš?", listOf("bavim", "bave"), "Prezent (?): se baviš"),
+        s(2, "FUTURE", "AFFIRMATIVE", "1SG", "Я буду радоваться нашему успеху.", "Radovaću se našem uspehu.", listOf("ćeš", "radujem"), "Futur I + se: radovaću se"),
+        s(2, "FUTURE", "NEGATIVE", "1SG", "Мы не будем смеяться над ошибкой.", "Nećemo se smejati grešci.", listOf("ćemo", "nismo"), "Futur I (-): nećemo se smejati"),
+        s(2, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты будешь отдыхать на выходных?", "Da li ćeš se odmarati za vikend?", listOf("ću", "odmaraš"), "Futur I (?): da li ćeš se odmarati"),
+
+        // Lesson 3: Модальные конструкции (hteti / moći / morati)
+        s(3, "PAST", "AFFIRMATIVE", "1SG", "Я должен был сразу уйти.", "Morao sam odmah da krenem.", listOf("moram", "krenuo"), "Perfekat: morao sam da krenem"),
+        s(3, "PAST", "NEGATIVE", "1SG", "Я не мог прийти на встречу.", "Nisam mogao da dođem na sastanak.", listOf("sam", "neću"), "Perfekat (-): nisam mogao da..."),
+        s(3, "PAST", "INTERROGATIVE", "2SG_PL", "Ты должен был ждать долго?", "Da li si morao dugo da čekaš?", listOf("moram", "čekao"), "Perfekat (?): da li si morao da..."),
+        s(3, "PRESENT", "AFFIRMATIVE", "1SG", "Я хочу говорить по-сербски свободно.", "Ja hoću da govorim srpski tečno.", listOf("neću", "govoriti"), "Prezent: hoću + da + prezent"),
+        s(3, "PRESENT", "NEGATIVE", "1SG", "Здесь вы не смеете парковать машину.", "Ovde ne smete da parkirate auto.", listOf("smete", "parkirati"), "Prezent (-): ne smete da..."),
+        s(3, "PRESENT", "INTERROGATIVE", "2SG_PL", "Ты можешь повторить это слово?", "Možeš li da ponoviš ovu reč?", listOf("mogu", "ponoviti"), "Prezent (?): možeš li da..."),
+        s(3, "FUTURE", "AFFIRMATIVE", "1SG", "Завтра я смогу помочь команде.", "Sutra ću moći da pomognem timu.", listOf("mogu", "pomoći"), "Futur I: ću moći da..."),
+        s(3, "FUTURE", "NEGATIVE", "1SG", "Я не смогу прийти на встречу.", "Neću moći da dođem na sastanak.", listOf("ću", "nisam"), "Futur I (-): neću moći da..."),
+        s(3, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты сможешь закончить работу вовремя?", "Hoćeš li moći da završiš posao na vreme?", listOf("ću", "završiti"), "Futur I (?): hoćeš li moći da..."),
+
+        // Lesson 4: Прошедшее время (Перфекат)
+        s(4, "PAST", "AFFIRMATIVE", "1SG", "Вчера я купил новый словарь.", "Juče sam kupio nov rečnik.", listOf("si", "kupujem"), "Perfekat (+): sam kupio"),
+        s(4, "PAST", "NEGATIVE", "1SG", "Я не забыл о твоём звонке.", "Nisam zaboravio na tvoj poziv.", listOf("sam", "zaboravljam"), "Perfekat (-): nisam zaboravio"),
+        s(4, "PAST", "INTERROGATIVE", "2SG_PL", "Вы посетили музей на прошлой неделе?", "Da li ste posetili muzej prošle nedelje?", listOf("smo", "posetite"), "Perfekat (?): da li ste posetili"),
+        s(4, "PRESENT", "AFFIRMATIVE", "1SG", "Сейчас я внимательно слушаю рассказ.", "Sada pažljivo slušam priču.", listOf("slušao", "slušaš"), "Prezent (+): slušam"),
+        s(4, "PRESENT", "NEGATIVE", "1SG", "Я не забываю новые слова.", "Ne zaboravljam nove reči.", listOf("zaboravio", "nisam"), "Prezent (-): ne zaboravljam"),
+        s(4, "PRESENT", "INTERROGATIVE", "2SG_PL", "Ты видишь нашего старого друга?", "Da li vidiš našeg starog prijatelja?", listOf("vidim", "video"), "Prezent (?): da li vidiš"),
+        s(4, "FUTURE", "AFFIRMATIVE", "1SG", "Мы закончим проект до пятницы.", "Završićemo projekat pre petka.", listOf("će", "završili"), "Futur I (+): završićemo"),
+        s(4, "FUTURE", "NEGATIVE", "1SG", "Я не забуду о важном событии.", "Neću zaboraviti na važan događaj.", listOf("ću", "nisam"), "Futur I (-): neću zaboraviti"),
+        s(4, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты посетишь нас в этом месяце?", "Da li ćeš nas posetiti ovog meseca?", listOf("ću", "posetio"), "Futur I (?): da li ćeš posetiti"),
+
+        // Lesson 5: Будущее время I (Футур I)
+        s(5, "PAST", "AFFIRMATIVE", "1SG", "В прошлом году мы путешествовали поездом.", "Prošle godine smo putovali vozom.", listOf("ste", "putujemo"), "Perfekat (+): smo putovali"),
+        s(5, "PAST", "NEGATIVE", "1SG", "Он не позвонил мне вчера вечером.", "Nije mi pozvao juče uveče.", listOf("je", "neće"), "Perfekat (-): nije pozvao"),
+        s(5, "PAST", "INTERROGATIVE", "2SG_PL", "Вы успели на поезд вовремя?", "Da li ste stigli na voz na vreme?", listOf("smo", "stižete"), "Perfekat (?): da li ste stigli"),
+        s(5, "PRESENT", "AFFIRMATIVE", "1SG", "Мы планируем летний отпуск в июле.", "Planiramo letnji odmor u julu.", listOf("planirao", "planirate"), "Prezent (+): planiramo"),
+        s(5, "PRESENT", "NEGATIVE", "1SG", "На этой неделе я не путешествую.", "Ove nedelje ne putujem.", listOf("putovao", "neću"), "Prezent (-): ne putujem"),
+        s(5, "PRESENT", "INTERROGATIVE", "2SG_PL", "Что ты планируешь на выходные?", "Šta planiraš za vikend?", listOf("planiram", "planirao"), "Prezent (?): šta planiraš"),
+        s(5, "FUTURE", "AFFIRMATIVE", "1SG", "Завтра я поеду в Нови-Сад.", "Sutra ću putovati u Novi Sad.", listOf("ćeš", "putovao"), "Futur I (+): ću putovati"),
+        s(5, "FUTURE", "NEGATIVE", "1SG", "Я не поеду без паспорта.", "Neću putovati bez pasoša.", listOf("ću", "nisam"), "Futur I (-): neću putovati"),
+        s(5, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты позвонишь, как только прибудешь?", "Hoćeš li pozvati čim stigneš?", listOf("ću", "pozvao"), "Futur I (?): hoćeš li pozvati"),
+
+        // Lesson 6: Видовые пары глаголов
+        s(6, "PAST", "AFFIRMATIVE", "1SG", "Я прочитал всю статью за десять минут.", "Pročitao sam ceo članak za deset minuta.", listOf("čitao", "si"), "Совершенный вид (прош.): pročitao sam"),
+        s(6, "PAST", "NEGATIVE", "1SG", "Я ещё не написал этот отчёт.", "Još nisam napisao ovaj izveštaj.", listOf("sam", "pisao"), "Совершенный вид (-): nisam napisao"),
+        s(6, "PAST", "INTERROGATIVE", "2SG_PL", "Ты выучил все новые правила?", "Da li si naučio sva nova pravila?", listOf("učio", "sam"), "Совершенный вид (?): da li si naučio"),
+        s(6, "PRESENT", "AFFIRMATIVE", "1SG", "По субботам я покупаю свежие фрукты.", "Subotom kupujem sveže voće.", listOf("kupim", "kupovao"), "Несовершенный вид (наст.): kupujem"),
+        s(6, "PRESENT", "NEGATIVE", "1SG", "Сейчас я не открываю окно.", "Sada ne otvaram prozor.", listOf("otvorim", "nisam"), "Несовершенный вид (-): ne otvaram"),
+        s(6, "PRESENT", "INTERROGATIVE", "2SG_PL", "Ты регулярно повторяешь старые уроки?", "Da li redovno ponavljaš stare lekcije?", listOf("ponoviš", "ponavljam"), "Несовершенный вид (?): da li ponavljaš"),
+        s(6, "FUTURE", "AFFIRMATIVE", "1SG", "Мы сделаем отличную презентацию.", "Napravićemo odličnu prezentaciju.", listOf("pravimo", "napravili"), "Совершенный вид (буд.): napravićemo"),
+        s(6, "FUTURE", "NEGATIVE", "1SG", "Я не буду покупать лишних вещей.", "Neću kupovati suvišne stvari.", listOf("ću", "kupiti"), "Несовершенный вид (-): neću kupovati"),
+        s(6, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты откроешь окно в комнате?", "Hoćeš li otvoriti prozor u sobi?", listOf("otvaraš", "ću"), "Совершенный вид (?): hoćeš li otvoriti"),
+
+        // Lesson 7: Повелительное наклонение (Императив)
+        s(7, "PAST", "AFFIRMATIVE", "1SG", "Вчера я помог другу с переводом.", "Juče sam pomogao prijatelju sa prevodom.", listOf("pomognem", "si"), "Perfekat: sam pomogao"),
+        s(7, "PAST", "NEGATIVE", "1SG", "Я не стал ждать перед входом.", "Nisam čekao ispred ulaza.", listOf("sam", "čekaj"), "Perfekat (-): nisam čekao"),
+        s(7, "PAST", "INTERROGATIVE", "2SG_PL", "Ты отправил адрес сообщением?", "Da li si poslao adresu porukom?", listOf("pošalji", "sam"), "Perfekat (?): da li si poslao"),
+        s(7, "PRESENT", "AFFIRMATIVE", "2SG_PL", "Пожалуйста, помоги мне с этим заданием!", "Molim te, pomozi mi sa ovim zadatkom!", listOf("pomažeš", "pomogao"), "Imperativ: pomozi!"),
+        s(7, "PRESENT", "NEGATIVE", "2SG_PL", "Не забывай закрывать дверь!", "Nemoj da zaboravljaš da zatvoriš vrata!", listOf("nemojte", "zaboravio"), "Imperativ (-): nemoj da..."),
+        s(7, "PRESENT", "INTERROGATIVE", "2SG_PL", "Можете открыть книги на этой странице?", "Možete li da otvorite knjige na ovoj strani?", listOf("otvori", "mogu"), "Вежливая просьба: možete li da..."),
+        s(7, "FUTURE", "AFFIRMATIVE", "2SG_PL", "Давайте отправимся прямо сейчас!", "Krenimo odmah!", listOf("krenite", "krećem"), "Imperativ 1PL: krenimo!"),
+        s(7, "FUTURE", "NEGATIVE", "1SG", "Мы не опоздаем на встречу.", "Nećemo kasniti na sastanak.", listOf("ćemo", "nismo"), "Futur I (-): nećemo kasniti"),
+        s(7, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты подождёшь меня перед входом?", "Hoćeš li me sačekati ispred ulaza?", listOf("sačekaj", "ću"), "Futur I (?): hoćeš li sačekati"),
+
+        // Lesson 8: Условное наклонение (Потенциал)
+        s(8, "PAST", "AFFIRMATIVE", "1SG", "Я хотел посетить старый город.", "Želeo sam da posetim stari grad.", listOf("bih", "želim"), "Perfekat: želeo sam"),
+        s(8, "PAST", "NEGATIVE", "1SG", "Мы не выбрали этот вариант.", "Nismo izabrali ovu opciju.", listOf("bismo", "smo"), "Perfekat (-): nismo izabrali"),
+        s(8, "PAST", "INTERROGATIVE", "2SG_PL", "Вы предложили новый план вчера?", "Da li ste predložili novi plan juče?", listOf("biste", "predložite"), "Perfekat (?): da li ste predložili"),
+        s(8, "PRESENT", "AFFIRMATIVE", "1SG", "Я хотел бы заказать домашний кофе.", "Želeo bih da naručim domaću kafu.", listOf("sam", "ću"), "Potencijal (+): želeo bih"),
+        s(8, "PRESENT", "NEGATIVE", "1SG", "Я не стал бы предлагать это решение.", "Ne bih predložio to rešenje.", listOf("bih", "nisam"), "Potencijal (-): ne bih predložio"),
+        s(8, "PRESENT", "INTERROGATIVE", "2SG_PL", "Что бы вы нам порекомендовали?", "Šta biste nam preporučili?", listOf("bih", "ste"), "Potencijal (?): šta biste preporučili"),
+        s(8, "FUTURE", "AFFIRMATIVE", "1SG", "Я с удовольствием пришёл бы завтра.", "Rado bih došao sutra.", listOf("sam", "će"), "Potencijal (+): rado bih došao"),
+        s(8, "FUTURE", "NEGATIVE", "1SG", "Я не откажусь от вашего совета.", "Neću odbiti vaš savet.", listOf("bih", "ću"), "Futur I (-): neću odbiti"),
+        s(8, "FUTURE", "INTERROGATIVE", "2SG_PL", "Вы воспользовались бы этой возможностью?", "Da li biste iskoristili ovu priliku?", listOf("bismo", "ste"), "Potencijal (?): da li biste iskoristili"),
+
+        // Lesson 9: Глаголы движения
+        s(9, "PAST", "AFFIRMATIVE", "1SG", "Мы вышли из здания на свежий воздух.", "Izašli smo iz zgrade na svež vazduh.", listOf("ušli", "smo"), "Perfekat: izašli smo iz..."),
+        s(9, "PAST", "NEGATIVE", "1SG", "Он не уехал из города вчера.", "Nije otišao iz grada juče.", listOf("je", "došao"), "Perfekat (-): nije otišao"),
+        s(9, "PAST", "INTERROGATIVE", "2SG_PL", "Вы прошли мимо старой крепости?", "Da li ste prošli pored stare tvrđave?", listOf("smo", "prođete"), "Perfekat (?): da li ste prošli"),
+        s(9, "PRESENT", "AFFIRMATIVE", "1SG", "Каждое утро я иду пешком на работу.", "Svako jutro idem peške na posao.", listOf("ideš", "išao"), "Prezent (+): idem peške na..."),
+        s(9, "PRESENT", "NEGATIVE", "1SG", "Сейчас я не вхожу в зал.", "Sada ne ulazim u salu.", listOf("izlazim", "nisam"), "Prezent (-): ne ulazim"),
+        s(9, "PRESENT", "INTERROGATIVE", "2SG_PL", "Куда ты идёшь так быстро?", "Kuda ideš tako brzo?", listOf("idem", "išao"), "Prezent (?): kuda ideš"),
+        s(9, "FUTURE", "AFFIRMATIVE", "2SG_PL", "Мы вернёмся домой поздно вечером.", "Vratićemo se kući kasno uveče.", listOf("ćete", "vratili"), "Futur I (+): vratićemo se"),
+        s(9, "FUTURE", "NEGATIVE", "1SG", "Я не уйду до конца встречи.", "Neću otići pre kraja sastanka.", listOf("ću", "doći"), "Futur I (-): neću otići"),
+        s(9, "FUTURE", "INTERROGATIVE", "2SG_PL", "Когда ты придёшь на остановку?", "Kada ćeš doći na stanicu?", listOf("ću", "došao"), "Futur I (?): kada ćeš doći"),
+
+        // Lesson 10: Дательный падеж и клитики
+        s(10, "PAST", "AFFIRMATIVE", "1SG", "Профессор ясно объяснил нам правило.", "Profesor nam je jasno objasnio pravilo.", listOf("vam", "smo"), "Dativ клитика: nam je objasnio"),
+        s(10, "PAST", "NEGATIVE", "1SG", "Я не сказал ему адрес вчера.", "Nisam mu rekao adresu juče.", listOf("joj", "sam"), "Dativ (-): nisam mu rekao"),
+        s(10, "PAST", "INTERROGATIVE", "2SG_PL", "Ты поздравил своего друга?", "Da li si čestitao svom prijatelju?", listOf("sam", "čestitaš"), "Dativ (?): čestitao prijatelju"),
+        s(10, "PRESENT", "AFFIRMATIVE", "1SG", "Я полностью верю тебе на слово.", "Potpuno ti verujem na reč.", listOf("mi", "veruješ"), "Dativ клитика: ti verujem"),
+        s(10, "PRESENT", "NEGATIVE", "1SG", "Это время мне не подходит.", "Ovaj termin mi ne odgovara.", listOf("ti", "odgovaram"), "Dativ (-): mi ne odgovara"),
+        s(10, "PRESENT", "INTERROGATIVE", "2SG_PL", "Вам подходит встреча в среду?", "Da li vam odgovara sastanak u sredu?", listOf("nam", "odgovaram"), "Dativ (?): da li vam odgovara"),
+        s(10, "FUTURE", "AFFIRMATIVE", "1SG", "Я позвоню тебе сразу после работы.", "Javiću ti se odmah posle posla.", listOf("mi", "javio"), "Dativ клитика: javiću ti se"),
+        s(10, "FUTURE", "NEGATIVE", "1SG", "Я не буду мешать вам сегодня.", "Neću vam smetati danas.", listOf("nam", "ću"), "Futur I (-): neću vam smetati"),
+        s(10, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты дашь мне синюю ручку?", "Hoćeš li mi dati plavu olovku?", listOf("ti", "ću"), "Dativ (?): hoćeš li mi dati"),
+
+        // Lesson 11: Винительный и локатив
+        s(11, "PAST", "AFFIRMATIVE", "2SG_PL", "Вчера мы гуляли по старому городу.", "Juče smo šetali po starom gradu.", listOf("grad", "ste"), "Lokativ (где): po starom gradu"),
+        s(11, "PAST", "NEGATIVE", "1SG", "Утром я не был в аэропорту.", "Jutros nisam bio na aerodromu.", listOf("aerodrom", "sam"), "Lokativ (-): na aerodromu"),
+        s(11, "PAST", "INTERROGATIVE", "2SG_PL", "Ты ходил в книжный магазин вчера?", "Da li si išao u knjižaru juče?", listOf("knjižari", "sam"), "Akuzativ (куда): u knjižaru"),
+        s(11, "PRESENT", "AFFIRMATIVE", "2SG_PL", "Коллеги уже находятся в офисе.", "Kolege se već nalaze u kancelariji.", listOf("kancelariju", "nalazim"), "Lokativ (где): u kancelariji"),
+        s(11, "PRESENT", "NEGATIVE", "1SG", "Ключей нет на большом столе.", "Ključevi nisu na velikom stolu.", listOf("sto", "su"), "Lokativ (-): na stolu"),
+        s(11, "PRESENT", "INTERROGATIVE", "2SG_PL", "Где находится главная площадь?", "Gde se nalazi glavni trg?", listOf("trgu", "kuda"), "Lokativ (?): gde se nalazi"),
+        s(11, "FUTURE", "AFFIRMATIVE", "2SG_PL", "Вечером мы пойдём в театр.", "Večeras ćemo ići u pozorište.", listOf("pozorištu", "idemo"), "Akuzativ (куда): u pozorište"),
+        s(11, "FUTURE", "NEGATIVE", "1SG", "Завтра мы не останемся в квартире.", "Sutra nećemo ostati u stanu.", listOf("stan", "ćemo"), "Lokativ (-): u stanu"),
+        s(11, "FUTURE", "INTERROGATIVE", "2SG_PL", "Вы пойдёте в городской парк?", "Hoćete li ići u gradski park?", listOf("parku", "ćemo"), "Akuzativ (?): u gradski park"),
+
+        // Lesson 12: Притяжательные местоимения
+        s(12, "PAST", "AFFIRMATIVE", "1SG", "Её идея была очень полезной.", "Njena ideja je bila veoma korisna.", listOf("njegova", "bilo"), "Притяжательное: njena (ж. р.)"),
+        s(12, "PAST", "NEGATIVE", "1SG", "Это не был их план.", "To nije bio njihov plan.", listOf("naš", "bila"), "Притяжательное (-): njihov"),
+        s(12, "PAST", "INTERROGATIVE", "2SG_PL", "Твой брат был вчера в офисе?", "Da li je tvoj brat bio juče u kancelariji?", listOf("moj", "bila"), "Притяжательное (?): tvoj brat"),
+        s(12, "PRESENT", "AFFIRMATIVE", "2SG_PL", "Наша команда работает над новым проектом.", "Naš tim radi na novom projektu.", listOf("vaš", "radimo"), "Притяжательное: naš tim"),
+        s(12, "PRESENT", "NEGATIVE", "1SG", "Это не мой телефон на столе.", "Ovo nije moj telefon na stolu.", listOf("tvoj", "je"), "Притяжательное (-): nije moj"),
+        s(12, "PRESENT", "INTERROGATIVE", "2SG_PL", "Это ваш новый сосед?", "Da li je ovo vaš novi komšija?", listOf("naš", "vaša"), "Притяжательное (?): vaš komšija"),
+        s(12, "FUTURE", "AFFIRMATIVE", "1SG", "Моя семья посетит Белград летом.", "Moja porodica će posetiti Beograd na leto.", listOf("moj", "ću"), "Притяжательное: moja porodica"),
+        s(12, "FUTURE", "NEGATIVE", "1SG", "Мы не будем менять наше расписание.", "Nećemo menjati naš raspored.", listOf("naša", "ćemo"), "Притяжательное (-): naš raspored"),
+        s(12, "FUTURE", "INTERROGATIVE", "2SG_PL", "Его брат придёт к нам завтра?", "Hoće li njegov brat doći kod nas sutra?", listOf("njen", "došao"), "Притяжательное (?): njegov brat"),
+
+        // Lesson 13: Степени сравнения
+        s(13, "PAST", "AFFIRMATIVE", "1SG", "Второе задание было легче первого.", "Drugi zadatak je bio lakši od prvog.", listOf("teži", "lako"), "Komparativ: lakši od..."),
+        s(13, "PAST", "NEGATIVE", "1SG", "Этот отель не был дороже.", "Taj hotel nije bio skuplji.", listOf("jeftiniji", "je"), "Komparativ (-): nije bio skuplji"),
+        s(13, "PAST", "INTERROGATIVE", "2SG_PL", "Какой метод был лучше для вас?", "Koji metod je bio bolji za vas?", listOf("gori", "dobar"), "Komparativ (?): bio bolji"),
+        s(13, "PRESENT", "AFFIRMATIVE", "1SG", "Поезд быстрее автобуса на этой линии.", "Voz je brži od autobusa na ovoj liniji.", listOf("sporiji", "nego"), "Komparativ: brži od..."),
+        s(13, "PRESENT", "NEGATIVE", "1SG", "Погода сегодня не хуже, чем вчера.", "Vreme danas nije gore nego juče.", listOf("bolje", "od"), "Komparativ (-): nije gore nego..."),
+        s(13, "PRESENT", "INTERROGATIVE", "2SG_PL", "Фрукты дешевле на рынке?", "Da li je voće jeftinije na pijaci?", listOf("skuplje", "jeftino"), "Komparativ (?): jeftinije"),
+        s(13, "FUTURE", "AFFIRMATIVE", "1SG", "Следующий шаг будет самым важным.", "Sledeći korak će biti najvažniji.", listOf("važniji", "bio"), "Superlativ: najvažniji"),
+        s(13, "FUTURE", "NEGATIVE", "1SG", "Следующий тест не будет сложнее.", "Sledeći test neće biti teži.", listOf("lakši", "će"), "Komparativ (-): neće biti teži"),
+        s(13, "FUTURE", "INTERROGATIVE", "2SG_PL", "Новый стол будет больше старого?", "Hoće li novi sto biti veći od starog?", listOf("manji", "će"), "Komparativ (?): veći od..."),
+
+        // Lesson 14: Сложные союзы
+        s(14, "PAST", "AFFIRMATIVE", "2SG_PL", "Мы вышли на прогулку, хотя было холодно.", "Izašli smo u šetnju iako je bilo hladno.", listOf("zato", "dok"), "Уступка: iako"),
+        s(14, "PAST", "NEGATIVE", "2SG_PL", "Мы не пошли в парк, потому что шёл дождь.", "Nismo išli u park zato što je padala kiša.", listOf("iako", "čim"), "Причина: zato što"),
+        s(14, "PAST", "INTERROGATIVE", "2SG_PL", "Почему ты ушёл, когда начался дождь?", "Zašto si otišao kada je počela kiša?", listOf("iako", "dok"), "Время: kada"),
+        s(14, "PRESENT", "AFFIRMATIVE", "1SG", "Я читаю новости, пока пью кофе.", "Čitam vesti dok pijem kafu.", listOf("čim", "iako"), "Время: dok"),
+        s(14, "PRESENT", "NEGATIVE", "1SG", "Я не выхожу, если плохая погода.", "Ne izlazim ako je loše vreme.", listOf("zato", "iako"), "Условие: ako"),
+        s(14, "PRESENT", "INTERROGATIVE", "2SG_PL", "Что ты слушаешь, пока едешь на работу?", "Šta slušaš dok ideš na posao?", listOf("ako", "zato"), "Время (?): dok ideš"),
+        s(14, "FUTURE", "AFFIRMATIVE", "1SG", "Я позвоню, как только закончу работу.", "Pozvaću te čim završim posao.", listOf("dok", "iako"), "Время: čim"),
+        s(14, "FUTURE", "NEGATIVE", "2SG_PL", "Мы не отправимся, прежде чем проверим билет.", "Nećemo krenuti pre nego što proverimo kartu.", listOf("čim", "pošto"), "Время: pre nego što"),
+        s(14, "FUTURE", "INTERROGATIVE", "2SG_PL", "Ты позвонишь, когда приедешь в город?", "Hoćeš li se javiti kada stigneš u grad?", listOf("dok", "iako"), "Время (?): kada stigneš"),
+
+        // Lesson 15: Пассив и безличные конструкции
+        s(15, "PAST", "AFFIRMATIVE", "1SG", "Вчера музей был открыт весь день.", "Juče je muzej bio otvoren ceo dan.", listOf("zatvoren", "bilo"), "Причастие: bio otvoren"),
+        s(15, "PAST", "NEGATIVE", "1SG", "Парковка здесь не была разрешена.", "Parkiranje ovde nije bilo dozvoljeno.", listOf("zabranjeno", "je"), "Безличное (-): nije bilo dozvoljeno"),
+        s(15, "PAST", "INTERROGATIVE", "2SG_PL", "Нужно было взять паспорт?", "Da li je bilo potrebno poneti pasoš?", listOf("moguće", "bila"), "Безличное (?): bilo potrebno"),
+        s(15, "PRESENT", "AFFIRMATIVE", "1SG", "Здесь говорят по-сербски.", "Ovde se govori srpski jezik.", listOf("govore", "je"), "Безлично-возвратное: se govori"),
+        s(15, "PRESENT", "NEGATIVE", "1SG", "Здесь запрещено фотографировать.", "Ovde je zabranjeno fotografisanje.", listOf("dozvoljeno", "nije"), "Предикатив: zabranjeno je"),
+        s(15, "PRESENT", "INTERROGATIVE", "2SG_PL", "Возможно забронировать столик на вечер?", "Da li je moguće rezervisati sto za veče?", listOf("zabranjeno", "su"), "Безличное (?): da li je moguće"),
+        s(15, "FUTURE", "AFFIRMATIVE", "1SG", "Важно, чтобы мы проверили детали.", "Važno je da proverimo detalje.", listOf("dosadno", "proverili"), "Безличное: važno je da..."),
+        s(15, "FUTURE", "NEGATIVE", "1SG", "В воскресенье банки не будут открыты.", "U nedelju banke neće biti otvorene.", listOf("zatvorene", "će"), "Будущее (-): neće biti otvorene"),
+        s(15, "FUTURE", "INTERROGATIVE", "2SG_PL", "Музей будет открыт завтра?", "Hoće li muzej biti otvoren sutra?", listOf("zatvoren", "bio"), "Будущее (?): hoće li biti otvoren"),
+
+        // Lesson 16: Итоговый синтез (Полиглот)
+        s(16, "PAST", "AFFIRMATIVE", "2SG_PL", "Мы легко договорились без словаря.", "Lako smo se sporazumeli bez rečnika.", listOf("ste", "sporazumemo"), "Синтез (прош.): smo se sporazumeli"),
+        s(16, "PAST", "NEGATIVE", "2SG_PL", "Мы не забыли эти важные слова.", "Nismo zaboravili ove važne reči.", listOf("smo", "zaboravljamo"), "Синтез (-): nismo zaboravili"),
+        s(16, "PAST", "INTERROGATIVE", "2SG_PL", "Вы легко объяснились в Белграде?", "Da li ste se lako sporazumeli u Beogradu?", listOf("smo", "sporazumete"), "Синтез (?): da li ste se sporazumeli"),
+        s(16, "PRESENT", "AFFIRMATIVE", "1SG", "Я тренируюсь каждый день, чтобы говорить свободно.", "Vežbam svaki dan da bih govorio tečno.", listOf("bih", "govorim"), "Синтез (наст.): vežbam da bih govorio"),
+        s(16, "PRESENT", "NEGATIVE", "1SG", "Я не сомневаюсь в твоём успехе.", "Ne sumnjam u tvoj uspeh.", listOf("sumnjaš", "nisam"), "Синтез (-): ne sumnjam"),
+        s(16, "PRESENT", "INTERROGATIVE", "2SG_PL", "Какова ваша главная цель в обучении?", "Koji je vaš glavni cilj u učenju?", listOf("naš", "su"), "Синтез (?): koji je vaš cilj"),
+        s(16, "FUTURE", "AFFIRMATIVE", "2SG_PL", "После практики вы будете говорить свободно.", "Posle vežbe govorićete tečno.", listOf("govorite", "govorili"), "Синтез (буд.): govorićete tečno"),
+        s(16, "FUTURE", "NEGATIVE", "1SG", "Мы не забудем эти полезные правила.", "Nećemo zaboraviti ova korisna pravila.", listOf("ćemo", "nismo"), "Синтез (-): nećemo zaboraviti"),
+        s(16, "FUTURE", "INTERROGATIVE", "2SG_PL", "Вы продолжите ежедневное общение?", "Hoćete li nastaviti svakodnevnu komunikaciju?", listOf("ćemo", "nastavili"), "Синтез (?): hoćete li nastaviti")
+    )
 }
