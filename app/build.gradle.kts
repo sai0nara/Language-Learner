@@ -15,6 +15,10 @@ plugins {
   alias(libs.plugins.google.services)
 }
 
+base {
+  archivesName.set("lang-learn")
+}
+
 android {
   namespace = "com.example"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
@@ -97,7 +101,7 @@ androidComponents {
     variant.outputs.forEach { output ->
       val version = output.versionName.get()
       (output as? com.android.build.api.variant.impl.VariantOutputImpl)?.outputFileName?.set(
-        "app-${variant.name}-v$version-${buildTimestamp()}.apk"
+        "lang-learn-${variant.name}-v$version-${buildTimestamp()}.apk"
       )
     }
   }

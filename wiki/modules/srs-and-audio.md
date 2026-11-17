@@ -2,11 +2,11 @@
 
 > SM-2 spaced repetition scheduling and dual-audio pronunciation playback.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 
 ## Spaced Repetition (`srs/`)
 
-`SpacedRepetitionAlgorithm` computes next review intervals, repetition counts, and clamped ease factors from `ReviewGrade` ratings (`AGAIN`, `HARD`, `GOOD`, `EASY`). Failed recalls reset repetition to zero and schedule a 1-day interval.
+`SpacedRepetitionAlgorithm` implements FSRS v5-inspired scheduling (`NEW`, `LEARNING`, `REVIEW`, `RELEARNING`, `stability`, `difficulty`, retrievability `R = (1 + (19/81) * (t / S))^-0.5`), implicit accuracy/latency/return rating mapping (`deriveVocabRating`, `deriveSentenceRating`), and `buildDailyBlendedQueue` (20-item `70%` overdue / `30%` active-lesson queue capped at `30`/day), while preserving `calculateNextReview` for legacy unit test compatibility.
 
 ## Dual Audio (`audio/`)
 

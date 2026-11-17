@@ -4,9 +4,11 @@ Offline-first Android language learning app with custom XML/CSV/JSON curriculum 
 
 ## Driving the project: `conductor/`
 
-`conductor/` is the project-management layer. Before starting work, read the
-track workflow (`conductor/workflow.md`) and current track status
-(`conductor/tracks.md` — one `[x]`/`[~]`/`[ ]` line per track). Each track has its
+`conductor/` is the project-management layer. Before starting work, create and
+check out a new feature branch (e.g. `feat/<slug>`) unless the user explicitly
+asks to stay on the current branch, and read the track workflow
+(`conductor/workflow.md`) and current track status (`conductor/tracks.md` — one
+`[x]`/`[~]`/`[ ]` line per track). Each track has its
 own plan under `conductor/tracks/<track_id>/plan.md` (or `conductor/archive/` for
 finished ones). Work follows TDD: red (failing test) → green → refactor → UI test.
 Aim for >80% coverage and UI tests on every user-facing feature.

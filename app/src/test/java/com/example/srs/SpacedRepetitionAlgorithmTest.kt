@@ -100,4 +100,117 @@ class SpacedRepetitionAlgorithmTest {
         assertTrue(result.nextReviewTimestamp >= before + sixDaysMs)
         assertTrue(result.nextReviewTimestamp <= after + sixDaysMs)
     }
+
+    @Test
+    fun `deriveVocabRating maps accuracy and latency boundaries to ReviewGrade 1-4`() {
+        assertEquals(ReviewGrade.AGAIN, SpacedRepetitionAlgorithm.deriveVocabRating(isCorrect = false, latencyMs = 1000L))
+        assertEquals(ReviewGrade.EASY, SpacedRepetitionAlgorithm.deriveVocabRating(isCorrect = true, latencyMs = 2500L))
+        assertEquals(ReviewGrade.GOOD, SpacedRepetitionAlgorithm.deriveVocabRating(isCorrect = true, latencyMs = 2501L))
+        assertEquals(ReviewGrade.GOOD, SpacedRepetitionAlgorithm.deriveVocabRating(isCorrect = true, latencyMs = 6000L))
+        assertEquals(ReviewGrade.HARD, SpacedRepetitionAlgorithm.deriveVocabRating(isCorrect = true, latencyMs = 6001L))
+    }
+
+    @Test
+    fun `deriveSentenceRating maps accuracy, latency, tile returns, and grammar drawer penalty`() {
+        assertEquals(
+            ReviewGrade.AGAIN,
+            SpacedRepetitionAlgorithm.deriveSentenceRating(isCorrect = false, latencyMs = 3000L, tileReturns = 0, grammarOpenedMidAttempt = false)
+        )
+        assertEquals(
+            ReviewGrade.AGAIN,
+            SpacedRepetitionAlgorithm.deriveSentenceRating(isCorrect = true, latencyMs = 3000L, tileReturns = 0, grammarOpenedMidAttempt = true)
+        )
+        assertEquals(
+            ReviewGrade.EASY,
+            SpacedRepetitionAlgorithm.deriveSentenceRating(isCorrect = true, latencyMs = 6000L, tileReturns = 0, grammarOpenedMidAttempt = false)
+        )
+        assertEquals(
+            ReviewGrade.GOOD,
+            SpacedRepetitionAlgorithm.deriveSentenceRating(isCorrect = true, latencyMs = 6000L, tileReturns = 2, grammarOpenedMidAttempt = false)
+        )
+        assertEquals(
+            ReviewGrade.GOOD,
+            SpacedRepetitionAlgorithm.deriveSentenceRating(isCorrect = true, latencyMs = 15000L, tileReturns = 2, grammarOpenedMidAttempt = false)
+        )
+        assertEquals(
+            ReviewGrade.HARD,
+            SpacedRepetitionAlgorithm.deriveSentenceRating(isCorrect = true, latencyMs = 15001L, tileReturns = 0, grammarOpenedMidAttempt = false)
+        )
+        assertEquals(
+            ReviewGrade.HARD,
+            SpacedRepetitionAlgorithm.deriveSentenceRating(isCorrect = true, latencyMs = 5000L, tileReturns = 3, grammarOpenedMidAttempt = false)
+        )
+    }
+
+    @Test
+    fun `calculateFsrsNextReview updates state, stability, difficulty 1-10, lapses, and retrievability`() {
+        val now = 1_000_000_000L
+        val newItem = createReview().copy(state = "NEW", stability = 0f, difficulty = 5.0f, reps = 0, lapses = 0)
+
+        val reviewed = SpacedRepetitionAlgorithm.calculateFsrsNextReview(newItem, ReviewGrade.GOOD, nowMs = now)
+        assertEquals("REVIEW", reviewed.state)
+        assertTrue(reviewed.stability >= 3.0f)
+        assertEquals(1, reviewed.reps)
+        assertEquals(0, reviewed.lapses)
+        assertEquals(now, reviewed.lastReviewedAt)
+
+        val oneDayLater = now + 24L * 60L * 60L * 1000L
+        val lapsed = SpacedRepetitionAlgorithm.calculateFsrsNextReview(reviewed, ReviewGrade.AGAIN, nowMs = oneDayLater)
+        assertEquals("RELEARNING", lapsed.state)
+        assertEquals(1, lapsed.lapses)
+        assertTrue(lapsed.stability < reviewed.stability)
+        assertTrue(lapsed.difficulty in 1.0f..10.0f)
+
+        val rNow = SpacedRepetitionAlgorithm.retrievability(reviewed, nowMs = now)
+        val rLater = SpacedRepetitionAlgorithm.retrievability(reviewed, nowMs = now + 5L * 24L * 60L * 60L * 1000L)
+        assertEquals(1.0f, rNow, 0.001f)
+        assertTrue(rLater < rNow && rLater > 0f)
+    }
+
+    @Test
+    fun `buildDailyBlendedQueue enforces 70-30 split, retrievability order, and 30 per day soft cap`() {
+        val now = 1_000_000_000L
+        val dayMs = 24L * 60L * 60L * 1000L
+        val overdue = (1..20).map { i ->
+            createReview().copy(
+                id = "over_$i",
+                lessonId = "lesson_1",
+                state = "REVIEW",
+                stability = i.toFloat(),
+                lastReviewedAt = now - 5L * dayMs,
+                nextReviewTimestamp = now - 1_000L
+            )
+        }
+        val activeLessonItems = (1..10).map { i ->
+            createReview().copy(
+                id = "act_$i",
+                lessonId = "lesson_2",
+                state = "NEW",
+                stability = 0f,
+                nextReviewTimestamp = now + dayMs
+            )
+        }
+
+        val queue = SpacedRepetitionAlgorithm.buildDailyBlendedQueue(
+            overdueItems = overdue,
+            activeLessonItems = activeLessonItems,
+            reviewedTodayCount = 0,
+            nowMs = now
+        )
+        assertEquals(20, queue.size)
+        val overdueInQueue = queue.filter { it.id.startsWith("over_") }
+        val activeInQueue = queue.filter { it.id.startsWith("act_") }
+        assertEquals(14, overdueInQueue.size)
+        assertEquals(6, activeInQueue.size)
+        // Sorted by ascending retrievability -> lowest stability first
+        assertEquals("over_1", overdueInQueue.first().id)
+
+        val capped = SpacedRepetitionAlgorithm.buildDailyBlendedQueue(
+            overdueItems = overdue,
+            activeLessonItems = activeLessonItems,
+            reviewedTodayCount = 27,
+            nowMs = now
+        )
+        assertEquals(3, capped.size)
+    }
 }

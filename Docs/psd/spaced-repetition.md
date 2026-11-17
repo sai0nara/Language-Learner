@@ -1,12 +1,12 @@
-# Spaced Repetition (SM-2) — Product Specification
+# Spaced Repetition (FSRS v5) — Product Specification
 
-> Pure SM-2 state transitions in `SpacedRepetitionAlgorithm.calculateNextReview` persisted via `SrsDao` and rendered in `SpacedRepetitionScreen`.
+> FSRS-inspired state transitions, retrievability `R`, implicit accuracy/latency rating mapping, and 70/30 `DAILY_REVIEW` queue blending in `SpacedRepetitionAlgorithm`, persisted via `SrsDao` and rendered in `SpacedRepetitionScreen`.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 
 ## Overview
 
-Implements `Docs/prd/spaced-repetition.md` with a pure, deterministic `SpacedRepetitionAlgorithm` object, reactive Room queries in `SrsDao`, and a two-step reveal-and-grade flashcard UI in `SpacedRepetitionScreen`.
+Implements `Docs/prd/spaced-repetition.md` with `SpacedRepetitionAlgorithm` (`calculateFsrsNextReview`, `retrievability`, `deriveVocabRating`, `deriveSentenceRating`, `buildDailyBlendedQueue`, and legacy `calculateNextReview` compatibility), reactive Room queries in `SrsDao`, and `SpacedRepetitionScreen` (surfacing `dailyBlendedQueue` via `refreshDailyBlendedQueue()`). Note: `calculateFsrsNextReview` uses simplified difficulty-weighted stability multipliers rather than full 19-parameter FSRS-5 `w[]` vector optimization, while preserving exact FSRS state transitions (`NEW`, `LEARNING`, `REVIEW`, `RELEARNING`) and retrievability `R = (1 + (19/81) * (t / S))^-0.5`.
 
 ## Architecture
 

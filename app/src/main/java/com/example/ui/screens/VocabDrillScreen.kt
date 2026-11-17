@@ -5,6 +5,8 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -51,7 +54,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.model.LessonEntity
@@ -88,6 +93,8 @@ fun VocabDrillScreen(
     var isCompleted by remember { mutableStateOf(false) }
     var correctCount by remember { mutableIntStateOf(0) }
     var initialTotal by remember { mutableIntStateOf(0) }
+    var cardStartMs by remember { mutableStateOf(System.currentTimeMillis()) }
+    val attemptedIdsInSession = remember { mutableSetOf<String>() }
 
     // Load initial queue
     LaunchedEffect(rawVocabList) {
@@ -103,8 +110,9 @@ fun VocabDrillScreen(
     val currentItem = drillQueue.getOrNull(currentIndex)
 
     // Automatically pronounce target word on display
-    LaunchedEffect(currentItem) {
+    LaunchedEffect(currentItem, currentIndex) {
         if (currentItem != null) {
+            cardStartMs = System.currentTimeMillis()
             val wordToSpeak = if (isLatin) currentItem.targetWordLatin else currentItem.targetWord
             viewModel.playAudio(wordToSpeak, currentItem.audioUri, isTargetLanguage = true)
         }
@@ -305,18 +313,34 @@ fun VocabDrillScreen(
                             }
 
                             val animatedBg by animateColorAsState(targetValue = targetBgColor, label = "card_color")
+                            val shakeOffset = remember(currentIndex, optionText) { Animatable(0f) }
+                            LaunchedEffect(isSelected, isCorrectState) {
+                                if (isSelected && isCorrectState == false) {
+                                    listOf(-14f, 14f, -10f, 10f, 0f).forEach { target ->
+                                        shakeOffset.animateTo(target, animationSpec = tween(durationMillis = 45))
+                                    }
+                                }
+                            }
 
                             Card(
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(64.dp)
+                                    .offset { IntOffset(shakeOffset.value.roundToInt(), 0) }
                                     .clip(RoundedCornerShape(12.dp))
                                     .clickable(enabled = selectedOption == null) {
                                         selectedOption = optionText
+                                        val latencyMs = (System.currentTimeMillis() - cardStartMs).coerceAtLeast(0L)
+                                        val isFirstAttempt = attemptedIdsInSession.add(currentItem.id)
+                                        viewModel.recordImplicitVocabAttempt(
+                                            vocab = currentItem,
+                                            isCorrect = isTarget,
+                                            latencyMs = latencyMs,
+                                            isFirstAttemptInSession = isFirstAttempt
+                                        )
                                         if (isTarget) {
                                             isCorrectState = true
                                             correctCount++
-                                            viewModel.recordAnswer(lesson.id, isCorrect = true)
                                             // Haptic feedback
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                 vibrator?.vibrate(VibrationEffect.createOneShot(40, VibrationEffect.DEFAULT_AMPLITUDE))
@@ -334,7 +358,6 @@ fun VocabDrillScreen(
                                             }
                                         } else {
                                             isCorrectState = false
-                                            viewModel.recordAnswer(lesson.id, isCorrect = false)
                                             // Vibrate error
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                                 vibrator?.vibrate(VibrationEffect.createOneShot(120, VibrationEffect.DEFAULT_AMPLITUDE))

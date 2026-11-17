@@ -461,6 +461,7 @@ class SentencePracticeTest {
         // Assert - summary & DB
         page.assertSummaryDisplayed()
         composeRule.waitUntil(timeoutMillis = 5_000) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper()
             runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)?.correctAnswersInLast100 == 1 }
         }
         val updated = runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)!! }
@@ -532,6 +533,7 @@ class SentencePracticeTest {
         assertEquals(50L, vibratorShadow.milliseconds)
 
         composeRule.waitUntil(timeoutMillis = 5_000) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper()
             runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)?.correctAnswersInLast100 == 1 }
         }
 
@@ -568,6 +570,7 @@ class SentencePracticeTest {
         assertEquals(120L, vibratorShadow.milliseconds)
 
         composeRule.waitUntil(timeoutMillis = 5_000) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper()
             runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)?.totalAnswersInLast100 == 1 }
         }
         val dbLesson = runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)!! }
@@ -610,6 +613,7 @@ class SentencePracticeTest {
         val ttsShadow = Shadows.shadowOf(ShadowTextToSpeech.getLastTextToSpeechInstance())
         assertEquals("Ja sam student", ttsShadow.lastSpokenText)
         composeRule.waitUntil(timeoutMillis = 5_000) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper()
             runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)?.correctAnswersInLast100 == 1 }
         }
     }
@@ -635,6 +639,7 @@ class SentencePracticeTest {
         // Assert
         page.assertFeedbackDisplayed("Правильный ответ: Ja sam student")
         composeRule.waitUntil(timeoutMillis = 5_000) {
+            org.robolectric.shadows.ShadowLooper.idleMainLooper()
             runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)?.totalAnswersInLast100 == 1 }
         }
         val dbLesson = runBlocking(Dispatchers.IO) { db.lessonDao().getLessonById(lesson.id)!! }

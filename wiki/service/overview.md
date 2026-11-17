@@ -2,11 +2,11 @@
 
 > What Language Learner is and how study, import, and review flows move through MVVM.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 
 ## System Purpose
 
-Language Learner is an offline-first Android application for self-directed language study. Learners import custom curricula (JSON, CSV, XML) or study built-in lessons through vocabulary drills, 3x3 grammar matrices, sentence construction, and SM-2 spaced repetition.
+Language Learner is an offline-first Android application for self-directed language study. Learners import custom curricula (JSON, CSV, XML) or study the built-in 16-lesson curriculum through vocabulary drills, 3x3 grammar matrices, sentence construction, weak-cell remediation, and FSRS-based spaced repetition.
 
 ## Data Flow
 

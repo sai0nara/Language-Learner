@@ -102,6 +102,76 @@ object InitialCurriculumData {
             totalAnswersInLast100 = 0,
             vocabCount = 6,
             sentenceCount = 4
+        ),
+        LessonEntity(
+            id = "lesson_7", orderIndex = 7,
+            title = "Урок 7: Повелительное наклонение",
+            subtitle = "Императив: ради! радите! немој да радиш!",
+            grammarFocus = "Императив", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_8", orderIndex = 8,
+            title = "Урок 8: Условное наклонение",
+            subtitle = "Потенцијал: бих, би, бисмо, бисте + радни придев",
+            grammarFocus = "Потенцијал", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_9", orderIndex = 9,
+            title = "Урок 9: Глаголы движения",
+            subtitle = "Ићи, доћи, отићи, ући, изаћи с предлозима",
+            grammarFocus = "Глаголы движения", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_10", orderIndex = 10,
+            title = "Урок 10: Дательный падеж и кому/чему",
+            subtitle = "Личные местоимения и клитики ми, ти, му, јој, нам",
+            grammarFocus = "Датив (Дательный падеж)", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_11", orderIndex = 11,
+            title = "Урок 11: Винительный и локатив",
+            subtitle = "Куда vs Где (у град / у граду)",
+            grammarFocus = "Акузатив и Локатив", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_12", orderIndex = 12,
+            title = "Урок 12: Притяжательные местоимения",
+            subtitle = "Мој, твој, његов, њен, наш, ваш, њихов",
+            grammarFocus = "Притяжательные формы", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_13", orderIndex = 13,
+            title = "Урок 13: Степени сравнения",
+            subtitle = "Компаратив и суперлатив прилагательных и наречий",
+            grammarFocus = "Сравнение", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_14", orderIndex = 14,
+            title = "Урок 14: Сложные союзы",
+            subtitle = "Зато што, иако, док, чим, пошто",
+            grammarFocus = "Придаточные предложения", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_15", orderIndex = 15,
+            title = "Урок 15: Пассив и безличные конструкции",
+            subtitle = "Овде се говори српски / Треба да...",
+            grammarFocus = "Безличные конструкции", level = "B1",
+            vocabCount = 1, sentenceCount = 1
+        ),
+        LessonEntity(
+            id = "lesson_16", orderIndex = 16,
+            title = "Урок 16: Итоговый синтез (Полиглот)",
+            subtitle = "Свободное комбинирование времен, падежей и вопросов",
+            grammarFocus = "Комплексная матрица", level = "B1",
+            vocabCount = 1, sentenceCount = 1
         )
     )
 
@@ -236,7 +306,20 @@ object InitialCurriculumData {
             sourceTranslation = "сейчас же / сразу", partOfSpeech = "Наречие",
             exampleSentence = "Морамо одмах да позовемо такси.",
             distractorsJson = "[\"касније\", \"сутра\", \"јуче\", \"брзо\"]"
-        )
+        ),
+        VocabItemEntity("v_4_1", "lesson_4", "јуче", "juče", "вчера", "Наречие", distractorsJson = "[\"данас\",\"сутра\",\"увек\"]"),
+        VocabItemEntity("v_5_1", "lesson_5", "сутра", "sutra", "завтра", "Наречие", distractorsJson = "[\"јуче\",\"данас\",\"сада\"]"),
+        VocabItemEntity("v_6_1", "lesson_6", "написати", "napisati", "написать", "Глагол", distractorsJson = "[\"писати\",\"читати\",\"рећи\"]"),
+        VocabItemEntity("v_7_1", "lesson_7", "помоћи", "pomoći", "помочь", "Глагол", distractorsJson = "[\"радити\",\"учити\",\"дати\"]"),
+        VocabItemEntity("v_8_1", "lesson_8", "желети", "želeti", "желать", "Глагол", distractorsJson = "[\"моћи\",\"имати\",\"знати\"]"),
+        VocabItemEntity("v_9_1", "lesson_9", "доћи", "doći", "прийти", "Глагол", distractorsJson = "[\"отићи\",\"ићи\",\"ући\"]"),
+        VocabItemEntity("v_10_1", "lesson_10", "поклон", "poklon", "подарок", "Существительное", distractorsJson = "[\"писмо\",\"књига\",\"посао\"]"),
+        VocabItemEntity("v_11_1", "lesson_11", "град", "grad", "город", "Существительное", distractorsJson = "[\"село\",\"улица\",\"кућа\"]"),
+        VocabItemEntity("v_12_1", "lesson_12", "наш", "naš", "наш", "Местоимение", distractorsJson = "[\"мој\",\"твој\",\"ваш\"]"),
+        VocabItemEntity("v_13_1", "lesson_13", "бољи", "bolji", "лучше", "Прилагательное", distractorsJson = "[\"гори\",\"већи\",\"мањи\"]"),
+        VocabItemEntity("v_14_1", "lesson_14", "зато што", "zato što", "потому что", "Союз", distractorsJson = "[\"иако\",\"док\",\"кад\"]"),
+        VocabItemEntity("v_15_1", "lesson_15", "требати", "trebati", "быть нужным", "Глагол", distractorsJson = "[\"морати\",\"моћи\",\"смети\"]"),
+        VocabItemEntity("v_16_1", "lesson_16", "разумевање", "razumevanje", "понимание", "Существительное", distractorsJson = "[\"питање\",\"одговор\",\"знање\"]")
     )
 
     fun getInitialGrammarGuides(): List<GrammarGuideEntity> {
@@ -374,12 +457,21 @@ object InitialCurriculumData {
                 """.trimIndent(),
                 matrixJson = "{}"
             )
-        )
+        ) + (4..16).map { idx ->
+            GrammarGuideEntity(
+                id = "g_$idx",
+                lessonId = "lesson_$idx",
+                title = "Грамматическая матрица урока $idx",
+                summary = "Ключевые формы и согласование местоимений для урока $idx",
+                explanationMarkdown = "### Урок $idx\nИспользуйте 3x3 матрицу времён и форм (Past / Present / Future × Affirmative / Negative / Interrogative).",
+                matrixJson = "{}"
+            )
+        }
     }
 
     // All tokens and distractors are provided in inner case (lowercase)
     // with correct and wrong morphological variants
-    fun getInitialSentences(): List<SentenceEntity> = listOf(
+    private fun getExplicitInitialSentences(): List<SentenceEntity> = listOf(
         // Lesson 1
         SentenceEntity(
             id = "s_1_1",
@@ -388,9 +480,11 @@ object InitialCurriculumData {
             targetSentence = "Да ли данас радиш у канцеларији?",
             targetSentenceLatin = "Da li danas radiš u kancelariji?",
             tokensJson = "[\"да\", \"ли\", \"данас\", \"радиш\", \"у\", \"канцеларији\"]",
-            // Distractors: wrong grammatical variants (радим, раде, радите, јеси)
             distractorTokensJson = "[\"радим\", \"раде\", \"радите\", \"јеси\", \"радио\"]",
-            grammarHint = "Вопрос в настоящем времени: 'да ли' + глагол во 2 лице (радиш)"
+            grammarHint = "Вопрос в настоящем времени: 'да ли' + глагол во 2 лице (радиш)",
+            matrixTense = "PRESENT",
+            matrixForm = "INTERROGATIVE",
+            personGroup = "2SG_PL"
         ),
         SentenceEntity(
             id = "s_1_2",
@@ -399,9 +493,11 @@ object InitialCurriculumData {
             targetSentence = "Ја не говорим енглески брзо.",
             targetSentenceLatin = "Ja ne govorim engleski brzo.",
             tokensJson = "[\"ја\", \"не\", \"говорим\", \"енглески\", \"брзо\"]",
-            // Distractors: wrong person and tense variants (говориш, говори, прича)
             distractorTokensJson = "[\"говориш\", \"говори\", \"говоримо\", \"нисам\", \"прича\"]",
-            grammarHint = "Отрицание в презенте: частица 'не' перед глаголом 1 лица (говорим)"
+            grammarHint = "Отрицание в презенте: частица 'не' перед глаголом 1 лица (говорим)",
+            matrixTense = "PRESENT",
+            matrixForm = "NEGATIVE",
+            personGroup = "1SG"
         ),
         SentenceEntity(
             id = "s_1_3",
@@ -410,9 +506,11 @@ object InitialCurriculumData {
             targetSentence = "Сутра ћу радити код куће.",
             targetSentenceLatin = "Sutra ću raditi kod kuće.",
             tokensJson = "[\"сутра\", \"ћу\", \"радити\", \"код\", \"куће\"]",
-            // Distractors: wrong auxiliary / tense variants (ћеш, ће, бићу, кућа)
             distractorTokensJson = "[\"ћеш\", \"ће\", \"бићу\", \"кућа\", \"кућу\"]",
-            grammarHint = "Футур I: энклитика «ћу» после первого слова"
+            grammarHint = "Футур I: энклитика «ћу» после первого слова",
+            matrixTense = "FUTURE",
+            matrixForm = "AFFIRMATIVE",
+            personGroup = "1SG"
         ),
         SentenceEntity(
             id = "s_1_4",
@@ -421,9 +519,11 @@ object InitialCurriculumData {
             targetSentence = "Ми смо јуче пажљиво слушали професора.",
             targetSentenceLatin = "Mi smo juče pažljivo slušali profesora.",
             tokensJson = "[\"ми\", \"смо\", \"јуче\", \"пажљиво\", \"слушали\", \"професора\"]",
-            // Distractors: wrong auxiliary / participle agreement variants (сте, су, слушао, слушамо)
             distractorTokensJson = "[\"сте\", \"су\", \"слушао\", \"слушамо\", \"слушате\"]",
-            grammarHint = "Перфекат: форма множественного числа «смо слушали»"
+            grammarHint = "Перфекат: форма множественного числа «смо слушали»",
+            matrixTense = "PAST",
+            matrixForm = "AFFIRMATIVE",
+            personGroup = "2SG_PL"
         ),
 
         // Lesson 2
@@ -434,9 +534,11 @@ object InitialCurriculumData {
             targetSentence = "Добро се сећам овог лепог града.",
             targetSentenceLatin = "Dobro se sećam ovog lepog grada.",
             tokensJson = "[\"добро\", \"се\", \"сећам\", \"овог\", \"лепог\", \"града\"]",
-            // Distractors: wrong person/case variants (сећаш, сећа, граду, град)
             distractorTokensJson = "[\"сећаш\", \"сећа\", \"граду\", \"град\", \"си\"]",
-            grammarHint = "Частица 'се' на втором месте: добро се сећам"
+            grammarHint = "Частица 'се' на втором месте: добро се сећам",
+            matrixTense = "PRESENT",
+            matrixForm = "AFFIRMATIVE",
+            personGroup = "1SG"
         ),
         SentenceEntity(
             id = "s_2_2",
@@ -445,9 +547,11 @@ object InitialCurriculumData {
             targetSentence = "Којим спортом се бавиш?",
             targetSentenceLatin = "Kojim sportom se baviš?",
             tokensJson = "[\"којим\", \"спортом\", \"се\", \"бавиш\"]",
-            // Distractors: wrong verb variants (бавим, бави, баве)
             distractorTokensJson = "[\"бавим\", \"бави\", \"баве\", \"спорт\", \"ти\"]",
-            grammarHint = "Глагол 'бавити се' требует творительного падежа"
+            grammarHint = "Глагол 'бавити се' требует творительного падежа",
+            matrixTense = "PRESENT",
+            matrixForm = "INTERROGATIVE",
+            personGroup = "2SG_PL"
         ),
 
         // Lesson 3
@@ -458,9 +562,11 @@ object InitialCurriculumData {
             targetSentence = "Ја хоћу да говорим српски течно.",
             targetSentenceLatin = "Ja hoću da govorim srpski tečno.",
             tokensJson = "[\"ја\", \"хоћу\", \"да\", \"говорим\", \"српски\", \"течно\"]",
-            // Distractors: wrong modal variants (нећу, хоћеш, хоће, говорити)
             distractorTokensJson = "[\"нећу\", \"хоћеш\", \"хоће\", \"говорити\", \"могу\"]",
-            grammarHint = "Конструкция: хоћу + ДА + презенс (говорим)"
+            grammarHint = "Конструкция: хоћу + ДА + презенс (говорим)",
+            matrixTense = "PRESENT",
+            matrixForm = "AFFIRMATIVE",
+            personGroup = "1SG"
         ),
         SentenceEntity(
             id = "s_3_2",
@@ -469,9 +575,61 @@ object InitialCurriculumData {
             targetSentence = "Морамо одмах да позовемо лекара.",
             targetSentenceLatin = "Moramo odmah da pozovemo lekara.",
             tokensJson = "[\"морамо\", \"одмах\", \"да\", \"позовемо\", \"лекара\"]",
-            // Distractors: wrong verb forms (морам, морате, позвати, лекар)
             distractorTokensJson = "[\"морам\", \"морате\", \"позвати\", \"лекар\", \"можемо\"]",
-            grammarHint = "Морамо + ДА + глагол совершенного вида (позовемо)"
+            grammarHint = "Морамо + ДА + глагол совершенного вида (позовемо)",
+            matrixTense = "PRESENT",
+            matrixForm = "AFFIRMATIVE",
+            personGroup = "2SG_PL"
         )
     )
+
+    private data class MatrixSentenceTemplate(
+        val tense: String,
+        val form: String,
+        val personGroup: String,
+        val ru: String,
+        val sr: String,
+        val srLat: String,
+        val tokens: String,
+        val distractors: String,
+        val hint: String
+    )
+
+    private val nineMatrixTemplates = listOf(
+        MatrixSentenceTemplate("PAST", "AFFIRMATIVE", "1SG", "Я вчера работал.", "Ја сам јуче радио.", "Ja sam juče radio.", "[\"ја\",\"сам\",\"јуче\",\"радио\"]", "[\"си\",\"радим\"]", "Перфекат (+): ја сам радио"),
+        MatrixSentenceTemplate("PAST", "NEGATIVE", "1SG", "Я вчера не работал.", "Ја нисам јуче радио.", "Ja nisam juče radio.", "[\"ја\",\"нисам\",\"јуче\",\"радио\"]", "[\"сам\",\"не\"]", "Перфекат (-): нисам радио"),
+        MatrixSentenceTemplate("PAST", "INTERROGATIVE", "2SG_PL", "Ты вчера работал?", "Да ли си јуче радио?", "Da li si juče radio?", "[\"да\",\"ли\",\"си\",\"јуче\",\"радио\"]", "[\"сам\",\"радим\"]", "Перфекат (?): да ли си радио"),
+        MatrixSentenceTemplate("PRESENT", "AFFIRMATIVE", "1SG", "Я сегодня работаю.", "Ја данас радим.", "Ja danas radim.", "[\"ја\",\"данас\",\"радим\"]", "[\"радиш\",\"радио\"]", "Презент (+): радим"),
+        MatrixSentenceTemplate("PRESENT", "NEGATIVE", "1SG", "Я сегодня не работаю.", "Ја данас не радим.", "Ja danas ne radim.", "[\"ја\",\"данас\",\"не\",\"радим\"]", "[\"нисам\",\"нећу\"]", "Презент (-): не радим"),
+        MatrixSentenceTemplate("PRESENT", "INTERROGATIVE", "2SG_PL", "Ты сегодня работаешь?", "Да ли данас радиш?", "Da li danas radiš?", "[\"да\",\"ли\",\"данас\",\"радиш\"]", "[\"радим\",\"си\"]", "Презент (?): да ли радиш"),
+        MatrixSentenceTemplate("FUTURE", "AFFIRMATIVE", "1SG", "Я завтра буду работать.", "Ја ћу сутра радити.", "Ja ću sutra raditi.", "[\"ја\",\"ћу\",\"сутра\",\"радити\"]", "[\"нећу\",\"радим\"]", "Футур I (+): ћу радити"),
+        MatrixSentenceTemplate("FUTURE", "NEGATIVE", "1SG", "Я завтра не буду работать.", "Ја сутра нећу радити.", "Ja sutra neću raditi.", "[\"ја\",\"сутра\",\"нећу\",\"радити\"]", "[\"ћу\",\"нисам\"]", "Футур I (-): нећу радити"),
+        MatrixSentenceTemplate("FUTURE", "INTERROGATIVE", "2SG_PL", "Ты завтра будешь работать?", "Да ли ћеш сутра радити?", "Da li ćeš sutra raditi?", "[\"да\",\"ли\",\"ћеш\",\"сутра\",\"радити\"]", "[\"ћу\",\"си\"]", "Футур I (?): да ли ћеш радити")
+    )
+
+    fun getInitialSentences(): List<SentenceEntity> {
+        val explicit = getExplicitInitialSentences()
+        val generated = (1..16).flatMap { idx ->
+            val lessonId = "lesson_$idx"
+            val existingCoords = explicit.filter { it.lessonId == lessonId }.map { it.matrixCoordinateKey() }.toSet()
+            nineMatrixTemplates
+                .filter { "${it.tense}_${it.form}" !in existingCoords }
+                .map { t ->
+                    SentenceEntity(
+                        id = "s_${idx}_${t.tense.lowercase()}_${t.form.lowercase()}",
+                        lessonId = lessonId,
+                        sourceSentence = t.ru,
+                        targetSentence = t.sr,
+                        targetSentenceLatin = t.srLat,
+                        tokensJson = t.tokens,
+                        distractorTokensJson = t.distractors,
+                        grammarHint = t.hint,
+                        matrixTense = t.tense,
+                        matrixForm = t.form,
+                        personGroup = t.personGroup
+                    )
+                }
+        }
+        return explicit + generated
+    }
 }

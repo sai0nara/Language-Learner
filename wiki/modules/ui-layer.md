@@ -2,11 +2,11 @@
 
 > Jetpack Compose screens, Material 3 theme, and `LanguageLearnerViewModel`.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 
 ## Screens & Theme
 
-The UI is built with Jetpack Compose and Material 3 across dedicated screen composables for curriculum browsing, lesson details, vocabulary drills, 3x3 grammar matrices, sentence practice, spaced repetition reviews, and curriculum import/export.
+The UI is built with Jetpack Compose and Material 3 across dedicated screen composables for curriculum browsing, lesson details (with the 3x3 `MatrixHeatmapSection` and `"Drill Weak Cells"` remediation trigger), vocabulary drills (`500ms` auto-advance, lateral coral shake, implicit latency capture), 3x3 grammar matrices, sentence practice (evaluation lock, misplaced-token highlight, error grammar-rule link, weak-cell filtering), spaced repetition reviews (`DAILY_REVIEW` blended queue), and curriculum import/export.
 
 ## Cross-references
 

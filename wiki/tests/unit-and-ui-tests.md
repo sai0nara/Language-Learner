@@ -2,11 +2,11 @@
 
 > JVM, Robolectric, in-memory Room, and Compose UI test suites under `app/src/test`.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-16
 
 ## Test Stack
 
-All automated unit, persistence, and Robolectric Compose UI tests run offline on the JVM via `gradle testDebugUnitTest` (with `--enable-native-access=ALL-UNNAMED` configured in `app/build.gradle.kts` for JDK 25).
+All automated unit, persistence, and Robolectric Compose UI tests run offline on the JVM via `gradle testDebugUnitTest` (with `--enable-native-access=ALL-UNNAMED` configured in `app/build.gradle.kts` for JDK 25), including `com.example.qa.*` feature suites and `PolyglotFsrsAndMatrixMasteryTest`.
 
 ## Cross-references
 

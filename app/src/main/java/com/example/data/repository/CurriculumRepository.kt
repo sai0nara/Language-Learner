@@ -5,16 +5,24 @@ import com.example.data.local.AppDatabase
 import com.example.data.model.GrammarGuideEntity
 import com.example.data.model.LessonAnswerEntity
 import com.example.data.model.LessonEntity
+import com.example.data.model.LessonStatus
+import com.example.data.model.MatrixCellStat
+import com.example.data.model.MatrixCellStatus
 import com.example.data.model.SentenceEntity
 import com.example.data.model.SrsReviewEntity
 import com.example.data.model.VocabItemEntity
 import com.example.data.initial.InitialCurriculumData
 import com.example.srs.ReviewGrade
 import com.example.srs.SpacedRepetitionAlgorithm
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 
 class CurriculumRepository(private val db: AppDatabase) {
     val allLessons: Flow<List<LessonEntity>> = db.lessonDao().getAllLessons()
@@ -75,6 +83,7 @@ class CurriculumRepository(private val db: AppDatabase) {
      * When score >= 4.5 (90+ correct out of 100), unlocks the next lesson.
      */
     suspend fun recordAnswer(lessonId: String, isCorrect: Boolean): Float = withContext(Dispatchers.IO) {
+        if (db.lessonDao().getLessonById(lessonId) == null) return@withContext 0f
         // 1. Record answer in history
         db.lessonAnswerDao().insertAnswer(
             LessonAnswerEntity(lessonId = lessonId, isCorrect = isCorrect)
@@ -112,9 +121,212 @@ class CurriculumRepository(private val db: AppDatabase) {
     }
 
     suspend fun recordSrsResult(item: SrsReviewEntity, grade: ReviewGrade) = withContext(Dispatchers.IO) {
-        val quality = SpacedRepetitionAlgorithm.gradeToQuality(grade)
-        val updated = SpacedRepetitionAlgorithm.calculateNextReview(item, quality)
+        val updated = SpacedRepetitionAlgorithm.calculateFsrsNextReview(item, grade)
         db.srsDao().insertOrUpdate(updated)
+    }
+
+    /**
+     * First-Attempt Scoring Guard:
+     * Re-tests of AGAIN items within the same session do not inflate FSRS stability/intervals.
+     */
+    suspend fun recordImplicitSrsAttempt(
+        itemId: String,
+        itemType: String,
+        lessonId: String,
+        prompt: String,
+        answer: String,
+        secondaryText: String = "",
+        rating: ReviewGrade,
+        isFirstAttemptInSession: Boolean,
+        nowMs: Long = System.currentTimeMillis()
+    ) = withContext(Dispatchers.IO) {
+        if (!isFirstAttemptInSession) return@withContext
+        val existing = db.srsDao().getSrsItemById(itemId) ?: SrsReviewEntity(
+            id = itemId,
+            itemType = itemType,
+            lessonId = lessonId,
+            prompt = prompt,
+            answer = answer,
+            secondaryText = secondaryText,
+            nextReviewTimestamp = nowMs
+        )
+        val updated = SpacedRepetitionAlgorithm.calculateFsrsNextReview(existing, rating, nowMs)
+        db.srsDao().insertOrUpdate(updated)
+    }
+
+    suspend fun buildDailyBlendedReviewQueue(
+        nowMs: Long = System.currentTimeMillis()
+    ): List<SrsReviewEntity> = withContext(Dispatchers.IO) {
+        val lessons = db.lessonDao().getAllLessons().first()
+        val unlockedIds = lessons.filter { it.isUnlocked }.map { it.id }.toSet()
+        val activeLesson = lessons.firstOrNull { it.isUnlocked && !it.isCompleted }
+            ?: lessons.firstOrNull { it.isUnlocked }
+
+        val allItems = db.srsDao().getAllSrsItemsSync()
+        val overdue = allItems.filter { it.lessonId in unlockedIds && it.nextReviewTimestamp <= nowMs }
+        val activeItems = if (activeLesson != null) {
+            allItems.filter { it.lessonId == activeLesson.id }
+        } else {
+            emptyList()
+        }
+
+        val cal = Calendar.getInstance().apply {
+            timeInMillis = nowMs
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val reviewedToday = db.srsDao().countReviewedSince(cal.timeInMillis)
+        SpacedRepetitionAlgorithm.buildDailyBlendedQueue(
+            overdueItems = overdue,
+            activeLessonItems = activeItems,
+            reviewedTodayCount = reviewedToday,
+            nowMs = nowMs
+        )
+    }
+
+    private val matrixMutex = Mutex()
+
+    fun parseMatrixStats(json: String): Map<String, MatrixCellStat> = parseMatrixStatsJson(json)
+
+    suspend fun recordMatrixCellAttempt(
+        lessonId: String,
+        coordinateKey: String,
+        isCorrect: Boolean,
+        latencyMs: Long
+    ) = withContext(Dispatchers.IO) {
+        matrixMutex.withLock {
+            val lesson = db.lessonDao().getLessonById(lessonId) ?: return@withContext
+            val currentMap = parseMatrixStatsJson(lesson.matrixStatsJson).toMutableMap()
+            val prev = currentMap[coordinateKey] ?: MatrixCellStat()
+            val newAttempts = prev.attempts + 1
+            val newCorrect = prev.correct + if (isCorrect) 1 else 0
+            val newAccuracy = newCorrect.toFloat() / newAttempts.toFloat()
+            val newAvgLatency = ((prev.avgLatencyMs * prev.attempts) + latencyMs) / newAttempts
+            val cellStatus = computeCellStatus(newAttempts, newAccuracy, newAvgLatency)
+            currentMap[coordinateKey] = MatrixCellStat(
+                attempts = newAttempts,
+                correct = newCorrect,
+                accuracy = newAccuracy,
+                avgLatencyMs = newAvgLatency,
+                cellStatus = cellStatus
+            )
+            evaluateTwoTierGatesInternal(lesson.copy(matrixStatsJson = matrixStatsAdapter.toJson(currentMap)))
+        }
+    }
+
+    suspend fun evaluateTwoTierGates(lessonId: String) = withContext(Dispatchers.IO) {
+        matrixMutex.withLock {
+            val lesson = db.lessonDao().getLessonById(lessonId) ?: return@withContext
+            evaluateTwoTierGatesInternal(lesson)
+        }
+    }
+
+    private suspend fun evaluateTwoTierGatesInternal(lesson: LessonEntity) {
+        val vocabItems = db.vocabDao().getVocabForLessonSync(lesson.id)
+        val srsItems = db.srsDao().getSrsItemsByLessonSync(lesson.id)
+        val vocabMastery = if (vocabItems.isEmpty()) {
+            lesson.vocabMastery
+        } else {
+            val stableCount = srsItems.count { it.itemType == "VOCAB" && it.state == "REVIEW" && it.stability >= 3f }
+            stableCount.toFloat() / vocabItems.size.toFloat()
+        }
+        val unresolvedLapses = srsItems.count { it.state == "RELEARNING" }
+
+        val recent = db.lessonAnswerDao().getRecentAnswers(lesson.id, limit = 100)
+        val practiceScore = if (recent.isEmpty()) {
+            lesson.practiceScore
+        } else {
+            recent.count { it.isCorrect }.toFloat() / recent.size.toFloat()
+        }
+
+        val matrixMap = parseMatrixStats(lesson.matrixStatsJson)
+        val allNineMastered = ALL_MATRIX_COORDS.all { coord ->
+            val stat = matrixMap[coord]
+            stat != null && stat.attempts >= 3 && stat.accuracy >= 0.80f
+        }
+        val medianLatency = if (matrixMap.isEmpty()) {
+            lesson.medianAssemblyMs
+        } else {
+            val sorted = matrixMap.values.filter { it.attempts > 0 }.map { it.avgLatencyMs }.sorted()
+            if (sorted.isEmpty()) 0L else sorted[sorted.size / 2]
+        }
+
+        val isMastered = vocabMastery >= 0.85f &&
+            allNineMastered &&
+            unresolvedLapses == 0 &&
+            medianLatency in 1L..12_000L
+
+        val unlockNext = (recent.size >= MIN_PRACTICE_SAMPLE && practiceScore >= 0.70f) || lesson.masteryScore >= 4.5f
+        if (unlockNext) {
+            db.lessonDao().unlockLessonByOrder(lesson.orderIndex + 1)
+        }
+
+        val newStatus = when {
+            isMastered -> LessonStatus.MASTERED.name
+            !lesson.isUnlocked -> LessonStatus.LOCKED.name
+            recent.isNotEmpty() || matrixMap.isNotEmpty() -> LessonStatus.IN_PROGRESS.name
+            else -> LessonStatus.AVAILABLE.name
+        }
+
+        db.lessonDao().updatePolyglotProgress(
+            id = lesson.id,
+            status = newStatus,
+            completed = isMastered || (lesson.masteryScore >= 4.5f),
+            unlocked = lesson.isUnlocked,
+            vocabMastery = vocabMastery,
+            practiceScore = practiceScore,
+            unresolvedLapses = unresolvedLapses,
+            medianAssemblyMs = medianLatency,
+            matrixStatsJson = lesson.matrixStatsJson
+        )
+    }
+
+    fun getWeakMatrixCoordinates(lesson: LessonEntity): Set<String> =
+        parseMatrixStats(lesson.matrixStatsJson)
+            .filterValues { it.cellStatus == MatrixCellStatus.WEAK }
+            .keys
+
+    fun filterWeakSentences(
+        sentences: List<SentenceEntity>,
+        weakCoords: Set<String>,
+        limit: Int = 8
+    ): List<SentenceEntity> =
+        sentences.filter { it.matrixCoordinateKey() in weakCoords }.take(limit)
+
+    companion object {
+        const val MIN_PRACTICE_SAMPLE = 5
+
+        private val sharedMoshi = Moshi.Builder().build()
+        private val matrixStatsMapType = Types.newParameterizedType(
+            Map::class.java,
+            String::class.java,
+            MatrixCellStat::class.java
+        )
+        val matrixStatsAdapter = sharedMoshi.adapter<Map<String, MatrixCellStat>>(matrixStatsMapType)
+
+        fun parseMatrixStatsJson(json: String): Map<String, MatrixCellStat> {
+            if (json.isBlank() || json == "{}") return emptyMap()
+            return try {
+                matrixStatsAdapter.fromJson(json) ?: emptyMap()
+            } catch (_: Exception) {
+                emptyMap()
+            }
+        }
+
+        val ALL_MATRIX_COORDS = listOf(
+            "PAST_AFFIRMATIVE", "PAST_NEGATIVE", "PAST_INTERROGATIVE",
+            "PRESENT_AFFIRMATIVE", "PRESENT_NEGATIVE", "PRESENT_INTERROGATIVE",
+            "FUTURE_AFFIRMATIVE", "FUTURE_NEGATIVE", "FUTURE_INTERROGATIVE"
+        )
+
+        fun computeCellStatus(attempts: Int, accuracy: Float, avgLatencyMs: Long): MatrixCellStatus = when {
+            attempts < 3 -> MatrixCellStatus.UNTESTED
+            accuracy < 0.70f -> MatrixCellStatus.WEAK
+            accuracy >= 0.85f && avgLatencyMs <= 12_000L -> MatrixCellStatus.MASTERED
+            else -> MatrixCellStatus.PROFICIENT
+        }
     }
 
     suspend fun enrollInSrs(vocab: VocabItemEntity) = withContext(Dispatchers.IO) {

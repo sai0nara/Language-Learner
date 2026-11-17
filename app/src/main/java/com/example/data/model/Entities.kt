@@ -4,6 +4,30 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
+
+enum class LessonStatus {
+    LOCKED,
+    AVAILABLE,
+    IN_PROGRESS,
+    MASTERED
+}
+
+enum class MatrixCellStatus {
+    UNTESTED,
+    WEAK,
+    PROFICIENT,
+    MASTERED
+}
+
+@JsonClass(generateAdapter = true)
+data class MatrixCellStat(
+    val attempts: Int = 0,
+    val correct: Int = 0,
+    val accuracy: Float = 0f,
+    val avgLatencyMs: Long = 0L,
+    val cellStatus: MatrixCellStatus = MatrixCellStatus.UNTESTED
+)
 
 @Entity(tableName = "lessons")
 data class LessonEntity(
@@ -15,11 +39,17 @@ data class LessonEntity(
     val level: String = "B1",
     val isCompleted: Boolean = false,
     val masteryScore: Float = 0f, // 0.0 - 5.0 (calculated as (correctAnswers / 100) * 5)
-    val isUnlocked: Boolean = false, // Lesson 1 unlocked initially, subsequent require grade >= 4.5
+    val isUnlocked: Boolean = false, // Lesson 1 unlocked initially, subsequent require grade >= 4.5 or >= 70%
     val correctAnswersInLast100: Int = 0,
     val totalAnswersInLast100: Int = 0,
     val vocabCount: Int = 0,
-    val sentenceCount: Int = 0
+    val sentenceCount: Int = 0,
+    val status: String = if (isCompleted) "MASTERED" else if (isUnlocked) "AVAILABLE" else "LOCKED",
+    val vocabMastery: Float = 0f,
+    val practiceScore: Float = 0f,
+    val unresolvedLapses: Int = 0,
+    val medianAssemblyMs: Long = 0L,
+    val matrixStatsJson: String = "{}"
 )
 
 @Entity(
@@ -108,8 +138,13 @@ data class SentenceEntity(
     val tokensJson: String,           // Correct tokens (lowercase): ["хоћеш", "ли", "ићи", "сутра", "у", "биоскоп"]
     val distractorTokensJson: String, // Distractor tokens (lowercase): ["јеси", "отишао", "сутрадан"]
     val grammarHint: String = "",
-    val audioUri: String = ""
-)
+    val audioUri: String = "",
+    val matrixTense: String = "PRESENT",      // PAST, PRESENT, FUTURE
+    val matrixForm: String = "AFFIRMATIVE",   // AFFIRMATIVE, NEGATIVE, INTERROGATIVE
+    val personGroup: String = "1SG"           // 1SG, 2SG_PL, 3SG
+) {
+    fun matrixCoordinateKey(): String = "${matrixTense}_${matrixForm}"
+}
 
 @Entity(tableName = "srs_reviews")
 data class SrsReviewEntity(
@@ -121,7 +156,15 @@ data class SrsReviewEntity(
     val secondaryText: String = "",
     val repetition: Int = 0,
     val intervalDays: Int = 1,
-    val easeFactor: Float = 2.5f,     // SM-2 default ease factor
+    val easeFactor: Float = 2.5f,     // Legacy SM-2 ease factor (kept for compatibility)
     val nextReviewTimestamp: Long = System.currentTimeMillis(),
-    val lastQuality: Int = 0          // 0 to 5
+    val lastQuality: Int = 0,         // 0 to 5
+    val state: String = "NEW",        // NEW, LEARNING, REVIEW, RELEARNING
+    val stability: Float = 0f,        // FSRS stability in days
+    val difficulty: Float = 5.0f,     // FSRS difficulty (1.0 - 10.0)
+    val elapsedDays: Int = 0,
+    val scheduledDays: Int = 0,
+    val reps: Int = 0,
+    val lapses: Int = 0,
+    val lastReviewedAt: Long? = null
 )

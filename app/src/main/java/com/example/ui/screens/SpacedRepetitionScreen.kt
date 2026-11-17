@@ -55,8 +55,14 @@ fun SpacedRepetitionScreen(
     viewModel: LanguageLearnerViewModel,
     onBack: () -> Unit
 ) {
-    val dueItems by viewModel.dueSrsItems.collectAsStateWithLifecycle()
+    val dueItemsRaw by viewModel.dueSrsItems.collectAsStateWithLifecycle()
+    val dailyBlended by viewModel.dailyBlendedQueue.collectAsStateWithLifecycle()
     val isLatin by viewModel.isLatinScript.collectAsStateWithLifecycle()
+
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        viewModel.refreshDailyBlendedQueue()
+    }
+    val dueItems = if (dueItemsRaw.isNotEmpty()) dueItemsRaw else dailyBlended
 
     var currentIndex by remember { mutableIntStateOf(0) }
     var isRevealed by remember { mutableStateOf(false) }
