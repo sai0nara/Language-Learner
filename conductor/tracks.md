@@ -9,5 +9,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Revise Lessons content to suite requirements.**
+- [x] **Track: Revise Lessons content to suite requirements.**
   *Link: [./tracks/revise_lessons_content_20261117/](./tracks/revise_lessons_content_20261117/)*
