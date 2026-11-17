@@ -123,4 +123,29 @@ class CurriculumImporterTest {
         val stream = ByteArrayInputStream(content.toByteArray(Charsets.UTF_8))
         assertEquals(content, CurriculumImporter.readStream(stream))
     }
+
+    @Test
+    fun `sample XML template and JSON or XML token fallbacks use Latin`() {
+        val cyrillicRegex = Regex("[\\p{InCyrillic}]")
+        val xmlResult = CurriculumImporter.parseXml(CurriculumImporter.getSampleXmlTemplate())
+        assertTrue(xmlResult.sentences.isNotEmpty())
+        xmlResult.sentences.forEach { sentence ->
+            assertTrue(
+                "Sample XML sentence tokensJson should be Latin: ${sentence.tokensJson}",
+                !cyrillicRegex.containsMatchIn(sentence.tokensJson)
+            )
+        }
+
+        val jsonWithoutTokens = """
+            {"lessons":[{"id":"l1","title":"T","sentences":[{"sourceSentence":"S","targetSentence":"Ја радим","targetSentenceLatin":"Ja radim"}]}]}
+        """.trimIndent()
+        val jsonResult = CurriculumImporter.parseJson(jsonWithoutTokens)
+        assertEquals("[\"Ja\",\"radim\"]", jsonResult.sentences.single().tokensJson)
+
+        val xmlWithoutTokens = """
+            <curriculum><lesson id="l1" title="T"><sentence source="S" target="Ја радим" latin="Ja radim" /></lesson></curriculum>
+        """.trimIndent()
+        val xmlFallbackResult = CurriculumImporter.parseXml(xmlWithoutTokens)
+        assertEquals("[\"Ja\",\"radim\"]", xmlFallbackResult.sentences.single().tokensJson)
+    }
 }

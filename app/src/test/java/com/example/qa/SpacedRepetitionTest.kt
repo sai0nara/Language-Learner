@@ -704,22 +704,34 @@ class SpacedRepetitionTest {
     private fun runPairwiseConfigTest(
         cardId: String,
         grade: ReviewGrade,
-        isLatin: Boolean,
         itemType: String,
         expectedQuality: Int,
         expectedRepetition: Int,
         expectedIntervalDays: Int
     ) {
         // Arrange
-        val card = buildCard(
-            id = cardId,
-            itemType = itemType,
-            prompt = "добар дан",
-            answer = "добрый день",
-            secondaryText = "dobar dan",
-            repetition = 0,
-            intervalDays = 1
-        )
+        val isSentence = itemType == "SENTENCE"
+        val card = if (isSentence) {
+            buildCard(
+                id = cardId,
+                itemType = itemType,
+                prompt = "Добрый день.",
+                answer = "Добар дан.",
+                secondaryText = "Dobar dan.",
+                repetition = 0,
+                intervalDays = 1
+            )
+        } else {
+            buildCard(
+                id = cardId,
+                itemType = itemType,
+                prompt = "добар дан",
+                answer = "добрый день",
+                secondaryText = "dobar dan",
+                repetition = 0,
+                intervalDays = 1
+            )
+        }
         seedSrsCards(card)
         val vm = createViewModel()
         val page = SpacedRepetitionPage(composeRule)
@@ -731,7 +743,7 @@ class SpacedRepetitionTest {
         }
 
         // Act
-        page.assertPromptText("dobar dan")
+        page.assertPromptText(if (isSentence) "Добрый день." else "dobar dan")
             .tapShowAnswer()
         when (grade) {
             ReviewGrade.AGAIN -> page.tapGradeAgain()
@@ -751,36 +763,36 @@ class SpacedRepetitionTest {
     }
 
     @Test
-    fun `TC-026 pairwise config 1 AGAIN Latin VOCAB`() =
-        runPairwiseConfigTest("pw_1", ReviewGrade.AGAIN, isLatin = true, itemType = "VOCAB", expectedQuality = 1, expectedRepetition = 0, expectedIntervalDays = 1)
+    fun `TC-026 pairwise config 1 AGAIN VOCAB`() =
+        runPairwiseConfigTest("pw_1", ReviewGrade.AGAIN, itemType = "VOCAB", expectedQuality = 1, expectedRepetition = 0, expectedIntervalDays = 1)
 
     @Test
-    fun `TC-027 pairwise config 2 AGAIN TargetScript SENTENCE`() =
-        runPairwiseConfigTest("pw_2", ReviewGrade.AGAIN, isLatin = false, itemType = "SENTENCE", expectedQuality = 1, expectedRepetition = 0, expectedIntervalDays = 1)
+    fun `TC-027 pairwise config 2 AGAIN SENTENCE`() =
+        runPairwiseConfigTest("pw_2", ReviewGrade.AGAIN, itemType = "SENTENCE", expectedQuality = 1, expectedRepetition = 0, expectedIntervalDays = 1)
 
     @Test
-    fun `TC-028 pairwise config 3 HARD Latin SENTENCE`() =
-        runPairwiseConfigTest("pw_3", ReviewGrade.HARD, isLatin = true, itemType = "SENTENCE", expectedQuality = 2, expectedRepetition = 1, expectedIntervalDays = 1)
+    fun `TC-028 pairwise config 3 HARD SENTENCE`() =
+        runPairwiseConfigTest("pw_3", ReviewGrade.HARD, itemType = "SENTENCE", expectedQuality = 2, expectedRepetition = 1, expectedIntervalDays = 1)
 
     @Test
-    fun `TC-029 pairwise config 4 HARD TargetScript VOCAB`() =
-        runPairwiseConfigTest("pw_4", ReviewGrade.HARD, isLatin = false, itemType = "VOCAB", expectedQuality = 2, expectedRepetition = 1, expectedIntervalDays = 1)
+    fun `TC-029 pairwise config 4 HARD VOCAB`() =
+        runPairwiseConfigTest("pw_4", ReviewGrade.HARD, itemType = "VOCAB", expectedQuality = 2, expectedRepetition = 1, expectedIntervalDays = 1)
 
     @Test
-    fun `TC-030 pairwise config 5 GOOD Latin VOCAB`() =
-        runPairwiseConfigTest("pw_5", ReviewGrade.GOOD, isLatin = true, itemType = "VOCAB", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 3)
+    fun `TC-030 pairwise config 5 GOOD VOCAB`() =
+        runPairwiseConfigTest("pw_5", ReviewGrade.GOOD, itemType = "VOCAB", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 3)
 
     @Test
-    fun `TC-031 pairwise config 6 GOOD TargetScript SENTENCE`() =
-        runPairwiseConfigTest("pw_6", ReviewGrade.GOOD, isLatin = false, itemType = "SENTENCE", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 3)
+    fun `TC-031 pairwise config 6 GOOD SENTENCE`() =
+        runPairwiseConfigTest("pw_6", ReviewGrade.GOOD, itemType = "SENTENCE", expectedQuality = 4, expectedRepetition = 1, expectedIntervalDays = 3)
 
     @Test
-    fun `TC-032 pairwise config 7 EASY Latin SENTENCE`() =
-        runPairwiseConfigTest("pw_7", ReviewGrade.EASY, isLatin = true, itemType = "SENTENCE", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 7)
+    fun `TC-032 pairwise config 7 EASY SENTENCE`() =
+        runPairwiseConfigTest("pw_7", ReviewGrade.EASY, itemType = "SENTENCE", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 7)
 
     @Test
-    fun `TC-033 pairwise config 8 EASY TargetScript VOCAB`() =
-        runPairwiseConfigTest("pw_8", ReviewGrade.EASY, isLatin = false, itemType = "VOCAB", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 7)
+    fun `TC-033 pairwise config 8 EASY VOCAB`() =
+        runPairwiseConfigTest("pw_8", ReviewGrade.EASY, itemType = "VOCAB", expectedQuality = 5, expectedRepetition = 1, expectedIntervalDays = 7)
 
     // -------------------------------------------------------------------------
     // Error Guessing Tests (TC-034 .. TC-038)
@@ -900,5 +912,37 @@ class SpacedRepetitionTest {
         assertTrue(dueBefore.isEmpty())
         assertEquals(1, dueAtBoundary.size)
         assertEquals("dst_card", dueAtBoundary.single().id)
+    }
+
+    @Test
+    fun `TC-039 SENTENCE card shows source prompt on front and Latin target on reveal and audio`() {
+        // Arrange
+        seedSrsCards(
+            buildCard(
+                id = "sentence_srs_card",
+                itemType = "SENTENCE",
+                prompt = "Я работаю.",
+                answer = "Ја радим.",
+                secondaryText = "Ja radim."
+            )
+        )
+        val vm = createViewModel()
+        val page = SpacedRepetitionPage(composeRule)
+
+        composeRule.setContent {
+            LanguageLearnerTheme {
+                SpacedRepetitionScreen(viewModel = vm, onBack = {})
+            }
+        }
+
+        // Act
+        page.assertPromptText("Я работаю.")
+            .tapShowAnswer()
+
+        // Assert
+        page.assertAnswerText("Ja radim.")
+            .assertTextNotDisplayed("Ја радим.")
+        val shadowTts = Shadows.shadowOf(ShadowTextToSpeech.getLastTextToSpeechInstance())
+        assertEquals("Ja radim.", shadowTts.lastSpokenText)
     }
 }

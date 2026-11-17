@@ -2,6 +2,7 @@
 
 > **Test Model:** `qa-artifacts/2026-11-14-curriculum-progression/test-model.md`
 > **Test Suite:** `qa-artifacts/2026-11-14-curriculum-progression/test-suite.md`
+> **Status Note (2026-11-17):** Script-toggle elements (`isLatinScript`, `toggleScript()`, `toggle_script_button`) and Cyrillic-toggle assertions are **Obsolete** following track `latin_only_remove_script_switch_20261117` (UI is Latin-only).
 
 ---
 

@@ -2,7 +2,7 @@
 
 > Verifies `GrammarGuideEntity` JSON import, Room persistence, and cascade deletion.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Automated coverage
 

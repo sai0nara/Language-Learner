@@ -99,7 +99,7 @@ object CurriculumImporter {
                         val src = (sMap["sourceSentence"] as? String) ?: ""
                         val tgt = (sMap["targetSentence"] as? String) ?: ""
                         val tgtLatin = (sMap["targetSentenceLatin"] as? String) ?: ""
-                        val tokens = (sMap["tokens"] as? List<String>) ?: tgt.split(" ")
+                        val tokens = (sMap["tokens"] as? List<String>) ?: tgtLatin.ifBlank { tgt }.split(" ")
                         val distractors = (sMap["distractors"] as? List<String>) ?: emptyList()
                         val hint = (sMap["hint"] as? String) ?: ""
                         val audioUri = (sMap["audioUri"] as? String) ?: ""
@@ -330,7 +330,7 @@ object CurriculumImporter {
                                     val src = parser.getAttributeValue(null, "source") ?: ""
                                     val tgt = parser.getAttributeValue(null, "target") ?: ""
                                     val latin = parser.getAttributeValue(null, "latin") ?: ""
-                                    val tokensRaw = parser.getAttributeValue(null, "tokens") ?: tgt
+                                    val tokensRaw = parser.getAttributeValue(null, "tokens") ?: latin.ifBlank { tgt }.replace(" ", ",")
                                     val distractorsRaw = parser.getAttributeValue(null, "distractors") ?: ""
                                     val hint = parser.getAttributeValue(null, "hint") ?: ""
                                     val audio = parser.getAttributeValue(null, "audio") ?: ""
@@ -431,9 +431,9 @@ object CurriculumImporter {
           "sourceSentence": "Я хочу говорить по-сербски.",
           "targetSentence": "Ја хоћу да говорим српски.",
           "targetSentenceLatin": "Ja hoću da govorim srpski.",
-          "tokens": ["Ја", "хоћу", "да", "говорим", "српски."],
-          "distractors": ["нећу", "могу", "радим"],
-          "hint": "Используйте связку 'хоћу да + презенс'",
+          "tokens": ["ja", "hoću", "da", "govorim", "srpski."],
+          "distractors": ["neću", "mogu", "radim"],
+          "hint": "Используйте связку 'hoću da + prezent'",
           "audioUri": ""
         }
       ]
@@ -454,7 +454,7 @@ object CurriculumImporter {
   <lesson id="xml_lesson_1" title="Урок 1: Будущее время" grammarFocus="Futur I" level="B1">
     <vocab target="путовати" latin="putovati" translation="путешествовать" pos="Глагол" audio="" />
     <vocab target="куповати" latin="kupovati" translation="покупать" pos="Глагол" audio="" />
-    <sentence source="Мы завтра будем путешествовать." target="Ми ћемо сутра путовати." latin="Mi ćemo sutra putovati." tokens="Ми,ћемо,сутра,путовати." distractors="бићемо,јесте" hint="Будущее время Futur I" audio="" />
+    <sentence source="Мы завтра будем путешествовать." target="Ми ћемо сутра путовати." latin="Mi ćemo sutra putovati." tokens="mi,ćemo,sutra,putovati." distractors="bićemo,jeste" hint="Будущее время Futur I" audio="" />
   </lesson>
 </curriculum>"""
 }

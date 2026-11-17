@@ -381,7 +381,7 @@ object InitialCurriculumData {
                     exampleSerbian = "Нећу радити за викенд.",
                     exampleSerbianLatin = "Neću raditi za vikend.",
                     exampleRussian = "Я не буду работать на выходных.",
-                    notes = "Формы: neću, nećeš, neće, nećemo, nećете, neće + инфинитив."
+                    notes = "Формы: neću, nećeš, neće, nećemo, nećete, neće + инфинитив."
                 ),
                 ConjugationCell(
                     formType = "Interrogative (?)",
@@ -481,7 +481,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Da li danas radiš u kancelariji?",
             tokensJson = "[\"da\", \"li\", \"danas\", \"radiš\", \"u\", \"kancelariji\"]",
             distractorTokensJson = "[\"radim\", \"rade\", \"radite\", \"jesi\", \"radio\"]",
-            grammarHint = "Вопрос в настоящем времени: 'да ли' + глагол во 2 лице (радиш)",
+            grammarHint = "Вопрос в настоящем времени: 'da li' + глагол во 2 лице (radiš)",
             matrixTense = "PRESENT",
             matrixForm = "INTERROGATIVE",
             personGroup = "2SG_PL"
@@ -494,7 +494,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Ja ne govorim engleski brzo.",
             tokensJson = "[\"ja\", \"ne\", \"govorim\", \"engleski\", \"brzo\"]",
             distractorTokensJson = "[\"govoriš\", \"govori\", \"govorimo\", \"nisam\", \"priča\"]",
-            grammarHint = "Отрицание в презенте: частица 'не' перед глаголом 1 лица (говорим)",
+            grammarHint = "Отрицание в презенте: частица 'ne' перед глаголом 1 лица (govorim)",
             matrixTense = "PRESENT",
             matrixForm = "NEGATIVE",
             personGroup = "1SG"
@@ -507,7 +507,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Sutra ću raditi kod kuće.",
             tokensJson = "[\"sutra\", \"ću\", \"raditi\", \"kod\", \"kuće\"]",
             distractorTokensJson = "[\"ćeš\", \"će\", \"biću\", \"kuća\", \"kuću\"]",
-            grammarHint = "Футур I: энклитика «ћу» после первого слова",
+            grammarHint = "Futur I: энклитика «ću» после первого слова",
             matrixTense = "FUTURE",
             matrixForm = "AFFIRMATIVE",
             personGroup = "1SG"
@@ -520,7 +520,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Mi smo juče pažljivo slušali profesora.",
             tokensJson = "[\"mi\", \"smo\", \"juče\", \"pažljivo\", \"slušali\", \"profesora\"]",
             distractorTokensJson = "[\"ste\", \"su\", \"slušao\", \"slušamo\", \"slušate\"]",
-            grammarHint = "Перфекат: форма множественного числа «смо слушали»",
+            grammarHint = "Perfekat: форма множественного числа «smo slušali»",
             matrixTense = "PAST",
             matrixForm = "AFFIRMATIVE",
             personGroup = "2SG_PL"
@@ -535,7 +535,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Dobro se sećam ovog lepog grada.",
             tokensJson = "[\"dobro\", \"se\", \"sećam\", \"ovog\", \"lepog\", \"grada\"]",
             distractorTokensJson = "[\"sećaš\", \"seća\", \"gradu\", \"grad\", \"si\"]",
-            grammarHint = "Частица 'се' на втором месте: добро се сећам",
+            grammarHint = "Частица 'se' на втором месте: dobro se sećam",
             matrixTense = "PRESENT",
             matrixForm = "AFFIRMATIVE",
             personGroup = "1SG"
@@ -548,7 +548,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Kojim sportom se baviš?",
             tokensJson = "[\"kojim\", \"sportom\", \"se\", \"baviš\"]",
             distractorTokensJson = "[\"bavim\", \"bavi\", \"bave\", \"sport\", \"ti\"]",
-            grammarHint = "Глагол 'бавити се' требует творительного падежа",
+            grammarHint = "Глагол 'baviti se' требует творительного падежа",
             matrixTense = "PRESENT",
             matrixForm = "INTERROGATIVE",
             personGroup = "2SG_PL"
@@ -563,7 +563,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Ja hoću da govorim srpski tečno.",
             tokensJson = "[\"ja\", \"hoću\", \"da\", \"govorim\", \"srpski\", \"tečno\"]",
             distractorTokensJson = "[\"neću\", \"hoćeš\", \"hoće\", \"govoriti\", \"mogu\"]",
-            grammarHint = "Конструкция: хоћу + ДА + презенс (говорим)",
+            grammarHint = "Конструкция: hoću + DA + презенс (govorim)",
             matrixTense = "PRESENT",
             matrixForm = "AFFIRMATIVE",
             personGroup = "1SG"
@@ -576,7 +576,7 @@ object InitialCurriculumData {
             targetSentenceLatin = "Moramo odmah da pozovemo lekara.",
             tokensJson = "[\"moramo\", \"odmah\", \"da\", \"pozovemo\", \"lekara\"]",
             distractorTokensJson = "[\"moram\", \"morate\", \"pozvati\", \"lekar\", \"možemo\"]",
-            grammarHint = "Морамо + ДА + глагол совершенного вида (позовемо)",
+            grammarHint = "Moramo + DA + глагол совершенного вида (pozovemo)",
             matrixTense = "PRESENT",
             matrixForm = "AFFIRMATIVE",
             personGroup = "2SG_PL"
@@ -596,15 +596,15 @@ object InitialCurriculumData {
     )
 
     private val nineMatrixTemplates = listOf(
-        MatrixSentenceTemplate("PAST", "AFFIRMATIVE", "1SG", "Я вчера работал.", "Ја сам јуче радио.", "Ja sam juče radio.", "[\"ja\",\"sam\",\"juče\",\"radio\"]", "[\"si\",\"radim\"]", "Перфекат (+): ја сам радио"),
-        MatrixSentenceTemplate("PAST", "NEGATIVE", "1SG", "Я вчера не работал.", "Ја нисам јуче радио.", "Ja nisam juče radio.", "[\"ja\",\"nisam\",\"juče\",\"radio\"]", "[\"sam\",\"ne\"]", "Перфекат (-): нисам радио"),
-        MatrixSentenceTemplate("PAST", "INTERROGATIVE", "2SG_PL", "Ты вчера работал?", "Да ли си јуче радио?", "Da li si juče radio?", "[\"da\",\"li\",\"si\",\"juče\",\"radio\"]", "[\"sam\",\"radim\"]", "Перфекат (?): да ли си радио"),
-        MatrixSentenceTemplate("PRESENT", "AFFIRMATIVE", "1SG", "Я сегодня работаю.", "Ја данас радим.", "Ja danas radim.", "[\"ja\",\"danas\",\"radim\"]", "[\"radiš\",\"radio\"]", "Презент (+): радим"),
-        MatrixSentenceTemplate("PRESENT", "NEGATIVE", "1SG", "Я сегодня не работаю.", "Ја данас не радим.", "Ja danas ne radim.", "[\"ja\",\"danas\",\"ne\",\"radim\"]", "[\"nisam\",\"neću\"]", "Презент (-): не радим"),
-        MatrixSentenceTemplate("PRESENT", "INTERROGATIVE", "2SG_PL", "Ты сегодня работаешь?", "Да ли данас радиш?", "Da li danas radiš?", "[\"da\",\"li\",\"danas\",\"radiš\"]", "[\"radim\",\"si\"]", "Презент (?): да ли радиш"),
-        MatrixSentenceTemplate("FUTURE", "AFFIRMATIVE", "1SG", "Я завтра буду работать.", "Ја ћу сутра радити.", "Ja ću sutra raditi.", "[\"ja\",\"ću\",\"sutra\",\"raditi\"]", "[\"neću\",\"radim\"]", "Футур I (+): ћу радити"),
-        MatrixSentenceTemplate("FUTURE", "NEGATIVE", "1SG", "Я завтра не буду работать.", "Ја сутра нећу радити.", "Ja sutra neću raditi.", "[\"ja\",\"sutra\",\"neću\",\"raditi\"]", "[\"ću\",\"nisam\"]", "Футур I (-): нећу радити"),
-        MatrixSentenceTemplate("FUTURE", "INTERROGATIVE", "2SG_PL", "Ты завтра будешь работать?", "Да ли ћеш сутра радити?", "Da li ćeš sutra raditi?", "[\"da\",\"li\",\"ćeš\",\"sutra\",\"raditi\"]", "[\"ću\",\"si\"]", "Футур I (?): да ли ћеш радити")
+        MatrixSentenceTemplate("PAST", "AFFIRMATIVE", "1SG", "Я вчера работал.", "Ја сам јуче радио.", "Ja sam juče radio.", "[\"ja\",\"sam\",\"juče\",\"radio\"]", "[\"si\",\"radim\"]", "Perfekat (+): ja sam radio"),
+        MatrixSentenceTemplate("PAST", "NEGATIVE", "1SG", "Я вчера не работал.", "Ја нисам јуче радио.", "Ja nisam juče radio.", "[\"ja\",\"nisam\",\"juče\",\"radio\"]", "[\"sam\",\"ne\"]", "Perfekat (-): nisam radio"),
+        MatrixSentenceTemplate("PAST", "INTERROGATIVE", "2SG_PL", "Ты вчера работал?", "Да ли си јуче радио?", "Da li si juče radio.", "[\"da\",\"li\",\"si\",\"juče\",\"radio\"]", "[\"sam\",\"radim\"]", "Perfekat (?): da li si radio"),
+        MatrixSentenceTemplate("PRESENT", "AFFIRMATIVE", "1SG", "Я сегодня работаю.", "Ја данас радим.", "Ja danas radim.", "[\"ja\",\"danas\",\"radim\"]", "[\"radiš\",\"radio\"]", "Prezent (+): radim"),
+        MatrixSentenceTemplate("PRESENT", "NEGATIVE", "1SG", "Я сегодня не работаю.", "Ја данас не радим.", "Ja danas ne radim.", "[\"ja\",\"danas\",\"ne\",\"radim\"]", "[\"nisam\",\"neću\"]", "Prezent (-): ne radim"),
+        MatrixSentenceTemplate("PRESENT", "INTERROGATIVE", "2SG_PL", "Ты сегодня работаешь?", "Да ли данас радиш?", "Da li danas radiš?", "[\"da\",\"li\",\"danas\",\"radiš\"]", "[\"radim\",\"si\"]", "Prezent (?): da li radiš"),
+        MatrixSentenceTemplate("FUTURE", "AFFIRMATIVE", "1SG", "Я завтра буду работать.", "Ја ћу сутра радити.", "Ja ću sutra raditi.", "[\"ja\",\"ću\",\"sutra\",\"raditi\"]", "[\"neću\",\"radim\"]", "Futur I (+): ću raditi"),
+        MatrixSentenceTemplate("FUTURE", "NEGATIVE", "1SG", "Я завтра не буду работать.", "Ја сутра нећу радити.", "Ja sutra neću raditi.", "[\"ja\",\"sutra\",\"neću\",\"raditi\"]", "[\"ću\",\"nisam\"]", "Futur I (-): neću raditi"),
+        MatrixSentenceTemplate("FUTURE", "INTERROGATIVE", "2SG_PL", "Ты завтра будешь работать?", "Да ли ћеш сутра радити?", "Da li ćeš sutra raditi?", "[\"da\",\"li\",\"ćeš\",\"sutra\",\"raditi\"]", "[\"ću\",\"si\"]", "Futur I (?): da li ćeš raditi")
     )
 
     fun getInitialSentences(): List<SentenceEntity> {

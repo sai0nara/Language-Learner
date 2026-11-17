@@ -2,6 +2,7 @@
 
 - **Run Date:** 2026-11-14
 - **Audit Verdict:** **PASS** — 16 of 16 modeled elements covered (`100.0%`), `0` gaps remaining, all 21 pairwise parameter pairs covered in 9 configurations, and all footer counts reconcile with tables.
+- **Status Note (2026-11-17):** `isLatinScript` script-toggle cases are **Obsolete** following track `latin_only_remove_script_switch_20261117` (UI renders Latin examples with primary fallback).
 
 ---
 

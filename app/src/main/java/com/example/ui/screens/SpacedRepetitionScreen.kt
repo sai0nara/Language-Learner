@@ -159,6 +159,12 @@ fun SpacedRepetitionScreen(
             // Active Flashcard
             Spacer(modifier = Modifier.weight(0.3f))
 
+            val isSentence = currentItem.itemType == "SENTENCE"
+            // Sentence cards: prompt = source language, secondaryText = Latin target (the answer).
+            val promptText = if (isSentence) currentItem.prompt else currentItem.secondaryText.ifBlank { currentItem.prompt }
+            val answerText = if (isSentence) currentItem.secondaryText.ifBlank { currentItem.answer } else currentItem.answer
+            val targetSpeech = if (isSentence) answerText else promptText
+
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -173,8 +179,6 @@ fun SpacedRepetitionScreen(
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val promptText = currentItem.secondaryText.ifBlank { currentItem.prompt }
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
@@ -194,7 +198,7 @@ fun SpacedRepetitionScreen(
 
                         IconButton(
                             onClick = {
-                                viewModel.playAudio(promptText, isTargetLanguage = true)
+                                viewModel.playAudio(targetSpeech, isTargetLanguage = true)
                             }
                         ) {
                             Icon(
@@ -219,7 +223,7 @@ fun SpacedRepetitionScreen(
                             Spacer(modifier = Modifier.height(20.dp))
 
                             Text(
-                                text = currentItem.answer,
+                                text = answerText,
                                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                                 color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center,
@@ -250,8 +254,7 @@ fun SpacedRepetitionScreen(
                     Button(
                         onClick = {
                             isRevealed = true
-                            val word = currentItem.secondaryText.ifBlank { currentItem.prompt }
-                            viewModel.playAudio(word, isTargetLanguage = true)
+                            viewModel.playAudio(targetSpeech, isTargetLanguage = true)
                         },
                         modifier = Modifier
                             .fillMaxWidth()

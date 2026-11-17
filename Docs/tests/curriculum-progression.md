@@ -2,7 +2,7 @@
 
 > Maps the curriculum progression and mastery unlocking requirements to automated unit, Room, and Compose UI tests.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Automated coverage
 

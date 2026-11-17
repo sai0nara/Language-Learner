@@ -99,6 +99,14 @@ class ExampleUnitTest {
         assertTrue(result.vocabItems.isNotEmpty())
         assertTrue(result.sentences.isNotEmpty())
         assertEquals("Урок: Модальные глаголы (Хтети / Моћи)", result.lessons[0].title)
+
+        val cyrillicRegex = Regex("[\\p{InCyrillic}]")
+        result.sentences.forEach { sentence ->
+            assertTrue(
+                "Sample JSON sentence tokensJson should be Latin: ${sentence.tokensJson}",
+                !cyrillicRegex.containsMatchIn(sentence.tokensJson)
+            )
+        }
     }
 
     @Test

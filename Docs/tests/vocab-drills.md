@@ -2,7 +2,7 @@
 
 > Verifies `VocabDao` persistence, cascade deletion, SRS enrollment, and mastery recording for vocabulary drills.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Automated coverage
 

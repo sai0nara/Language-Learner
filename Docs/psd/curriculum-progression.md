@@ -41,6 +41,7 @@ Implements `Docs/prd/curriculum-progression.md` using a reactive MVVM architectu
 | Subsequent wrong answers drop a mastered lesson below `4.5f` | `updateGradeStats` sets `isCompleted = false` on that lesson (`Mastered` → `Unlocked`), while any previously unlocked `orderIndex + 1` lesson remains `isUnlocked = true`. |
 | Tapping a locked lesson card (`!lesson.isUnlocked`) | `CurriculumScreen` blocks navigation and displays `Toast.makeText(context, "Урок заблокирован. Наберите оценку 4.5 (90/100) в Уроке ${lesson.orderIndex - 1}", Toast.LENGTH_SHORT)`. |
 | App process restart after toggling theme | `isDarkTheme` (`true` / Dark) is an in-memory `MutableStateFlow` and resets to its default on cold start. |
+| Schema version bump (`AppDatabase` v3 → v4) | While the app is unreleased, `AppDatabase` uses `fallbackToDestructiveMigration()` on version bumps to re-seed Latin-only initial curriculum data cleanly. |
 | Imported lessons (`CurriculumRepository.importCurriculum`) | Uses 1-based `orderIndex` (`1..L`, `99`, or `100`), forces `idx == 0` in the imported batch to `isUnlocked = true` (`idx > 0` `isUnlocked = false`, `masteryScore = 0f`), and upserts via `OnConflictStrategy.REPLACE` (cascading delete of `lesson_answers` only for replaced `lessonId`s). |
 
 ## Dependencies

@@ -346,7 +346,7 @@ fun SentencePracticeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Преведите на српски",
+                        text = "Prevedite na srpski",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
