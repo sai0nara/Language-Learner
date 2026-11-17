@@ -2,7 +2,7 @@
 
 > Moshi-serialized `ConjugationMatrixData` stored in `GrammarGuideEntity.matrixJson` and rendered as an interactive 3x3 grid in `GrammarMatrixScreen`.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Overview
 
@@ -17,7 +17,7 @@ Implements `Docs/prd/grammar-matrices.md` by storing a 9-cell `ConjugationMatrix
 ## Data flow
 
 1. When a lesson is selected, `LanguageLearnerViewModel` queries `repository.getGrammarGuideForLesson(lesson.id)` and updates `activeGrammar`.
-2. `GrammarMatrixScreen` collects `activeGrammar` and `isLatinScript` and parses `guide.matrixJson` via Moshi's generated `ConjugationMatrixData` adapter.
+2. `GrammarMatrixScreen` collects `activeGrammar` and parses `guide.matrixJson` via Moshi's generated `ConjugationMatrixData` adapter.
 3. The 3x3 grid iterates over `tenses = listOf("Past", "Present", "Future")` and `forms = listOf("Affirmative", "Negative", "Interrogative")`, matching each cell by `formType` and `tense`.
 4. Tapping a cell updates `selectedCell` and triggers `viewModel.playAudio(cell.exampleSerbian, isTargetLanguage = true)`.
 
@@ -34,7 +34,7 @@ Implements `Docs/prd/grammar-matrices.md` by storing a 9-cell `ConjugationMatrix
 | Failure mode | Expected behaviour |
 |---|---|
 | `matrixJson` is empty (`"{}"`) or malformed | Moshi parse exception is caught and `matrixData` evaluates to `null`; the screen still renders the text explanation without crashing. |
-| `exampleSerbianLatin` is blank when Latin script is enabled | Falls back to transliterating or displaying `exampleSerbian`. |
+| `exampleSerbianLatin` is blank | Falls back to displaying `exampleSerbian`. |
 
 ## Dependencies
 

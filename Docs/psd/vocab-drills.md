@@ -2,7 +2,7 @@
 
 > Stateful Compose drill queue in `VocabDrillScreen` backed by `VocabDao`, Moshi distractor lists, `AudioController`, and `CurriculumRepository`.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Overview
 
@@ -10,7 +10,7 @@ Implements `Docs/prd/vocab-drills.md` by maintaining a mutable `drillQueue` in `
 
 ## Architecture
 
-- **Presentation:** `VocabDrillScreen` observes `viewModel.activeVocab` and `viewModel.isLatinScript`.
+- **Presentation:** `VocabDrillScreen` observes `viewModel.activeVocab` and renders Latin target words (`targetWordLatin.ifBlank { targetWord }`).
 - **Data:** `VocabDao` provides per-lesson `VocabItemEntity` lists; `CurriculumRepository` handles `recordAnswer` and `enrollInSrs`.
 
 ## Data flow

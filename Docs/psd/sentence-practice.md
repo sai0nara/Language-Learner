@@ -2,7 +2,7 @@
 
 > Token-pool state machine in `SentencePracticeScreen` backed by `SentenceEntity` JSON token lists and `CurriculumRepository` mastery recording.
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 ## Overview
 
@@ -10,7 +10,7 @@ Implements `Docs/prd/sentence-practice.md` inside `SentencePracticeScreen` using
 
 ## Architecture
 
-- **UI State:** `SentencePracticeScreen` observes `viewModel.activeSentences`, `viewModel.activeLesson`, and `viewModel.isLatinScript`.
+- **UI State:** `SentencePracticeScreen` observes `viewModel.activeSentences` and `viewModel.activeLesson`.
 - **Token Normalization:** `cleanToken(raw)` applies `raw.trim().lowercase().replace(Regex("[\\p{P}\\p{S}]"), "")`.
 - **Persistence:** `SentenceDao` supplies `SentenceEntity` rows for the active lesson; `CurriculumRepository.recordAnswer` records each check result.
 
