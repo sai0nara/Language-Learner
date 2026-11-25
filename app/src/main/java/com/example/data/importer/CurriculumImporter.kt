@@ -395,7 +395,7 @@ object CurriculumImporter {
           "targetWordLatin": "hteti",
           "sourceTranslation": "хотеть",
           "partOfSpeech": "Глагол",
-          "distractors": ["moći", "znati", "imati"],
+          "distractors": ["мочь", "знать", "иметь"],
           "audioUri": ""
         },
         {
@@ -403,7 +403,7 @@ object CurriculumImporter {
           "targetWordLatin": "moći",
           "sourceTranslation": "мочь",
           "partOfSpeech": "Глагол",
-          "distractors": ["hteti", "morati", "biti"],
+          "distractors": ["хотеть", "быть должным", "быть"],
           "audioUri": ""
         }
       ],

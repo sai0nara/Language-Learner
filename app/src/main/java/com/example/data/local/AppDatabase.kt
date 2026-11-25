@@ -21,7 +21,7 @@ import com.example.data.model.VocabItemEntity
         SentenceEntity::class,
         SrsReviewEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

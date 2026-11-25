@@ -2,11 +2,11 @@
 
 > Room database, entities, DAOs, initial curriculum seed, and XML/CSV/JSON importer.
 
-Last updated: 2026-11-16
+Last updated: 2026-11-17
 
 ## Persistence & Repository
 
-`AppDatabase` (version 3) hosts six Room entities (`LessonEntity`, `LessonAnswerEntity`, `VocabItemEntity`, `GrammarGuideEntity`, `SentenceEntity`, `SrsReviewEntity`) with cascading foreign keys from lessons to child items. `CurriculumRepository` exposes reactive `Flow` streams, seeds the 16-lesson initial curriculum (`InitialCurriculumData`, each lesson covering all 9 `matrixCoordinate` cells), tracks two-tier progression gates (`MIN_PRACTICE_SAMPLE = 5` at `>= 70%` to unlock; `MASTERED` 4-condition gate), aggregates `matrixStatsJson` under a `Mutex`, enforces the First-Attempt Scoring Guard, and builds the 70/30 `DAILY_REVIEW` blended queue.
+`AppDatabase` (version 5) hosts six Room entities (`LessonEntity`, `LessonAnswerEntity`, `VocabItemEntity`, `GrammarGuideEntity`, `SentenceEntity`, `SrsReviewEntity`) with cascading foreign keys from lessons to child items. `CurriculumRepository` exposes reactive `Flow` streams, seeds the 16-lesson initial curriculum (`InitialCurriculumData`, 10 vocab items with Russian distractors, a 9-cell 3x3 grammar guide, and 9 lesson-specific sentences covering all 9 `matrixCoordinate` cells per lesson), tracks two-tier progression gates (`MIN_PRACTICE_SAMPLE = 5` at `>= 70%` to unlock; `MASTERED` 4-condition gate), aggregates `matrixStatsJson` under a `Mutex`, enforces the First-Attempt Scoring Guard, and builds the 70/30 `DAILY_REVIEW` blended queue.
 
 ## Cross-references
 
